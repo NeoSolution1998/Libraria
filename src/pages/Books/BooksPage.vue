@@ -65,6 +65,7 @@ export default {
       dialogVisible: false,
     };
   },
+  
   methods: {
     async fetchBooks(page = 1, perPage = 4) {
       try {
