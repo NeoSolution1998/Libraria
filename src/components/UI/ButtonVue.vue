@@ -1,5 +1,5 @@
 <template>
-  <button type="submit" class="btn btn-primary"><slot></slot></button>
+  <button type="submit" class="btn"><slot></slot></button>
 </template>
 
 <script>

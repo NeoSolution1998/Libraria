@@ -1,107 +1,122 @@
 <template>
-  <div class="post mb-4">
-    <div class="row">
-      <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+  <header-vue></header-vue>
+  <div class="container">
+    <h1 class="text-center text-body-secondary">ТУТ У НАС ПОСТЫ</h1>
 
-        <div class="post-type post-img">
-          <a href="#">
-            <img
-              :src="post.imageUrl"
-              class="img-fluid"
-              :alt="'Image for ' + post.title"
-            />
-          </a>
+    <h2>{{ $store.state.likes }}</h2>
+    <h2>{{ $store.getters.getLikes }}</h2>
+    <button-vue @click="$store.commit('addLikes')"> Like</button-vue>
+
+    <!-- Используем v-for для отображения каждого поста -->
+    <div v-for="post in $store.state.posts" :key="post.id" class="posts row m-3">
+      <p>{{ post.title }}</p>
+      <p>{{ post.content }}</p>
+      <!-- Другие поля по вашему выбору -->
+    </div>
+    
+    
+    
+
+    <div class="container">
+      <div class="posts row m-3">
+        <div class="col-md-8 col-sm-12">
+          <img
+            class="img-post img-fluid img-thumbnail"
+            src="https://u.9111s.ru/uploads/202301/18/696d4101c5253a70f08f4f0d165b5092.jpg"
+            alt=""
+          />
         </div>
 
-        <div class="author-info author-info-2">
-          <ul class="list-unstyled">
-            <li>
-              <div class="info">
-                <p>Дата публикации:</p>
-                <strong>{{ post.created_at }}</strong>
-              </div>
-            </li>
-            <li>
-              <div class="info">
-                <p>Количество комментариев:</p>
-                <strong>{{ post.comments }}</strong>
-              </div>
-            </li>
-          </ul>
+        <div class="col-md-4 col-sm-12">
+          <h2 class="text-center"><strong>Post about</strong></h2>
+          <p class="text-center text-body-secondary">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae quibusdam
+            consequuntur itaque iste impedit nesciunt necessitatibus inventore incidunt
+            voluptate earum fugiat illo animi, enim at. Esse sit impedit suscipit est
+            voluptate repudiandae qui iusto soluta incidunt omnis numquam neque accusamus
+            inventore non illum error quidem expedita, dolorum, vero nobis laudantium.
+          </p>
         </div>
       </div>
-      <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
-        <div class="caption">
-          <h3 class="md-heading">
-            <a href="#">{{ post.title }}</a>
-          </h3>
-          <p>{{ post.content }}</p>
-          <a class="btn btn-primary" href="#" role="button">Читать далее</a>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4 col-md-6 col-sm-12" v-for="number in numbers" :key="number">
+        <div class="card mb-4 ml-3">
+          <img src="https://via.placeholder.com/400" class="card-img-top p-2" alt="#" />
+          <div class="card-body">
+            <h5 class="card-title">Заголовок карточки</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+              Author: <strong>Andrey</strong>
+            </h6>
+            <p class="card-text">
+              Небольшой пример текста, который должен основываться на названии карточки и
+              составлять основную часть содержимого карты.
+            </p>
+
+            <div class="row align-items-center">
+              <div class="col-2">
+                <a href="#" @click.prevent="icon" title="В избранное">
+                  <icon-vue class="w-100" name="star-empty"></icon-vue>
+                </a>
+              </div>
+              <div class="col-2">
+                <a href="#" @click.prevent="icon" title="В избранное">
+                  <icon-vue class="w-100" name="heart-empty"></icon-vue>
+                </a>
+              </div>
+              <div class="col text-end">
+                <a href="#" @click.prevent="icon" title="В избранное">
+                  <icon-vue class="w-100" name="chat"></icon-vue>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</template>
 
+  <!-- Колонка с икноками -->
+  <div class="container bg-white mt-5">
+    <h2>Fontello Icons</h2>
+    <fontello-icons></fontello-icons>
+  </div>
+
+  <footer-vue></footer-vue>
+</template>
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+
 export default {
-  name: "PostsItem",
-  props: {
-    post: {
-      type: Object,
-      required: true,
-    },
-  },
   data() {
     return {
-      defaultImageUrl: "/images/books/default2.png", // Замените на путь к вашему статическому изображению
+      numbers: [4, 2, 3, 4],
     };
   },
-  methods: {},
-  computed: {
-    formattedDate() {
-      const date = new Date(this.book.updated_at);
-      return date.toLocaleDateString("ru-RU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    },
+  methods: {
+    ...mapActions({
+      fetchPosts: "fetchPosts",
+    }),
+    ...mapMutations({}),
   },
   mounted() {
-    console.log("Данные компонентаdd:", this.post);
+    this.fetchPosts();
+  },
+
+  computed: {
+    ...mapState({}),
+    ...mapGetters({}),
   },
 };
 </script>
-
 <style scoped>
-/* Стили для изображений в постах */
-.post-img img {
-  border-radius: 5px;
-  max-height: 200px; /* Уменьшение размера изображения */
+.posts {
+  border-radius: 3%;
+  background-color: rgb(222, 226, 241);
+  padding: 1%;
 }
-
-/* Стили для информации об авторе и дате публикации */
-.author-info {
-  padding: 10px 0;
-}
-
-.author-info .info p {
-  margin-bottom: 5px;
-}
-
-/* Стили для кнопки "Читать далее" */
-.caption .btn {
-  margin-top: 10px;
-}
-
-/* Стили для поста */
-.post {
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 5px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 10px;
+.img-post {
+  border-radius: 3%;
 }
 </style>

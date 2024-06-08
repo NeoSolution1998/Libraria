@@ -1,7 +1,11 @@
 <template>
-  <div class="container-fluid">
-    <header-vue></header-vue>
-
+  <header-vue></header-vue>
+  <div class="container">
+    <div class="col-lg-12">
+      <div class="sidebar">
+        <h2 class="sidebar-title">Фильры</h2>
+      </div>
+    </div>
     <div class="row">
       <div class="col-lg-2">
         <div class="col-lg-12">
@@ -27,6 +31,17 @@
             </ul>
           </div>
         </div>
+
+        <div class="col-lg-12">
+          <div class="sidebar">
+            <h2 class="sidebar-title">Теги</h2>
+            <ul class="list-group">
+              <li class="list-group-item">Фантастика</li>
+              <li class="list-group-item">Детективы</li>
+              <li class="list-group-item">Романы</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="col-lg-10">
@@ -44,11 +59,11 @@
         ></PaginationVue>
       </div>
     </div>
-
-    <popular-vue></popular-vue>
-
-    <FooterVue></FooterVue>
   </div>
+
+  <popular-vue></popular-vue>
+
+  <FooterVue></FooterVue>
 </template>
 
 <script>
@@ -65,7 +80,7 @@ export default {
       dialogVisible: false,
     };
   },
-  
+
   methods: {
     async fetchBooks(page = 1, perPage = 4) {
       try {
@@ -79,7 +94,7 @@ export default {
             Authorization: `Bearer ${authToken}`,
           },
         });
-        console.log('dfsdfds',response);
+        console.log("dfsdfds", response);
         this.books = response.data.books;
         this.totalPages = Math.ceil(response.data.total_books / response.data.per_page);
         this.currentPage = response.data.current_page;

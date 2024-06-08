@@ -1,21 +1,23 @@
 <template>
-    <input class="form-control" type="text" @input="updateInput">
-  </template>
-  
-  <script>
-  export default {
-    name: "InputVue",
-    props: {
-        modelValue: [String, Number]
+  <input class="form-control" type="text" @input="updateInput" />
+</template>
+
+<script>
+export default {
+  name: "InputVue",
+  props: {
+    modelValue: [String, Number],
+  },
+  methods: {
+    updateInput(event) {
+      this.$emit("update:modelValue", event.target.value);
     },
-    methods: {
-        updateInput(event){
-            this.$emit('update:modelValue', event.target.value)
-        }
-    },
-  };
-  </script>
-  
-  <style>
-  </style>
-  
+  },
+};
+</script>
+
+<style>
+.form-control {
+  margin: 2px;
+}
+</style>

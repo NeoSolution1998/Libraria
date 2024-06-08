@@ -34,12 +34,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 20px;
 }
 
 .dialog_content {
   background: white;
   border-radius: 20px;
-  padding: 20px;
+  padding: 50px;
+  margin: 20px;
   min-width: 500px;
   min-height: 200px;
   display: flex;

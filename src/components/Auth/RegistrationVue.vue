@@ -100,7 +100,7 @@ export default {
             },
           }
         );
-          console.log('Зарегистривался', response);
+          console.log('ЗарегистрироЫвался', response);
           const token = response.data.access_token;
           Cookies.set("auth_token", token);
           const prevPageUrl = localStorage.getItem("prevPageUrl");

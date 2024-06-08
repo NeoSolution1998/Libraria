@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-100">
+  <div class="container">
     <h2>Популярные книги</h2>
     <div class="row">
       <div class="col-md-4 col-sm-6" v-for="(book, index) in books" :key="index">
@@ -7,14 +7,22 @@
           <a class="card-img-tiles" href="#" data-abc="true">
             <div class="inner">
               <div class="main-img">
-                <img :src="`/images/books/${book.image}`" alt="Category" class="book-image" />
+                <img
+                  :src="`/images/books/${book.image}`"
+                  alt="Category"
+                  class="book-image"
+                />
               </div>
             </div>
           </a>
           <div class="card-body text-center">
             <h4 class="card-title">{{ book.title }}</h4>
             <p class="text-muted">{{ book.price }}</p>
-            <a class="btn btn-outline-primary btn-sm" href="#" data-abc="true">View Products</a>
+            <router-link :to="{ name: 'Book', params: { id: book.id } }">
+              <a class="btn btn-outline-primary btn-sm" href="#" data-abc="true"
+                >Читать</a
+              ></router-link
+            >
           </div>
         </div>
       </div>
@@ -24,21 +32,20 @@
 
 <script>
 export default {
-  name: "PopularVue",
+  name: "PopularBooks",
   data() {
     return {
       books: [
-        { title: 'Book 1', image: 'GoT.png', price: 'Starting from $10' },
-        { title: 'Book 2', image: 'Kingdom.png', price: 'Starting from $15' },
-        { title: 'Book 3', image: 'potter.png', price: 'Starting from $20' },
-      ]
+        { id: 1, title: "Book 1", image: "GoT.png", price: "Starting from $10" },
+        { id: 3, title: "Book 2", image: "Kingdom.png", price: "Starting from $15" },
+        { id: 2, title: "Book 3", image: "potter.png", price: "Starting from $20" },
+      ],
     };
-  }
+  },
 };
 </script>
 
 <style>
-
 body {
   background-color: #eee;
 }

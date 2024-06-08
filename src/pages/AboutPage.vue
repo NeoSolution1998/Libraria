@@ -1,6 +1,7 @@
 <template>
   <div class="about-page">
     <header-vue></header-vue>
+
     <div class="container mt-4">
       <h1 class="mb-4">О нас</h1>
       <p>

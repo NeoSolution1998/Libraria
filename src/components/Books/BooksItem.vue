@@ -6,11 +6,13 @@
       </div>
       <div class="col-md-8">
         <div class="card-body">
-          <h5 class="card-title">Название книги: {{ book.title }}</h5>
+          <h5 class="card-title">
+            <router-link :to="{ name: 'Book', params: { id: book.id } }">{{ book.title }}</router-link>
+          </h5>
           <p class="card-text">Описание: {{ book.description }}</p>
           <p class="card-text"><strong>Автор:</strong> {{ book.author }}</p>
           <p class="card-text"><strong>Дата создания:</strong> {{ formattedDate }}</p>
-          <div class="text-end">
+          <div class="text-end" v-if="false">
             <ButtonVue @click="removeBook" class="btn btn-danger">Удалить</ButtonVue>
           </div>
         </div>
@@ -31,7 +33,7 @@ export default {
   data() {
     return {
 
-      defaultImageUrl: '/images/books/default2.png', // Замените на путь к вашему статическому изображению
+      defaultImageUrl: '/images/books/Kingdom.png', // Замените на путь к вашему статическому изображению
     };
   },
   methods: {

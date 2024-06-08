@@ -1,12 +1,30 @@
 <template>
   <div class="pagination-wrap">
-    <nav aria-label="Page navigation example">
+    <nav class="pagination-outer" aria-label="Page navigation">
       <ul class="pagination">
-        <li class="page-item"><a class="page-link" @click="goToPage(1)">Первая</a></li>
-        <li class="page-item"><a class="page-link" @click="prevPage">Назад</a></li>
-        <li class="page-item"><a class="page-link" @click="nextPage">Вперед</a></li>
-        <li class="page-item"><a class="page-link" @click="goToPage(totalPages)">Последняя</a></li>
-        <input type="number" v-model="inputPage" @keydown.enter="jumpToPage" class="form-control" style="width: 70px; display: inline;">
+        <li class="page-item">
+          <a class="page-link" @click="goToPage(1)" aria-label="First">
+            <span aria-hidden="true">«</span>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" @click="prevPage" aria-label="Previous">
+            <span aria-hidden="true">Назад</span>
+          </a>
+        </li>
+        <li class="page-item" v-for="page in pagesToShow" :key="page" :class="{ active: page === currentPage }">
+          <a class="page-link" @click="goToPage(page)">{{ page }}</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" @click="nextPage" aria-label="Next">
+            <span aria-hidden="true">Вперед</span>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" @click="goToPage(totalPages)" aria-label="Last">
+            <span aria-hidden="true">»</span>
+          </a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -27,10 +45,21 @@ export default {
   },
   data() {
     return {
-      inputPage: 1,
+      inputPage: this.currentPage,
     };
   },
   computed: {
+    pagesToShow() {
+      const range = [];
+      const start = Math.max(1, this.currentPage - 1);
+      const end = Math.min(this.totalPages, this.currentPage + 3);
+
+      for (let i = start; i <= end; i++) {
+        range.push(i);
+      }
+
+      return range;
+    },
   },
   methods: {
     prevPage() {
@@ -39,7 +68,6 @@ export default {
       }
     },
     nextPage() {
-      /* console.log('nexpage', this.currentPage); */
       if (this.currentPage < this.totalPages) {
         this.$emit("page-changed", this.currentPage + 1);
       }
@@ -47,13 +75,7 @@ export default {
     goToPage(page) {
       this.$emit("page-changed", page);
     },
-    jumpToPage() {
-      const pageNumber = parseInt(this.inputPage);
-      if (pageNumber >= 1 && pageNumber <= this.totalPages) {
-        this.$emit("page-changed", pageNumber);
-      }
-    },
-  }, 
+  },
 };
 </script>
 
@@ -71,7 +93,7 @@ export default {
 .pagination > li > a,
 .pagination > li > span {
   color: #2c3840;
-  margin: 0px 5px;
+  margin: 0 5px;
   border-radius: 3px;
   -webkit-box-shadow: 0px 1px 3px 0px rgba(44, 56, 64, 0.2);
   -moz-box-shadow: 0px 1px 3px 0px rgba(44, 56, 64, 0.2);
@@ -96,6 +118,63 @@ export default {
 }
 
 .pagination {
-  margin: 0px;
+  margin: 0;
+}
+
+.pagination-outer {
+  text-align: center;
+  width: 100%;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.pagination:before {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background: #e8e8e8;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.pagination li a.page-link {
+  padding: 5px 10px;
+  margin: 5px;
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+  box-shadow: 0 8px 6px -9px #5b5f5f;
+  font-size: 17px;
+  color: #686c6c;
+}
+
+.pagination li.active a.page-link,
+.pagination li a.page-link:hover {
+  background: #2b4157;
+  border-color: #34485b;
+  color: #fff;
+}
+
+@media only screen and (max-width: 479px) {
+  .pagination {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  .pagination li {
+    display: inline-block;
+  }
+  .pagination li a.page-link {
+    font-size: 14px;
+    padding: 4px 10px;
+    margin: 2px;
+  }
 }
 </style>

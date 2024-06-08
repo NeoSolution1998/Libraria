@@ -1,53 +1,9 @@
 <template>
-  <div class="container-fluid">
-    <!-- Блок с фильтром и поиском -->
-    <div class="filter-search-bar bg-light p-3 mb-4">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-          <input type="text" class="form-control" placeholder="Поиск по постам" />
-        </div>
-        <div class="col-md-6 text-md-right mt-3 mt-md-0">
-          <div class="btn-group">
-            <button
-              class="btn dropdown-toggle"
-              type="button"
-              id="dropdownDate"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              по дате
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownDate">
-              <li><button class="dropdown-item" type="button">По возрастанию</button></li>
-              <li><button class="dropdown-item" type="button">По убыванию</button></li>
-            </ul>
-          </div>
-          <div class="btn-group ml-2">
-            <button
-              class="btn dropdown-toggle"
-              type="button"
-              id="dropdownName"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              по имени
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownName">
-              <li><button class="dropdown-item" type="button">По алфавиту</button></li>
-              <li>
-                <button class="dropdown-item" type="button">
-                  По алфавиту в обратном порядке
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Лента постов -->
+  <div class="container">
+    <h2 class="mb-4">Популярные посты</h2>
     <div class="row">
-      <div class="col-12 col-md-6 col-lg-4 mb-5" v-for="post in posts" :key="post.id">
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-5" v-for="post in posts" :key="post.id">
+
         <div class="card card-sm h-100 p-2">
           <img
             src="https://u.9111s.ru/uploads/202301/18/696d4101c5253a70f08f4f0d165b5092.jpg"
@@ -74,7 +30,7 @@
               <a href="#" @click.prevent="likePost(post)" title="Лайк">
                 <icon-vue
                   class="w-100 icon-clickable"
-                  :name="this.liked === true ? 'star' : 'star-empty'"
+                  :name="this.liked ? 'star' : 'star-empty'"
                 ></icon-vue>
               </a>
             </div>
@@ -99,22 +55,46 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  name: "PostsList",
+  name: "PopularPosts",
   data() {
     return {
       liked: false,
       saved: false,
+      posts: [],
     };
   },
   props: {
-    posts: {
+    popularPosts: {
       type: Array,
       required: true,
     },
   },
-
   methods: {
+    async fetchPosts(page = 1, perPage = 4) {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/v1/posts", {
+          params: {
+            page: page,
+            per_page: perPage,
+          },
+          headers: {
+            Authorization: `Bearer CIFZiME42jOGAdciZfkD6FKuN3XL3Pwx0kOQb9lzf5ac247a`, // Замените на ваш токен авторизации
+          },
+        });
+        console.log("Get response", response.data.posts);
+        this.posts = response.data.posts;
+        this.totalPages = Math.ceil(response.data.total_posts / response.data.per_page);
+        this.currentPage = response.data.current_page;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    handlePageChanged(newPage) {
+      this.currentPage = newPage;
+      this.fetchPosts(newPage, this.perPage);
+    },
     truncateText(text, length) {
       if (text.length > length) {
         return text.substring(0, length) + "...";
@@ -122,24 +102,29 @@ export default {
       return text;
     },
     likePost(post) {
-      console.log(this.liked);
-      if (this.liked === true) {
-        this.likes = false;
+      if (this.liked) {
+        this.liked = false;
+      } else {
+        this.liked = true;
       }
-      this.liked = true;
     },
-
     savePost(post) {
-      if (this.saved === true) {
+      if (this.saved) {
         this.saved = false;
+      } else {
+        this.saved = true;
       }
-      this.saved = true;
     },
+  },
+  mounted() {
+    this.fetchPosts();
   },
 };
 </script>
 
 <style scoped>
+
+
 .card-image {
   height: 200px;
 }
@@ -164,13 +149,15 @@ export default {
 }
 
 .card-title {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
+  font-size: 1rem; /* Новый размер шрифта */
+  margin-bottom: 0.5rem;
 }
 
 .card-text {
-  margin-bottom: 1rem;
+  font-size: 0.875rem; /* Новый размер шрифта */
+  margin-bottom: 0.75rem;
 }
+
 
 .card-footer {
   background-color: white;
@@ -184,15 +171,6 @@ export default {
   font-size: 1.2em;
   margin-right: 10px;
   color: #555;
-}
-
-.filter-search-bar input {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.filter-search-bar button {
-  margin: 5px 0;
 }
 
 @media (max-width: 768px) {

@@ -1,17 +1,24 @@
 <template>
-  <div>
+
     <header-vue></header-vue>
-    <div class="col-lg-12">
-      <div v-if="posts.length === 0" class="no-posts">
-        <p>Постов нет</p>
-      </div>
-      <div v-else>
-        <posts-list v-bind:posts="posts"></posts-list>
+    <div class="container">
+      <div class="content">
+        <div v-if="posts.length === 0" class="no-posts">
+          <p>Постов нет</p>
+        </div>
+        <div v-else class="posts-list-wrapper">
+          <posts-list v-bind:posts="posts"></posts-list>
+        </div>
+
+        <PaginationVue
+          :totalPages="totalPages"
+          :currentPage="currentPage"
+          @page-changed="handlePageChanged"
+        ></PaginationVue>
       </div>
     </div>
-
     <footer-vue></footer-vue>
-  </div>
+
 </template>
 
 <script>
@@ -27,7 +34,7 @@ export default {
     };
   },
   methods: {
-    async fetchPosts(page = 1, perPage = 4) {
+    async fetchPosts(page = 1, perPage = 8) {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/v1/posts", {
           params: {
@@ -46,6 +53,10 @@ export default {
         console.error(e);
       }
     },
+    handlePageChanged(newPage) {
+      this.currentPage = newPage;
+      this.fetchPosts(newPage, this.perPage);
+    },
   },
   mounted() {
     this.fetchPosts();
@@ -54,24 +65,21 @@ export default {
 </script>
 
 <style scoped>
-/* Стили для изображений в постах */
-.post-img img {
-  border-radius: 5px;
-  max-height: 200px; /* Уменьшение размера изображения */
+/* Основные стили контейнера */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Стили для информации об авторе и дате публикации */
-.author-info {
-  padding: 10px 0;
+/* Стили для контента */
+.content {
+  flex: 1;
 }
 
-.author-info .info p {
-  margin-bottom: 5px;
-}
-
-/* Стили для кнопки "Читать далее" */
-.caption .btn {
-  margin-top: 10px;
+/* Стили для постов */
+.posts-list-wrapper {
+  min-height: 300px; /* Установите минимальную высоту по вашему усмотрению */
 }
 
 /* Стили для поста */
@@ -95,5 +103,10 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+/* Стили для футера */
+footer-vue {
+  margin-top: auto; /* Располагаем футер внизу контейнера */
 }
 </style>
