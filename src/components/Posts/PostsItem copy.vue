@@ -3,20 +3,7 @@
   <div class="container">
     <h1 class="text-center text-body-secondary">ТУТ У НАС ПОСТЫ</h1>
 
-    <h2>{{ $store.state.likes }}</h2>
-    <h2>{{ $store.getters.getLikes }}</h2>
-    <button-vue @click="$store.commit('addLikes')"> Like</button-vue>
-
     <!-- Используем v-for для отображения каждого поста -->
-    <div v-for="post in $store.state.posts" :key="post.id" class="posts row m-3">
-      <p>{{ post.title }}</p>
-      <p>{{ post.content }}</p>
-      <!-- Другие поля по вашему выбору -->
-    </div>
-    
-    
-    
-
     <div class="container">
       <div class="posts row m-3">
         <div class="col-md-8 col-sm-12">
@@ -91,7 +78,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   data() {
     return {
-      numbers: [4, 2, 3, 4],
+      numbers: [4, 2, 3],
     };
   },
   methods: {

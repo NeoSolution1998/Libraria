@@ -46,94 +46,45 @@
 
       <div class="col-lg-10">
         <!-- Список постов -->
-        <div v-if="books.length === 0" class="no-books">
+        <div v-if="$store.state.books.books.length === 0" class="no-books">
           <p>Книги не найдены</p>
         </div>
         <div v-else>
-          <books-list v-bind:books="books" @remove-book="removeBook"></books-list>
+          <books-list v-bind:books="$store.state.books.books"></books-list>
         </div>
         <PaginationVue
-          :totalPages="totalPages"
-          :currentPage="currentPage"
-          @page-changed="handlePageChanged"
+          :totalPages="$store.state.books.totalPages"
+          :currentPage="$store.state.books.currentPage"
+          @page-changed="
+            $store.commit('books/handleBooksPageChanged', {
+              pageNumber: $event,
+              dispatch: $store.dispatch,
+            })
+          "
         ></PaginationVue>
       </div>
     </div>
   </div>
 
-  <popular-vue></popular-vue>
+  <!-- <popular-vue></popular-vue> -->
 
   <FooterVue></FooterVue>
 </template>
 
 <script>
-import axios from "axios";
-import Cookies from "js-cookie";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
-  data() {
-    return {
-      books: [],
-      totalPages: 0,
-      currentPage: 1,
-      perPage: 5,
-      dialogVisible: false,
-    };
-  },
-
   methods: {
-    async fetchBooks(page = 1, perPage = 4) {
-      try {
-        const authToken = Cookies.get("auth_token") ?? "";
-        const response = await axios.get("http://127.0.0.1:8000/api/v1/books", {
-          params: {
-            page: page,
-            per_page: perPage,
-          },
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        console.log("dfsdfds", response);
-        this.books = response.data.books;
-        this.totalPages = Math.ceil(response.data.total_books / response.data.per_page);
-        this.currentPage = response.data.current_page;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async removeBook(bookId) {
-      try {
-        const authToken = Cookies.get("auth_token") ?? "";
-        await axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        this.fetchBooks(this.currentPage);
-      } catch (error) {
-        if (error.response) {
-          if (error.response.status === 500) {
-            console.error("Server error. Please try again later.");
-          } else {
-            console.error("Error deleting book:", error.response.data);
-          }
-        } else if (error.request) {
-          console.error("Server is unreachable. Please try again later.");
-        } else {
-          console.error("An error occurred:", error.message);
-        }
-      }
-    },
-    handlePageChanged(pageNumber) {
-      console.log("Страница которая отправляется в запрос", pageNumber);
-      this.fetchBooks(pageNumber);
-      this.currentPage = pageNumber;
-    },
+    ...mapActions({
+      fetchBooks: "books/fetchBooks",
+    }),
+    ...mapMutations({
+      handlePageChanged: "books/handleBooksPageChanged",
+    }),
   },
   mounted() {
-    this.fetchBooks(this.currentPage);
-    /* console.log(this.totalPages); */
+    this.fetchBooks();
   },
 };
 </script>

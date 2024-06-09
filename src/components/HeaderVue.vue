@@ -53,7 +53,7 @@
         <div class="text-end">
           <div class="row">
             <div class="col-6 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <form @submit.prevent="logout">
+              <form >
                 <input
                   type="search"
                   class="search-header form-control form-control-dark"
@@ -105,13 +105,12 @@
                   </li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <button class="dropdown-item" @click.prevent="logout">Выход</button>
+                    <button class="dropdown-item" @click.prevent="$store.dispatch('header/logout')">Выход</button>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          <!-- Условный рендеринг кнопок входа и регистрации -->
         </div>
       </div>
     </div>
@@ -121,66 +120,20 @@
 <script>
 import axios from "axios";
 import Cookies from "js-cookie";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "HeaderVue",
-  data() {
-    return {
-      logoSrc: "/images/logo.png", // Указываем путь к изображению логотипа
-      defaultAvatar: "/images/default-avatar.png", // Путь к аватарке по умолчанию
-      userName: "", // Имя пользователя
-      userAvatar: "", // URL аватарки пользователя
-    };
-  },
+
   methods: {
     isLoggedIn() {
       const authToken = Cookies.get("auth_token");
       return authToken && authToken.length > 0;
     },
-    async logout() {
-      try {
-        const authToken = Cookies.get("auth_token");
-
-        if (!authToken) {
-          console.error("Токен аутентификации не найден");
-          return;
-        }
-
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/v1/auth/logout",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-
-        Cookies.remove("auth_token");
-        this.$router.push("/login");
-      } catch (error) {
-        console.error("Ошибка при выходе из системы", error);
-        // Дополнительная обработка ошибок, если необходимо
-      }
-    },
-    async fetchUserData() {
-      const authToken = Cookies.get("auth_token");
-
-      if (authToken) {
-        try {
-          const response = await axios.get("http://127.0.0.1:8000/api/v1/auth/user", {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          });
-
-          this.userName = response.data.name;
-          this.userAvatar = response.data.avatar;
-        } catch (error) {
-          console.error("Ошибка получения данных пользователя", error);
-        }
-      }
-    },
+    ...mapActions({
+      fetchUserData: "header/fetchUserData",
+      logout: "header/logout"
+    }),
   },
   mounted() {
     if (this.isLoggedIn()) {

@@ -1,63 +1,40 @@
 <template>
-
-    <header-vue></header-vue>
-    <div class="container">
-      <div class="content">
-        <div v-if="posts.length === 0" class="no-posts">
+  <header-vue></header-vue>
+  <div class="container">
+    <div class="content">
+      <!-- <div v-if="$store.state.posts.posts.length === 0" class="no-posts">
           <p>Постов нет</p>
-        </div>
-        <div v-else class="posts-list-wrapper">
-          <posts-list v-bind:posts="posts"></posts-list>
-        </div>
-
-        <PaginationVue
-          :totalPages="totalPages"
-          :currentPage="currentPage"
-          @page-changed="handlePageChanged"
-        ></PaginationVue>
+        </div> -->
+      <div class="posts-list-wrapper">
+        <posts-list v-bind:posts="$store.state.posts.posts"></posts-list>
       </div>
-    </div>
-    <footer-vue></footer-vue>
 
+      <PaginationVue
+          :totalPages="$store.state.posts.totalPages"
+          :currentPage="$store.state.posts.currentPage"
+          @page-changed="
+            $store.commit('posts/handlePostsPageChanged', {
+              pageNumber: $event,
+              dispatch: $store.dispatch,
+            })
+          "
+        ></PaginationVue>
+    </div>
+  </div>
+  <footer-vue></footer-vue>
 </template>
 
 <script>
-import axios from "axios";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
-  data() {
-    return {
-      posts: [],
-      totalPages: 0,
-      currentPage: 1,
-      perPage: 5,
-    };
-  },
   methods: {
-    async fetchPosts(page = 1, perPage = 8) {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/api/v1/posts", {
-          params: {
-            page: page,
-            per_page: perPage,
-          },
-          headers: {
-            Authorization: `Bearer CIFZiME42jOGAdciZfkD6FKuN3XL3Pwx0kOQb9lzf5ac247a`, // Замените на ваш токен авторизации
-          },
-        });
-        console.log("Get response", response.data.posts);
-        this.posts = response.data.posts;
-        this.totalPages = Math.ceil(response.data.total_posts / response.data.per_page);
-        this.currentPage = response.data.current_page;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    handlePageChanged(newPage) {
-      this.currentPage = newPage;
-      this.fetchPosts(newPage, this.perPage);
-    },
+    ...mapActions({
+      fetchPosts: "posts/fetchPosts",
+    }),
+    ...mapMutations({}),
   },
+
   mounted() {
     this.fetchPosts();
   },

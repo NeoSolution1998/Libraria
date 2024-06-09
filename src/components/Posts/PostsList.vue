@@ -71,18 +71,18 @@
 
           <div class="row align-items-center m-3">
             <div class="col-2">
-              <a href="#" @click.prevent="likePost(post)" title="Лайк">
+              <a href="#" title="Лайк">
                 <icon-vue
                   class="w-100 icon-clickable"
-                  :name="this.liked === true ? 'star' : 'star-empty'"
+                  :name=" true ? 'star' : 'star-empty'"
                 ></icon-vue>
               </a>
             </div>
             <div class="col-2">
-              <a href="#" @click.prevent="savePost(post)" title="Сохранить">
+              <a href="#" title="Сохранить">
                 <icon-vue
                   class="w-100 icon-clickable"
-                  :name="this.saved ? 'heart' : 'heart-empty'"
+                  :name=" true ? 'heart' : 'heart-empty'"
                 ></icon-vue>
               </a>
             </div>
@@ -101,12 +101,7 @@
 <script>
 export default {
   name: "PostsList",
-  data() {
-    return {
-      liked: false,
-      saved: false,
-    };
-  },
+
   props: {
     posts: {
       type: Array,
@@ -120,20 +115,6 @@ export default {
         return text.substring(0, length) + "...";
       }
       return text;
-    },
-    likePost(post) {
-      console.log(this.liked);
-      if (this.liked === true) {
-        this.likes = false;
-      }
-      this.liked = true;
-    },
-
-    savePost(post) {
-      if (this.saved === true) {
-        this.saved = false;
-      }
-      this.saved = true;
     },
   },
 };
