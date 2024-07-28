@@ -28,38 +28,43 @@
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
+  computed: {
+    ...mapState({
+      posts: state => state.posts.posts,
+      totalPages: state => state.posts.totalPages,
+      currentPage: state => state.posts.currentPage,
+    }),
+  },
   methods: {
     ...mapActions({
       fetchPosts: "posts/fetchPosts",
+      initializeStateFromURL: "posts/initializeStateFromURL",
     }),
     ...mapMutations({}),
   },
 
   mounted() {
-    this.fetchPosts();
+    this.initializeStateFromURL(); 
   },
 };
 </script>
 
 <style scoped>
-/* Основные стили контейнера */
 .container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Стили для контента */
 .content {
   flex: 1;
 }
 
-/* Стили для постов */
 .posts-list-wrapper {
-  min-height: 300px; /* Установите минимальную высоту по вашему усмотрению */
+  min-height: 300px;
+  margin-bottom: 15px;
 }
 
-/* Стили для поста */
 .post {
   background-color: #ffffff;
   border: 1px solid #dddddd;
@@ -68,7 +73,6 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Стили для сообщения о том, что постов нет */
 .no-posts {
   text-align: center;
   font-size: 18px;
@@ -82,8 +86,7 @@ export default {
   margin-bottom: 20px;
 }
 
-/* Стили для футера */
 footer-vue {
-  margin-top: auto; /* Располагаем футер внизу контейнера */
+  margin-top: auto;
 }
 </style>
