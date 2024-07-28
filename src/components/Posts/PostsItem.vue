@@ -1,32 +1,41 @@
 <template>
-  <li class="post">  
-    <!-- Сюда позже добавить ссылку на пользователя и добавить пользователю аватарку -->              
-    <div class="float-left">
-      <a href="#"
-        ><img
-          src="https://bootdey.com/img/Content/avatar/avatar6.png"
-          alt=""
-          class="img-fluid rounded-circle"
-      /></a>
-    </div>
-    
-    <div class="act-content">
-      <div class="font400">
-        <a href="#" class="font600">{{post.user.name}}</a>
+  <div>
+    <div v-if="post" class="container">
+      <div class="main-body">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="w-100">
+                  <img
+                    src="https://u.9111s.ru/uploads/202301/18/696d4101c5253a70f08f4f0d165b5092.jpg"
+                    class="post-image img-fluid mb-3"
+                    alt="post.title"
+                  />
+                </div>
+
+              </div>
+              <div class="col-md-9">
+                <div>
+                  <icon-vue class="float-right book-save-icon" name="attach" title="Save Post"></icon-vue>
+                  <h1>Название поста: {{ post.title }}</h1>
+                </div>
+                <div class=""><rating-vue class=""></rating-vue></div>
+              </div>
+              <h2>Содержание</h2>
+              <div style="margin: 10px 10px 10px 10px" v-html="post.content"></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <span class="text-small">11 Min Ago</span>
-      <h5>{{post.title}}</h5>
-      <p>
-        {{ post.content}}
-      </p>
-      <img
-        src=""
-        alt=""
-        class="img-fluid img-thumbnail"
-      />
     </div>
-  </li>
+    <div v-else>
+      <p>Загрузка данных книги...</p>
+    </div>
+  </div>
 </template>
+
+
 <script>
 export default {
   name: "PostsItem",
@@ -38,7 +47,7 @@ export default {
   },
   data() {
     return {
-      defaultImageUrl: "/images/books/default2.png", // Замените на путь к вашему статическому изображению
+      defaultImageUrl: "/images/posts/default2.png", // Замените на путь к вашему статическому изображению
     };
   },
   methods: {},
@@ -63,6 +72,9 @@ export default {
   border-radius: 3%;
   margin-bottom: 10px;
   padding: 10px;
+}
+.post-image {
+  border-radius: 2%;
 }
 .activity-list .float-left {
   margin-right: 10px;
