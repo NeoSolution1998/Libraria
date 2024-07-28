@@ -4,6 +4,7 @@ import AboutPage from '@/pages/AboutPage.vue';
 import BooksPage from '@/pages/Books/BooksPage.vue';
 import BookPage from '@/pages/Books/BookPage.vue';
 import PostsPage from '@/pages/Posts/PostsPage.vue';
+import PostPage from '@/pages/Posts/PostPage.vue';
 import LoginPage from '@/pages/Auth/LoginPage.vue';
 import RegistrationPage from '@/pages/Auth/RegistrationPage.vue';
 import ProfilePage from '@/pages/Profile/ProfilePage.vue';
@@ -55,6 +56,11 @@ const routes = [
     path: '/books/:id',
     name: 'Book',
     component: BookPage, 
+  },
+  {
+    path: '/posts/:id',
+    name: 'Post',
+    component: PostPage, 
   },
   {
     path: '/test',
