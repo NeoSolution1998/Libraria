@@ -100,8 +100,7 @@ export default {
             },
           }
         );
-          console.log('ЗарегистрироЫвался', response);
-          const token = response.data.access_token;
+          const token = response.data.success.token;
           Cookies.set("auth_token", token);
           const prevPageUrl = localStorage.getItem("prevPageUrl");
           this.$router.push(prevPageUrl || "/");
