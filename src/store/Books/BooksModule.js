@@ -10,7 +10,9 @@ export const booksModule = {
     currentPage: 1,
     perPage: 6,
     searchQuery: '',
-    selectedCategory: '' 
+    selectedCategory: '',
+    sortByDate: '',
+    sortByName: ''
   }),
 
   getters: {
@@ -21,6 +23,8 @@ export const booksModule = {
     category: state => state.category,
     searchQuery: state => state.searchQuery,
     selectedCategory: state => state.selectedCategory,
+    sortByDate: state => state.sortByDate,
+    sortByName: state => state.sortByName,
   },
 
   mutations: {
@@ -45,6 +49,12 @@ export const booksModule = {
     setSearchQuery(state, query) {
       state.searchQuery = query;
     },
+    setSortByDate(state, order) {
+      state.sortByDate = order;
+    },
+    setSortByName(state, order) {
+      state.sortByName = order;
+    },
   },
 
   actions: {
@@ -52,10 +62,13 @@ export const booksModule = {
       try {
         const authToken = Cookies.get("auth_token") ?? "";
 
+        // Обновление URL с новыми параметрами
         const url = new URL(window.location.href);
         url.searchParams.set('page', page);
         url.searchParams.set('search', state.searchQuery);
         url.searchParams.set('category', state.selectedCategory);
+        url.searchParams.set('sortDate', state.sortByDate);
+        url.searchParams.set('sortName', state.sortByName);
         window.history.pushState({}, '', url);
 
         const response = await axios.get(`${rootState.domain}/api/v1/books`, {
@@ -63,7 +76,9 @@ export const booksModule = {
             page: page,
             per_page: perPage,
             search: state.searchQuery,
-            category: state.selectedCategory 
+            category: state.selectedCategory,
+            sortDate: state.sortByDate,
+            sortName: state.sortByName
           },
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -75,9 +90,10 @@ export const booksModule = {
         commit('setTotalPages', Math.ceil(response.data.meta.total_books / response.data.meta.per_page));
         commit('setCurrentPage', page);
       } catch (e) {
-        console.error(e);
+        console.error('Ошибка при получении данных о книгах:', e);
       }
     },
+
     async getBook({ commit, state, rootState }, bookId) {
       try {
         const authToken = Cookies.get("auth_token") ?? "";
@@ -89,7 +105,31 @@ export const booksModule = {
 
         commit('setBook', response.data);
       } catch (e) {
-        console.error(e);
+        console.error('Ошибка при получении книги:', e);
+      }
+    },
+
+    async createBook({ commit, rootState }, bookData) {
+      try {
+        const authToken = Cookies.get("auth_token") ?? "";
+        const formData = new FormData();
+
+        for (const key in bookData) {
+          if (bookData[key] !== null && bookData[key] !== '') {
+            formData.append(key, bookData[key]);
+          }
+        }
+
+        const response = await axios.post(`${rootState.domain}/api/v1/books`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        commit('setBook', response.data);
+      } catch (e) {
+        console.error('Ошибка при создании книги:', e);
       }
     },
 
@@ -97,13 +137,19 @@ export const booksModule = {
       const url = new URL(window.location.href);
       const page = parseInt(url.searchParams.get('page')) || 1;
       const searchQuery = url.searchParams.get('search') || '';
-      const selectedCategory = url.searchParams.get('category') || ''; 
+      const selectedCategory = url.searchParams.get('category') || '';
+      const sortByDate = url.searchParams.get('sortDate') || '';
+      const sortByName = url.searchParams.get('sortName') || '';
 
       commit('setCurrentPage', page);
       commit('setSearchQuery', searchQuery);
-      commit('setSelectedCategory', selectedCategory); 
+      commit('setSelectedCategory', selectedCategory);
+      commit('setSortByDate', sortByDate);
+      commit('setSortByName', sortByName);
+
       dispatch('fetchBooks', page);
-    }
+    },
   },
+
   namespaced: true
 };

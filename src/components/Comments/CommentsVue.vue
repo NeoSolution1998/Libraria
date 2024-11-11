@@ -1,160 +1,79 @@
 <template>
   <div class="container bg-white pl-4 pr-4 pb-4 pt-3 mb-3">
-    <h6><icon-vue name="chat"></icon-vue> Комментарии 5</h6>
+    <h6><icon-vue name="chat"></icon-vue> Комментарии {{ comments.length }}</h6>
     <hr class="pb-2" />
 
-    <!-- FIRST COMMENT -->
-    <div class="comment mb-5">
-      <div class="row">
-        <div class="col-1">
-          <div class="img-user-icon float-left w-100">
-            <img
-              src="https://bootdey.com/img/Content/avatar/avatar6.png"
-              alt=""
-              class="img-fluid rounded-circle"
-            />
-          </div>
-        </div>
-
-        <div class="col-11">
-          <icon-vue class="float-right" name="dot-3"></icon-vue>
-          <h6 class="m-0">Ruslan</h6>
-          <span class="comment-data text-small">11 Min Ago</span>
-
-          <div class="comment-content float-right mt-3">
-            <div class="font400">
-              <a href="#" class="font600"></a>
-            </div>
-            <p class="w-100">
-              Некоторый заполнитель для компонента сворачивания. Эта панель по умолчанию
-              скрыта, но открывается, когда пользователь активирует соответствующий
-              триггер.
-            </p>
-            <img
-              src="http://localhost:8080/images/books/Kingdom.png"
-              alt=""
-              class="img-fluid img-comment img-thumbnail mb-3"
-            />
-            <div>
-              <icon-vue name="reply"></icon-vue><icon-vue name="heart-empty"></icon-vue>
-            </div>
-            <hr />
-          </div>
-          <!-- ОТВЕТ НА КОММЕНТ 1 -->
-
-          <div class="comment">
-            <div class="row">
-              <div class="col-1">
-                <div class="img-user-icon float-left w-100">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                    alt=""
-                    class="img-fluid rounded-circle"
-                  />
-                </div>
-              </div>
-
-              <div class="col-11">
-                <icon-vue class="float-right" name="dot-3"></icon-vue>
-                <h6 class="m-0">Марина</h6>
-                <span class="comment-data text-small">11 Min Ago</span>
-
-                <div class="comment-content float-right mt-3">
-                  <div class="font400">
-                    <a href="#" class="font600"></a>
-                  </div>
-                  <p>
-                    Некоторый заполнитель для компонента сворачивания. Эта панель по
-                    умолчанию скрыта, но открывается, когда пользователь активирует
-                    соответствующий триггер.
-                  </p>
-                  <div>
-                    <icon-vue name="reply"></icon-vue
-                    ><icon-vue name="heart-empty"></icon-vue>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- ОТВЕТ НА КОММЕНТ 2 -->
-          <div class="comment">
-            <div class="row">
-              <div class="col-1">
-                <div class="img-user-icon float-left w-100">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                    alt=""
-                    class="img-fluid rounded-circle"
-                  />
-                </div>
-              </div>
-
-              <div class="col-11">
-                <icon-vue class="float-right" name="dot-3"></icon-vue>
-                <h6 class="m-0">Мигель</h6>
-                <span class="comment-data text-small">11 Min Ago</span>
-
-                <div class="comment-content float-right mt-3">
-                  <div class="font400">
-                    <a href="#" class="font600"></a>
-                  </div>
-                  <p>
-                    Некоторый заполнитель для компонента сворачивания. Эта панель по
-                    умолчанию скрыта, но открывается, когда пользователь активирует
-                    соответствующий триггер.
-                  </p>
-                  <div>
-                    <icon-vue name="reply"></icon-vue
-                    ><icon-vue name="heart-empty"></icon-vue>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div v-if="comments.length > 0">
+      {{ console.log(comments) }}
+      <comments v-for="comment in comments" :key="comment.id" :comment="comment" @reply="handleReply"></comments>
+    </div>
+    <div v-else>
+      <p>Нет комментариев.</p>
     </div>
 
-    <!-- SECOND -->
-    <div class="comment">
-      <div class="row">
-        <div class="col-1">
-          <div class="img-user-icon float-left w-100">
-            <img
-              src="https://bootdey.com/img/Content/avatar/avatar5.png"
-              alt=""
-              class="img-fluid rounded-circle"
-            />
-          </div>
-        </div>
-
-        <div class="col-11">
-          <icon-vue class="float-right" name="dot-3"></icon-vue>
-          <h6 class="m-0">Ruslan</h6>
-          <span class="comment-data text-small">11 Min Ago</span>
-
-          <div class="comment-content float-right mt-3">
-            <div class="font400">
-              <a href="#" class="font600"></a>
-            </div>
-            <p>
-              Некоторый заполнитель для компонента сворачивания. Эта панель по умолчанию
-              скрыта, но открывается, когда пользователь активирует соответствующий
-              триггер.
-            </p>
-
-            <div>
-              <icon-vue name="reply"></icon-vue><icon-vue name="heart-empty"></icon-vue>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="new-comment mt-3">
+      <textarea v-model="newCommentContent" placeholder="Напишите комментарий..." rows="3" class="form-control"></textarea>
+      <!-- <button @click="submitComment" class="btn btn-outline-dark mb-2 test mt-2">Добавить комментарий</button> -->
+      <button class="btn btn-outline-dark mb-2 test mt-2">Добавить комментарий</button>
     </div>
   </div>
 </template>
+
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "CommentsVue",
+  components: {
+    Comment
+  },
+  props: {
+    commentableType: {
+      type: String,
+      required: true
+    },
+    commentableId: {
+      type: [String, Number],
+      required: true
+    }
+  },
+  data() {
+    return {
+      newCommentContent: '',
+      parentCommentId: null
+    };
+  },
+  computed: {
+    ...mapGetters('comments', {
+      comments: 'comments'
+    })
+  },
+  mounted() {
+    this.fetchComments();
+  },
+  methods: {
+    ...mapActions('comments', {
+      getComment: "getComment",
+      addComment: "addComment"
+    }),
+    fetchComments() {
+      this.getComment({ commentableType: this.commentableType, commentableId: this.commentableId });
+    },
+    submitComment() {
+      if (this.newCommentContent.trim() === '') return;
+      this.addComment({
+        commentableType: this.commentableType,
+        commentableId: this.commentableId,
+        content: this.newCommentContent,
+        parentId: this.parentCommentId
+      });
+      this.newCommentContent = '';
+      this.parentCommentId = null;
+    },
+    handleReply(parentId) {
+      this.parentCommentId = parentId;
+    }
+  }
 };
 </script>
 <style scoped>
@@ -164,14 +83,17 @@ export default {
   margin: 0%;
   padding: 0%;
 }
+
 .img-user-icon {
   max-width: 50px;
   margin-left: 20%;
   padding: 0%;
 }
+
 .container {
   border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Добавление тени */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* Добавление тени */
 }
 
 .post {
@@ -180,6 +102,7 @@ export default {
   margin-bottom: 10px;
   padding: 10px;
 }
+
 .activity-list .float-left {
   margin-right: 10px;
   width: 40px;
@@ -193,6 +116,7 @@ export default {
   line-height: 43px;
   text-align: center;
 }
+
 .activity-list .float-left a {
   display: inline-block;
   color: #999;

@@ -50,8 +50,8 @@ export const postsModule = {
                 const url = new URL(window.location.href);
                 url.searchParams.set('page', page);
                 url.searchParams.set('search', state.searchQuery);
-                url.searchParams.set('sortDate', state.sortByDate);  // Добавлено обновление параметра сортировки по дате в URL
-                url.searchParams.set('sortName', state.sortByName);  // Добавлено обновление параметра сортировки по имени в URL
+                url.searchParams.set('sortDate', state.sortByDate);
+                url.searchParams.set('sortName', state.sortByName);
                 window.history.pushState({}, '', url);
 
                 const response = await axios.get(rootState.domain + "/api/v1/posts", {
@@ -59,8 +59,8 @@ export const postsModule = {
                         page: page,
                         per_page: per_page,
                         search: state.searchQuery,
-                        sortDate: state.sortByDate,  // Передаем параметр сортировки по дате в запрос
-                        sortName: state.sortByName   // Передаем параметр сортировки по имени в запрос
+                        sortDate: state.sortByDate,
+                        sortName: state.sortByName
                     },
                     headers: {
                         Authorization: `Bearer ${authToken}`,

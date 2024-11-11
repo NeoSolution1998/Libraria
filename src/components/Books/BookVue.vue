@@ -21,7 +21,7 @@
               </div>
               <div class="col-md-9">
                 <div>
-                  <icon-vue class="float-right book-save-icon " name="attach" title="Save Book"></icon-vue>
+                  <icon-vue class="float-right book-save-icon" name="attach" title="Save Book"></icon-vue>
                   <h1>{{ book.title }}</h1>
                 </div>
                 
@@ -40,7 +40,7 @@
         </div>
       </div>
 
-      <div class="mt-5">
+      <div class="mt-4">
         <div
           v-for="chapter in book.chapters"
           :key="chapter.id"
@@ -53,7 +53,10 @@
             <p class="card-text"><strong>Длительность:</strong> {{ chapter.duration }}</p>
             <p class="card-text"><strong>Персонажи:</strong> {{ chapter.characters }}</p>
             <p v-if="chapter.images" class="card-text">
-              <strong>Изображения:</strong> {{ chapter.images }}
+              <strong>Изображения:</strong>
+              <div v-for="image in chapter.images" :key="image.id">
+                <img :src="image.url || defaultImageUrl" :alt="'Изображение главы ' + chapter.title" class="chapter-image img-fluid mb-2"/>
+              </div>
             </p>
           </div>
         </div>
@@ -71,6 +74,7 @@ export default {
   data() {
     return {
       defaultCoverImage: "/images/books/Kingdom.png",
+      defaultImageUrl: "/images/books/Kingdom.png"
     };
   },
   props: {
@@ -83,7 +87,6 @@ export default {
 </script>
 
 <style scoped>
-
 .book-save-icon {
   font-size: 30px;
 }
@@ -122,5 +125,11 @@ export default {
 }
 .button-container .btn {
   width: 100%;
+}
+
+.chapter-image {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
 }
 </style>

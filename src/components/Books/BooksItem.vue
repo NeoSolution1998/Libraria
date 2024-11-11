@@ -1,15 +1,19 @@
 <template>
   <div class="card mb-3 shadow-sm">
     <div class="row g-0">
-      <div class="col-md-3">
-        <img :src="book.imageUrl || defaultImageUrl" class="img-fluid rounded-start" :alt="'Обложка книги ' + book.title">
+      <div class="col-md-2 col-12 d-flex justify-content-center align-items-center">
+        {{console.log(book)}}
+        <img v-if="book.images.length > 0" :src="book.images[0].image" class="img-fluid card-img-top"
+          :alt="'Обложка книги ' + book.title" @load="onImageLoad(book.id)" v-show="loadedImages.includes(book.id)" />
+        <img v-else src="https://via.placeholder.com/400x300?text=No+Image" class="img-fluid card-img-top"
+          alt="No Image" />
       </div>
-      <div class="col-md-8">
+      <div class="col-md-10 col-12">
         <div class="card-body">
           <h5 class="card-title">
             <router-link :to="{ name: 'Book', params: { id: book.id } }">{{ book.title }}</router-link>
           </h5>
-          <p class="card-text">Описание: {{ book.description }}</p>
+          <p class="card-text">Описание: {{ book.description.substring(0, 150) + "..." }}</p>
           <p class="card-text"><strong>Автор:</strong> {{ book.author }}</p>
           <p class="card-text"><strong>Дата создания:</strong> {{ formattedDate }}</p>
           <div class="text-end" v-if="false">
@@ -32,15 +36,20 @@ export default {
   },
   data() {
     return {
-
       defaultImageUrl: '/images/books/Kingdom.png', // Замените на путь к вашему статическому изображению
+      loadedImages: []
     };
   },
   methods: {
     removeBook() {
-      console.log('bookItem');
       this.$emit("remove-book", this.book.id);
     },
+
+    onImageLoad(bookId) {
+      if (!this.loadedImages.includes(bookId)) {
+        this.loadedImages.push(bookId);
+      }
+    }
   },
   computed: {
     formattedDate() {
@@ -51,9 +60,6 @@ export default {
         day: "numeric",
       });
     },
-  },
-  mounted() {
-    /* console.log("Данные компонента:", this.book); */
   },
 };
 </script>
@@ -72,6 +78,12 @@ export default {
   font-family: "Arial", sans-serif;
 }
 
+.card-img-top {
+  width: 100%;
+  height: auto;
+  border-radius: 10px 0px 0px 10px;
+}
+
 .btn {
   font-family: "Arial", sans-serif;
 }
@@ -85,7 +97,38 @@ export default {
   height: 100%;
   width: 100%;
   max-width: 200px;
-  max-height: 300px;/* Устанавливаем максимальную высоту для обложки */
-  padding: 10px;
+  max-height: 300px;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .img-fluid {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .card-img-top {
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+  }
+
+  /* Center image in mobile view */
+  .col-12.d-flex {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+  }
 }
 </style>

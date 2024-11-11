@@ -1,10 +1,13 @@
 <template>
   <header-vue></header-vue>
-
-  <div><profile-vue :user="user"></profile-vue></div>
-
+  <div class="container">
+    <div>
+      <profile-vue :user="user"></profile-vue>
+    </div>
+  </div>
   <footer-vue></footer-vue>
 </template>
+
 <script>
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -12,21 +15,20 @@ import axios from "axios";
 export default {
   data() {
     return {
-      user: {}
-    }
+      user: []
+    };
   },
   methods: {
     async getUser() {
       try {
         const authToken = Cookies.get("auth_token") ?? "";
-        const response = await axios.get("http://127.0.0.1:8000/api/v1/auth/user" , {
-          params: {},
+        const response = await axios.get("http://127.0.0.1:8000/api/v1/user/getUserWithToken", {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
         console.log("USER", response.data);
-        this.user = response.data
+        this.user = response.data;
       } catch (e) {
         console.error(e);
       }
@@ -37,4 +39,3 @@ export default {
   },
 };
 </script>
-<style scoped></style>
