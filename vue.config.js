@@ -10,15 +10,15 @@ module.exports = defineConfig({
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-   /*  host: '0.0.0.0',
+    host: '0.0.0.0',
     port: 8080,
     client: {
       webSocketURL: {
         protocol: 'wss', // Использовать WSS протокол
-        hostname: 'your-ngrok-domain.ngrok.io', // Ваш ngrok домен
+        hostname: 'waste-street-opportunities-closes.trycloudflare.com', // Ваш ngrok домен
         port: '443', // Порт HTTPS
         pathname: '/ws',
       },
-    }, */
+    }, 
   },
 });

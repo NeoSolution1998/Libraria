@@ -7,6 +7,7 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="w-100">
+                  {{ console.log(post) }}
                   <img
                     src="https://u.9111s.ru/uploads/202301/18/696d4101c5253a70f08f4f0d165b5092.jpg"
                     class="post-image img-fluid mb-3"

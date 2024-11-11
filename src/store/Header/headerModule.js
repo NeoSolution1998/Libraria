@@ -23,10 +23,10 @@ export const headerModule = {
   actions: {
     async fetchUserData({ commit, state, rootState }) {
         const authToken = Cookies.get("auth_token");
-        console.log('dfdfdfd');
+
         if (authToken) {
           try {
-            const response = await axios.get(rootState.domain + "/api/v1/auth/user", {
+            const response = await axios.get(rootState.domain + "/api/v1/user/getUserWithToken", {
               headers: {
                 Authorization: `Bearer ${authToken}`,
               },

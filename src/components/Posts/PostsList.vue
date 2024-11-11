@@ -1,7 +1,17 @@
 <template>
   <div class="container-fluid">
+    <!-- Кнопки для открытия фильтров, поиска и боковой панели на мобильных устройствах -->
+    <div class="d-md-none mb-3">
+      <button class="btn btn-outline-dark mr-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterSearchBar" aria-expanded="false" aria-controls="filterSearchBar">
+        Фильтры и поиск
+      </button>
+      <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-expanded="false" aria-controls="sidebar">
+        Категории
+      </button>
+    </div>
+
     <!-- Фильтры и поиск -->
-    <div class="filter-search-bar bg-light p-3 mb-4 rounded shadow-sm">
+    <div id="filterSearchBar" class="filter-search-bar bg-light p-3 mb-4 rounded shadow-sm collapse d-md-block">
       <div class="row align-items-center">
         <div class="col-md-6">
           <input
@@ -37,7 +47,7 @@
 
     <div class="row">
       <!-- Боковая панель -->
-      <div class="col-lg-3">
+      <div id="sidebar" class="col-lg-3 collapse d-lg-block">
         <div class="sidebar bg-light p-3 rounded shadow-sm mb-4">
           <h5 class="sidebar-title">Посты для книг</h5>
           <select class="form-select mb-3">
@@ -51,6 +61,9 @@
             <li class="list-group-item">Романы</li>
           </ul>
         </div>
+        <div class="sidebar bg-light p-3 rounded shadow-sm mb-4">
+          <div>Хотите прокомментировать книгу? Перейдите на вот эту <router-link :to="{ name: 'PostCreate' }">страницу</router-link> и добавьте пост.</div>
+        </div>
       </div>
 
       <!-- Лента постов -->
@@ -61,7 +74,21 @@
           </div>
           <div class="post-card" v-for="post in posts" :key="post.id">
             <div class="card h-100 shadow-sm">
-              <img src="https://u.9111s.ru/uploads/202301/18/696d4101c5253a70f08f4f0d165b5092.jpg" class="card-img-top card-image" alt="Book Cover" />
+              <!-- Изображение с проверкой загрузки -->
+              <img
+                v-if="post.images.length > 0"
+                :src="post.images[0].image"
+                class="card-img-top card-image"
+                alt="Book Cover"
+                @load="onImageLoad(post.id)"
+                v-show="loadedImages.includes(post.id)"
+              />
+              <img
+                v-else
+                src="https://via.placeholder.com/400x200?text=No+Image"
+                class="card-img-top card-image"
+                alt="No Image"
+              />
               <div class="card-body">
                 <h5 class="card-title"><router-link :to="{ name: 'Post', params: { id: post.id } }">{{ truncateText(post.title, 21) }}</router-link></h5>
                 <p class="card-author text-muted"><strong>Автор поста:</strong> {{ truncateText(post.user.name, 20) }}</p>
@@ -102,7 +129,10 @@ export default {
 
   data() {
     return {
-      localSearchQuery: ''
+      localSearchQuery: '',
+      loadedImages: [], // Массив для хранения ID постов с загруженными изображениями
+      showSearch: false, // Переменная для управления видимостью панели поиска на мобильных устройствах
+      showFilters: false // Переменная для управления видимостью фильтров на мобильных устройствах
     };
   },
   computed: {
@@ -145,6 +175,17 @@ export default {
     sortPostsByName(order) {
       this.setSortByName(order);
       this.fetchPosts();
+    },
+    onImageLoad(postId) {
+      if (!this.loadedImages.includes(postId)) {
+        this.loadedImages.push(postId);
+      }
+    },
+    toggleSearch() {
+      this.showSearch = !this.showSearch;
+    },
+    toggleFilters() {
+      this.showFilters = !this.showFilters;
     }
   },
 };
@@ -248,5 +289,39 @@ export default {
 .list-group-item {
   font-size: 1rem;
   margin-bottom: 5px;
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+  .filter-search-bar {
+    padding: 10px;
+  }
+
+  .filter-search-bar .row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .btn-group {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .sidebar {
+    padding: 15px;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-author,
+  .card-content {
+    font-size: 0.875rem;
+  }
 }
 </style>

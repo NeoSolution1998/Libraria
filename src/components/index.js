@@ -26,6 +26,7 @@ import ProfileVue from "@/components/Profile/ProfileVue.vue";
 import SettingsVue from "@/components/Profile/SettingsVue.vue";
 
 import CommentsVue from "@/components/Comments/CommentsVue.vue";
+import Comments from "@/components/Comments/Comments.vue";
 
 import AuthVue from "@/components/Auth/AuthVue.vue";
 import LoginVue from "@/components/Auth/LoginVue.vue";
@@ -60,6 +61,7 @@ export default [
     BookVue,
     SubscriptionVue,
     CommentsVue,
+    Comments,
     IconVue,
     FontelloIcons,
     PopularPosts,
