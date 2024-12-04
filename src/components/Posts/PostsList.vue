@@ -76,7 +76,7 @@
             <div class="card h-100 shadow-sm">
               <!-- Изображение с проверкой загрузки -->
               <img
-                v-if="post.images.length > 0"
+                v-if="post.images && post.images.length > 0"
                 :src="post.images[0].image"
                 class="card-img-top card-image"
                 alt="Book Cover"

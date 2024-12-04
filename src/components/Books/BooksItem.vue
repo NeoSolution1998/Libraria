@@ -3,7 +3,7 @@
     <div class="row g-0">
       <div class="col-md-2 col-12 d-flex justify-content-center align-items-center">
         {{console.log(book)}}
-        <img v-if="book.images.length > 0" :src="book.images[0].image" class="img-fluid card-img-top"
+        <img v-if="book.images && book.images.length > 0" :src="book.images[0].image" class="img-fluid card-img-top"
           :alt="'Обложка книги ' + book.title" @load="onImageLoad(book.id)" v-show="loadedImages.includes(book.id)" />
         <img v-else src="https://via.placeholder.com/400x300?text=No+Image" class="img-fluid card-img-top"
           alt="No Image" />
