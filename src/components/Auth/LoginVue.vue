@@ -70,7 +70,7 @@ export default {
 
         console.log("Авторизация успешна", response.data);
 
-        const token = response.data.success.token;
+        const token = response.data.token;
         console.log(token);
         Cookies.set("auth_token", token);
 
