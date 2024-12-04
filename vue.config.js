@@ -3,22 +3,22 @@ const { defineConfig } = require('@vue/cli-service');
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {
-    devtool: 'source-map',
+    devtool: 'source-map', // Для удобной отладки
   },
   devServer: {
-    allowedHosts: 'all',
+    allowedHosts: 'all', // Разрешить доступ с любых хостов
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': '*', // Разрешить кросс-доменные запросы (если нужно)
     },
-    host: '0.0.0.0',
-    port: 8080,
+    host: 'localhost', // Хост для работы на локальной машине
+    port: 8080, // Порт разработки
+    hot: true, // Включаем HMR (по умолчанию включено)
     client: {
       webSocketURL: {
-        protocol: 'wss', // Использовать WSS протокол
-        hostname: 'waste-street-opportunities-closes.trycloudflare.com', // Ваш ngrok домен
-        port: '443', // Порт HTTPS
-        pathname: '/ws',
+        protocol: 'ws', // Используем WebSocket без SSL
+        hostname: 'localhost', // Указываем локальный хост
+        port: 8080, // Порт разработки
       },
-    }, 
+    },
   },
 });
