@@ -42,14 +42,15 @@
 
     <div class="row flex-column-reverse flex-lg-row">
       <main class="col-lg-9 col-12">
-        <div v-if="$store.state.books.books.length === 0" class="no-books">
+        <div v-if="!books" class="no-books">
           <p>Книги не найдены</p>
         </div>
         <div v-else>
-          <books-list v-bind:books="$store.state.books.books" class="pad-left"></books-list>
+          <books-list :books="books" class="pad-left"></books-list>
         </div>
-        <PaginationVue :totalPages="$store.state.books.totalPages" :currentPage="$store.state.books.currentPage" @page-changed="onPageChange"></PaginationVue>
+        <PaginationVue :totalPages="totalPages" :currentPage="currentPage" @page-changed="onPageChange"></PaginationVue>
       </main>
+
 
       <!-- Боковая панель -->
       <aside id="sidebar" class="col-lg-3 col-12 collapse d-lg-block">
@@ -93,6 +94,9 @@ export default {
       searchQuery: state => state.books.searchQuery,
       category: state => state.books.category,
       selectedCategory: state => state.books.selectedCategory,
+      books: state => state.books.books,
+      totalPages: state => state.books.totalPages,
+      currentPage: state => state.books.currentPage
     }),
   },
   watch: {
