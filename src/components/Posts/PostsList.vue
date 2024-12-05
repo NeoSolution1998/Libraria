@@ -85,7 +85,7 @@
               />
               <img
                 v-else
-                src="https://via.placeholder.com/400x200?text=No+Image"
+                src="/images/default_books.jpg"
                 class="card-img-top card-image"
                 alt="No Image"
               />
