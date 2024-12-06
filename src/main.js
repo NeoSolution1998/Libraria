@@ -7,6 +7,8 @@ import components from "@/components";
 import router from './router/router';
 import './assets/css/fontello.css';
 import store from './store';
+import './assets/css/main.css';
+import './assets/css/fonts.css';
 
 const app = createApp(App);
 

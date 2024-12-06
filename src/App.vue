@@ -14,6 +14,7 @@ export default {
 .container-fluid {
   padding: 0px;
  background-color: rgb(232, 229, 229);
+ 
   
 }
 </style>
