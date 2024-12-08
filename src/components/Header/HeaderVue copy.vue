@@ -3,6 +3,7 @@
     <!-- НАВИГАЦИЯ -->
 
     <div v-if="!isMobile" class="header-nav">
+
       <router-link to="/" class="logo">
         <i class="fas fa-book-reader"></i>
       </router-link>
@@ -82,7 +83,7 @@ import Cookies from "js-cookie";
 import { mapActions } from "vuex";
 
 export default {
-  name: "HeaderVue",
+
   data() {
     return {
       user: {},

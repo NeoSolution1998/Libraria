@@ -7,7 +7,8 @@ import SearchVue from "@/components/UI/SearchVue.vue";
 import SortVue from "@/components/UI/SortVue.vue";
 import RatingVue from '@/components/UI/RatingVue.vue';
 
-import HeaderVue from "@/components/HeaderVue.vue";
+import HeaderVue from "@/components/Header/HeaderVue.vue";
+
 import FooterVue from "@/components/FooterVue.vue";
 import SubscriptionVue from "@/components/SubscriptionVue.vue";
 
