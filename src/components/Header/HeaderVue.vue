@@ -4,8 +4,7 @@
     <NavMenu v-if="!isMobile" />
     <NavMenuBurger v-else :isMobileMenuOpen="isMobileMenuOpen" @toggleMenu="toggleMobileMenu" />
 
-    <!-- Поиск и авторизация --> 
-    
+    <!-- Поиск и авторизация -->
     <div class="header-auth">
       <SearchBar />
       <AuthButtons :isLoggedIn="isLoggedIn()" :user="user" @logout="logout" />
@@ -33,7 +32,7 @@ export default {
     return {
       user: {},
       isMobile: false,
-      isMobileMenuOpen: false,
+      isMobileMenuOpen: false, // Управляет состоянием меню
     };
   },
   created() {
@@ -48,7 +47,11 @@ export default {
       this.isMobile = window.innerWidth <= 640;
     },
     toggleMobileMenu() {
+      console.log("Меню переключено!");
       this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    },
+    closeMobileMenu() {
+      this.isMobileMenuOpen = false;
     },
     isLoggedIn() {
       const authToken = Cookies.get("auth_token");
@@ -60,6 +63,9 @@ export default {
   },
 };
 </script>
+
+
+
 
 <style scoped>
 .header-container {
@@ -73,11 +79,17 @@ export default {
   margin: auto;
   padding-left: 40px;
   padding-right: 40px;
+  position: sticky;
+  z-index: 1000;
+  top: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-.header-auth{
+
+.header-auth {
   display: flex;
   gap: 20px;
 }
+
 @media (max-width: 1024px) {
   .header-container {
     max-width: 1024px;
@@ -86,16 +98,26 @@ export default {
     padding-right: 30px;
   }
 }
-.header-auth{
+
+.header-auth {
   gap: 10px;
 }
+
 @media (max-width: 640px) {
   .header-container {
     max-width: 640px;
-    height: 70px;
+    height: 60px;
     padding-left: 10px;
     padding-right: 10px;
   }
 }
 
+@media (max-width: 440px) {
+  .header-container {
+    max-width: 640px;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
 </style>

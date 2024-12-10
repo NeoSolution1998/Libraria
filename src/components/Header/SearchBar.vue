@@ -1,9 +1,8 @@
 <template>
   <div 
     class="header-search" 
-    :class="{ 'input-active': isActive }" 
-    @mouseover="handleMouseOver"
-    @mouseleave="handleMouseLeave"
+    :class="{ 'input-active': isActive }"
+    @click="handleClick"
   >
     <input
       ref="searchInput"
@@ -38,15 +37,10 @@ export default {
         this.isActive = false;
       }
     },
-    handleMouseOver() {
-      // Автоматически фокусируем поле при наведении
+    handleClick() {
+      // При клике активируем поле и фокусируем его
+      this.isActive = true;
       this.$refs.searchInput.focus();
-    },
-    handleMouseLeave() {
-      // При выходе мыши снимаем фокус, если текста нет
-      if (this.searchText.trim() === "") {
-        this.isActive = false;
-      }
     },
   },
 };
@@ -72,13 +66,14 @@ export default {
   text-decoration: none;
   position: relative;
   z-index: 1;
+  transition: transform 0.2s ease; /* Добавляем плавность увеличения */
 }
 
 .search-input {
   border: none;
   background: var(--dark-muted);
-  outline: none;
   color: var(--bisque);
+  outline: none;
   font-size: 16px;
   line-height: 30px;
   padding: 0 10px;
@@ -91,22 +86,63 @@ export default {
   z-index: 0; /* Поле будет за кнопкой */
 }
 
-.header-search:hover > .search-input,
+.icon-search {
+  font-size: 20px;
+  color: var(--bisque);
+}
+
 .header-search.input-active > .search-input {
   width: 240px; /* Расширяем поле ввода */
   padding-left: 10px;
 }
 
-.header-search:hover > .search-btn,
 .header-search.input-active > .search-btn {
   background: var(--dark-muted);
 }
 
 @media (max-width: 640px) {
-  .header-search:hover > .search-input,
-.header-search.input-active > .search-input {
-  width: 180px; /* Расширяем поле ввода */
-  padding-left: 10px;
+  .icon-search{
+    font-size: 14px;
+  }
+  .search-input {
+    height: 35px;
+    width: 35px;
+    font-size: 14px;
+  }
+  .search-btn {
+    width: 35px;
+    height: 35px;
+  }
+  .header-search.input-active > .search-input {
+    width: 180px; /* Уменьшенное расширение на мобильных */
+    padding-left: 10px;
+  }
+
 }
+
+@media (max-width: 440px) {
+  .icon-search{
+    font-size: 14px;
+  }
+  .search-input {
+    height: 32px;
+    width: 32px;
+    font-size: 14px;
+  }
+  .search-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .header-search.input-active > .search-input {
+    width: 150px; /* Уменьшенное расширение на мобильных */
+    padding-left: 10px;
+  }
+}
+@media (max-width: 320px){
+  .header-search.input-active > .search-input {
+    width: 140px; /* Уменьшенное расширение на мобильных */
+    padding-left: 10px;
+  }
 }
 </style>
+

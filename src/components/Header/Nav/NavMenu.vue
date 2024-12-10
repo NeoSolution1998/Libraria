@@ -1,7 +1,7 @@
 <template>
   <div class="header-nav">
     <router-link to="/" class="logo">
-      <img src="/images/logo.svg" alt="Logo">
+      <img src="/images/2 1.png" alt="Logo">
     </router-link>
     <router-link to="/books" class="nav-link" active-class="active">Книги</router-link>
     <router-link to="/posts" class="nav-link" active-class="active">Посты</router-link>
@@ -22,6 +22,9 @@ export default {
   align-items: center;
   background-color: var(--dark);
 }
+.logo img {
+  filter: hue-rotate(90deg) brightness(1.2) contrast(1.5);
+}
 
 .logo {
   margin-right: 20px;
@@ -30,18 +33,25 @@ export default {
 }
 
 .logo img {
-  height: 60px; 
+  height: 60px;
   max-height: 100%;
-  object-fit: contain; /* Поддерживаем пропорции */
-  transition: transform 0.3s ease; /* Добавляем анимацию */
+  object-fit: contain;
+  /* Поддерживаем пропорции */
+  transition: transform 0.3s ease;
+  /* Добавляем анимацию */
 }
-
+.img {
+   color: #033030;
+   background:#525e75;
+   background-color: #525e75;
+}
 .logo img:hover {
-  transform: scale(1.1); /* Легкое увеличение при наведении */
+  transform: scale(1.1);
+  /* Легкое увеличение при наведении */
 }
 
 .nav-link {
-  color: white;
+  color: var(--bisque);
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -69,7 +79,7 @@ export default {
   }
 
   .logo img {
-    height: 50px; 
+    height: 50px;
   }
 
   .nav-link {
@@ -81,7 +91,7 @@ export default {
 
 @media (max-width: 640px) {
   .logo img {
-    height: 30px; 
+    height: 30px;
   }
 
   .nav-link {
