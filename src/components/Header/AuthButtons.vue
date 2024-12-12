@@ -56,15 +56,15 @@ export default {
 }
 
 .register-button {
-  background-color: #d6b211;
-  color: #000000;
+  background-color: var(--bisque);
+  color:var(--dark);
   border: none;
   font-size: 20px;
   font-family: "Rubik-Medium";
 }
 
 .register-button:hover {
-  background-color: var(--bisque);
+  background-color:  var(--bisque-hover)
 
 }
 

@@ -9,7 +9,7 @@ import { headerModule } from "./Header/headerModule";
 
 export default createStore({
     state: {
-        domain: "http://45.131.40.15"
+        domain: process.env.VUE_APP_API_URL,
     },
     modules: {
         posts: postsModule,
