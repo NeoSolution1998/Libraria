@@ -9,7 +9,7 @@ import { headerModule } from "./Header/headerModule";
 
 export default createStore({
     state: {
-        domain: "http://127.0.0.1:8000"
+        domain: "http://45.131.40.15"
     },
     modules: {
         posts: postsModule,
