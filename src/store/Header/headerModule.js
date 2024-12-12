@@ -26,7 +26,7 @@ export const headerModule = {
 
         if (authToken) {
           try {
-            const response = await axios.get(rootState.domain + "/api/v1/user/getUserWithToken", {
+            const response = await axios.get(rootState.domain + "/api/v1/auth/user", {
               headers: {
                 Authorization: `Bearer ${authToken}`,
               },
