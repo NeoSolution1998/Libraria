@@ -13,10 +13,8 @@
     <ul v-if="isDropdownOpen" class="header-dropdown-menu">
       <li><router-link to="/profile" class="header-dropdown-item">Открыть профиль</router-link></li>
       <li><router-link to="/settings" class="header-dropdown-item">Настройки</router-link></li>
-      <li>
-        <hr class="header-dropdown-divider" />
-      </li>
-      <li><button class="header-dropdown-item" @click="$emit('logout')">Выход</button></li>
+      <hr class="header-dropdown-divider" />
+      <li class="header-dropdown-item" @click="$emit('logout')">Выход</li>
     </ul>
   </div>
 </template>
@@ -76,33 +74,49 @@ export default {
 
 .header-dropdown-menu {
   position: absolute;
-  right: 0;
-  top: 100%;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  right: -50%;
+  top: 140%;
+  width: 200px;
+  background-color: var(--dark);
+  border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 0;
+  padding: 10px 0;
   list-style: none;
   display: block;
+  padding: 4px;
+  margin: 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .header-dropdown-item {
-  padding: 0.5rem 1rem;
+  height: 30px;
+  padding: 5px 5px;
+  border-radius: 8px;
+  font-family: 'Rubik-Medium';
   text-decoration: none;
-  color: #525e75;
+  color: var(--bisque);
   cursor: pointer;
 }
 
+.header-dropdown-menu li {
+  margin: 5px 0;
+}
+
+.header-dropdown-menu li:hover {
+  background-color: var(--bisque);
+  border-radius: 5px;
+}
+
 .header-dropdown-item:hover {
-  background-color: #f1ddbf;
-  color: #26292e;
+  color: var(--dark-muted);
 }
 
 .header-dropdown-divider {
-  margin: 0.5rem 0;
+  margin: 0;
   border: 0;
-  height: 1px;
+  height: 2px;
   background-color: #ccc;
 }
 
@@ -111,6 +125,15 @@ export default {
     width: 60px;
     height: 60px;
   }
+
+  .header-dropdown-menu {
+    right: -40%;
+    top: 125%;
+    width: 200px;
+    padding: 10px 0;
+    padding: 4px;
+    margin: 0%;
+  }
 }
 
 @media (max-width: 640px) {
@@ -118,27 +141,66 @@ export default {
     width: 45px;
     height: 45px;
   }
+
   .header-dropdown {
-  height: 45px;
-  width: 45px;
+    height: 45px;
+    width: 45px;
+  }
+
+  .header-dropdown-menu {
+    right: -10%;
+    top: 125%;
+    width: 150px;
+    padding: 10px 0;
+    padding: 4px;
+    margin: 0%;
+  }
+
+  .header-dropdown-item {
+    height: 30px;
+    padding: 5px 5px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .header-dropdown-menu li {
+    margin: 5px 0;
+  }
+
+  .user-menu-button {
+    height: 45px;
+  }
 }
 
-.user-menu-button {
-  height: 45px;
-}
-}
 @media (max-width: 440px) {
   .header-dropdown-avatar {
     width: 40px;
     height: 40px;
   }
-  .header-dropdown {
-  height: 40px;
-  width: 40px;
-}
 
-.user-menu-button {
-  height: 40px;
-}
+  .header-dropdown {
+    height: 40px;
+    width: 40px;
+  }
+
+  .header-dropdown-menu {
+    right: -15%;
+    top: 120%;
+    width: 130px;
+    padding: 10px 0;
+    padding: 4px;
+    margin: 0%;
+  }
+
+  .header-dropdown-item {
+    height: 30px;
+    padding: 5px 5px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
+
+  .user-menu-button {
+    height: 40px;
+  }
 }
 </style>

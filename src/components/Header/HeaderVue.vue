@@ -47,7 +47,6 @@ export default {
       this.isMobile = window.innerWidth <= 640;
     },
     toggleMobileMenu() {
-      console.log("Меню переключено!");
       this.isMobileMenuOpen = !this.isMobileMenuOpen;
     },
     closeMobileMenu() {

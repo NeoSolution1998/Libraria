@@ -1,7 +1,7 @@
 <template>
   <div class="header-nav">
     <router-link to="/" class="logo">
-      <img src="/images/2 1.png" alt="Logo">
+      <img src="/images/logo.svg" alt="Logo">
     </router-link>
     <router-link to="/books" class="nav-link" active-class="active">Книги</router-link>
     <router-link to="/posts" class="nav-link" active-class="active">Посты</router-link>
@@ -33,18 +33,14 @@ export default {
 }
 
 .logo img {
-  height: 60px;
+  height: 40px;
   max-height: 100%;
   object-fit: contain;
   /* Поддерживаем пропорции */
   transition: transform 0.3s ease;
   /* Добавляем анимацию */
 }
-.img {
-   color: #033030;
-   background:#525e75;
-   background-color: #525e75;
-}
+
 .logo img:hover {
   transform: scale(1.1);
   /* Легкое увеличение при наведении */
@@ -79,7 +75,7 @@ export default {
   }
 
   .logo img {
-    height: 50px;
+    height: 40px;
   }
 
   .nav-link {

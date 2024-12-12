@@ -15,6 +15,9 @@
         <!-- Ссылки -->
         <div class="menu-list-pages">
             <div class="menu-list-page">
+                <router-link to="/" @click="$emit('toggleMenu')">
+                    <p>Главная</p>
+                </router-link>
                 <router-link to="/books" @click="$emit('toggleMenu')">
                     <p>Книги</p>
                 </router-link>
@@ -29,7 +32,7 @@
 
         <!-- Кнопка закрытия меню -->
         <div class="menu-list-button" @click="$emit('toggleMenu')">
-            <a>Меню</a>
+            <a>Закрыть</a>
         </div>
     </div>
 </template>
