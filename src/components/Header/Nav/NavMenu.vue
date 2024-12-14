@@ -22,10 +22,6 @@ export default {
   align-items: center;
   background-color: var(--dark);
 }
-.logo img {
-  filter: hue-rotate(90deg) brightness(1.2) contrast(1.5);
-}
-
 .logo {
   margin-right: 20px;
   display: flex;

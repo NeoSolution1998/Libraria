@@ -1,4 +1,4 @@
-import ButtonVue from "@/components/UI/ButtonVue.vue";
+import ButtonVue from "@/components/UI/Buttons/ButtonVue.vue";
 import InputVue from "@/components/UI/InputVue.vue";
 import DialogVue from "@/components/UI/DialogVue.vue";
 import PaginationVue from "@/components/UI/PaginationVue.vue";
@@ -7,9 +7,15 @@ import SearchVue from "@/components/UI/SearchVue.vue";
 import SortVue from "@/components/UI/SortVue.vue";
 import RatingVue from '@/components/UI/RatingVue.vue';
 
-import HeaderVue from "@/components/Header/HeaderVue.vue";
 
+/*HOME PAGE COMPONENTS */
+import WelcomeSection from '@/components/Home/WelcomeSection.vue';
+import HowWorksSection from '@/components/Home/HowWorksSection.vue';
+/* HEADER AND FOOTER */
+import HeaderVue from "@/components/Header/HeaderVue.vue";
 import FooterVue from "@/components/FooterVue.vue";
+/*  */
+
 import SubscriptionVue from "@/components/SubscriptionVue.vue";
 
 import BooksList from "@/components/Books/BooksList.vue";
@@ -67,5 +73,7 @@ export default [
     FontelloIcons,
     PopularPosts,
     RatingVue,
-    PopularBookSeries
+    PopularBookSeries,
+    WelcomeSection,
+    HowWorksSection,
 ]

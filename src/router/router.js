@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import MainPage from '@/pages/MainPage.vue';
+import HomePage from '@/pages/Home/HomePage.vue';
 import AboutPage from '@/pages/AboutPage.vue';
 import BooksPage from '@/pages/Books/BooksPage.vue';
 import BookPage from '@/pages/Books/BookPage.vue';
@@ -18,7 +18,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: MainPage, 
+    component: HomePage, 
   },
   {
     path: '/posts',
