@@ -5,6 +5,12 @@
         <h3>Добро пожаловать!</h3>
         <p>Войдите, чтобы продолжить.</p>
       </div>
+
+      <!-- Отображение ошибки -->
+      <div v-if="errorMessage" class="auth-error">
+        {{ errorMessage }}
+      </div>
+
       <form @submit.prevent="loginUser">
         <div class="input-group">
           <input v-model="userData.email" class="auth-input" type="email" placeholder="E-mail" required />
@@ -41,8 +47,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import Cookies from "js-cookie";
+import { mapActions } from "vuex";
 
 export default {
   name: "LoginVue",
@@ -53,29 +58,21 @@ export default {
         email: "",
         password: "",
       },
+      errorMessage: "", // Для хранения сообщения об ошибке
+      rememberMe: false,
     };
   },
   methods: {
+    ...mapActions("auth", ["login"]),
+
     async loginUser() {
+      this.errorMessage = ""; // Сбрасываем сообщение об ошибке перед попыткой входа
       try {
-        const apiUrl = `${process.env.VUE_APP_API_URL}/api/v1/auth/login`;
-        const response = await axios.post(apiUrl, {
-          email: this.userData.email,
-          password: this.userData.password,
-        });
-        console.log("API URL:", process.env.VUE_APP_API_URL);
-
-        console.log("Авторизация успешна", response.data);
-
-        const token = response.data.token;
-        console.log(token);
-        Cookies.set("auth_token", token);
-
-        const prevPageUrl = localStorage.getItem("prevPageUrl");
-        this.$router.push(prevPageUrl || "/");
+        await this.login(this.userData);
+        console.log("Успешный вход в систему");
       } catch (error) {
-        console.error("Ошибка аутентификации", error.response.data);
-        // Дополнительная обработка ошибки, например, вывод сообщения пользователю
+        console.error("Ошибка входа", error.response?.data);
+        this.errorMessage = error.response?.data?.message || "Произошла ошибка. Попробуйте еще раз.";
       }
     },
   },
@@ -83,7 +80,6 @@ export default {
 </script>
 
 <style scoped>
-
 .auth-container {
   display: flex;
   justify-content: center;
@@ -135,7 +131,7 @@ export default {
   top: 50%;
   right: 15px;
   transform: translateY(-50%);
-  color: #bbb;
+  color: var(--dark);
 }
 
 .auth-options {
@@ -146,16 +142,18 @@ export default {
   color: var(--light-hover);
   margin-bottom: 20px;
 }
+
 .auth-options div {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.auth-options div label{
+.auth-options div label {
   margin: 0%;
   padding-left: 5px;
 }
+
 .auth-options a {
   color: var(--bisque);
   text-decoration: none;
@@ -196,5 +194,12 @@ export default {
 
 .auth-footer a:hover {
   text-decoration: underline;
+}
+
+.auth-error {
+  color: #d9534f;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 </style>

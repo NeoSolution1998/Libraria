@@ -29,7 +29,8 @@
               <label for="invalidCheck" class="auth-checkbox-label">
                 Даю согласие на обработку данных
               </label>
-              <div v-if="errors.consent" class="auth-error">{{ errors.consent }}</div>
+              <!-- Ошибка теперь выводится под флажком -->
+              <div v-if="errors.consent" class="auth-error consent-error">{{ errors.consent }}</div>
             </div>
 
             <div class="auth-button-container">
@@ -43,9 +44,9 @@
 </template>
 
 
+
 <script>
-import axios from "axios";
-import Cookies from "js-cookie";
+import { mapActions } from "vuex";
 
 export default {
   name: "RegistrationVue",
@@ -61,6 +62,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions("auth", ["register"]),
+
     validateForm() {
       this.errors = {}; // Сброс ошибок
 
@@ -74,8 +77,8 @@ export default {
       }
       if (!this.userData.password.trim()) {
         this.errors.password = "Password field cannot be blank!";
-      } else if (this.userData.password.length < 6) {
-        this.errors.password = "Пароль должен содержать не менее 6 символов!";
+      } else if (this.userData.password.length < 3) {
+        this.errors.password = "Пароль должен содержать не менее 3 символов!";
       }
       if (!this.consent) {
         this.errors.consent = "Вы должны согласиться на обработку данных!";
@@ -84,31 +87,26 @@ export default {
       // Возвращает true, если ошибок нет
       return Object.keys(this.errors).length === 0;
     },
+
     async registerUser() {
       if (!this.validateForm()) {
         return; // Прерываем отправку, если есть ошибки
       }
 
       try {
-        const response = await axios.post(
-          "http://45.131.40.15/api/v1/auth/register",
-          this.userData,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        const token = response.data.success.token;
-        Cookies.set("auth_token", token);
-        const prevPageUrl = localStorage.getItem("prevPageUrl");
-        this.$router.push(prevPageUrl || "/");
+        await this.register(this.userData); // Вызываем Vuex экшен
+        this.$router.push("/books"); // Перенаправляем пользователя
       } catch (error) {
-        console.error("Ошибка регистрации", error.response?.data);
-        if (error.response?.data?.errors) {
-          this.errors = error.response.data.errors;
+        console.error("Ошибка регистрации", error);
+        if (error.errors) {
+          this.errors = error.errors; // Сохраняем детализированные ошибки
+        } else {
+          this.errors.general = error.message || "Произошла ошибка регистрации.";
         }
       }
     },
   },
+
 };
 </script>
 
@@ -182,6 +180,7 @@ export default {
   align-items: center;
   margin-bottom: 20px;
 }
+
 .auth-checkbox-input {
   margin-right: 10px;
 }
