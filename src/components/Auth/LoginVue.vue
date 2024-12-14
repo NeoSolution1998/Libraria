@@ -1,53 +1,53 @@
 <template>
-  <div class="form-body">
-    <div class="row">
-      <div class="form-holder">
-        <div class="form-content">
-          <div class="form-items">
-            <h3>Авторизация</h3>
-            <p>Введите логин и пароль.</p>
-            <form class="requires-validation" @submit.prevent="loginUser" novalidate>
-              <div class="col-md-12">
-                <input
-                  class="form-control"
-                  v-model="userData.email"
-                  type="email"
-                  name="email"
-                  placeholder="E-mail Address"
-                  required
-                />
-                <div class="valid-feedback">Email field is valid!</div>
-                <div class="invalid-feedback">Email field cannot be blank!</div>
-              </div>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h3>Добро пожаловать!</h3>
+        <p>Войдите, чтобы продолжить.</p>
+      </div>
 
-              <div class="col-md-12">
-                <input
-                  class="form-control"
-                  v-model="userData.password"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  required
-                />
-              </div>
+      <!-- Отображение ошибки -->
+      <div v-if="errorMessage" class="auth-error">
+        {{ errorMessage }}
+      </div>
 
-              <div class="form-button mt-3">
-                <button id="submit" type="submit" class="btn btn-primary">Войти</button>
-              </div>
-            </form>
-            <p>
-              Нет аккаунта?
-              <router-link to="/registration">Зарегистрируйтесь.</router-link>
-            </p>
+      <form @submit.prevent="loginUser">
+        <div class="input-group">
+          <input v-model="userData.email" class="auth-input" type="email" placeholder="E-mail" required />
+          <div class="input-icon">
+            <i class="fas fa-envelope"></i>
           </div>
         </div>
+
+        <div class="input-group">
+          <input v-model="userData.password" class="auth-input" type="password" placeholder="Пароль" required />
+          <div class="input-icon">
+            <i class="fas fa-lock"></i>
+          </div>
+        </div>
+
+        <div class="auth-options">
+          <div>
+            <input type="checkbox" id="rememberMe" v-model="rememberMe" />
+            <label for="rememberMe">Запомнить меня</label>
+          </div>
+          <a href="#" class="forgot-password">Забыли пароль?</a>
+        </div>
+
+        <button type="submit" class="auth-button">Войти</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>
+          Нет аккаунта? <a href="/registration">Зарегистрироваться</a>
+        </p>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import axios from "axios";
-import Cookies from "js-cookie";
+import { mapActions } from "vuex";
 
 export default {
   name: "LoginVue",
@@ -58,130 +58,148 @@ export default {
         email: "",
         password: "",
       },
+      errorMessage: "", // Для хранения сообщения об ошибке
+      rememberMe: false,
     };
   },
   methods: {
+    ...mapActions("auth", ["login"]),
+
     async loginUser() {
+      this.errorMessage = ""; // Сбрасываем сообщение об ошибке перед попыткой входа
       try {
-        const response = await axios.post("http://127.0.0.1:8000/api/v1/auth/login", {
-          email: this.userData.email,
-          password: this.userData.password,
-        });
-
-        console.log("Авторизация успешна", response.data);
-
-        const token = response.data.token;
-        console.log(token);
-        Cookies.set("auth_token", token);
-
-        const prevPageUrl = localStorage.getItem("prevPageUrl");
-        this.$router.push(prevPageUrl || "/");
+        await this.login(this.userData);
+        console.log("Успешный вход в систему");
       } catch (error) {
-        console.error("Ошибка аутентификации", error.response.data);
-        // Дополнительная обработка ошибки, например, вывод сообщения пользователю
+        console.error("Ошибка входа", error.response?.data);
+        this.errorMessage = error.response?.data?.message || "Произошла ошибка. Попробуйте еще раз.";
       }
     },
   },
 };
 </script>
+
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;900&display=swap");
-
-*,
-body {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.form-body {
-  background-image: url("/public/images/main/4.jpg"); /* Замените на путь к вашему изображению */
-  background-size: cover; /* Изображение будет масштабироваться, чтобы полностью покрывать элемент */
-  background-position: center; /* Центрируйте изображение */
-  background-repeat: no-repeat;
-  background-size: 100%; /* Избегайте повторения изображения */
-}
-.form-holder {
+.auth-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  min-height: 100px;
+  height: 500px;
+  background: linear-gradient(135deg, #9cb2c0, #a8a8a8);
+  font-family: "Rubik-Regular";
+  padding: 10px;
 }
 
-.form-holder .form-content {
-  position: relative;
-  text-align: center;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  align-items: center;
-  padding: 60px;
-}
-
-.form-content .form-items {
-  background-color: rgb(130, 182, 174);
-  border: 3px solid #fff;
+.auth-card {
+  background: var(--dark);
   padding: 40px;
-  display: inline-block;
-  width: 100%;
-  min-width: 540px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
   border-radius: 10px;
-  text-align: left;
-  -webkit-transition: all 0.4s ease;
-  transition: all 0.4s ease;
-}
-
-.form-content h3 {
-  color: #fff;
-  text-align: left;
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-.form-content p {
-  color: #fff;
-  text-align: left;
-  font-size: 17px;
-  font-weight: 300;
-  line-height: 20px;
-  margin-bottom: 30px;
-}
-
-.form-content input[type="text"],
-.form-content input[type="password"],
-.form-content input[type="email"],
-.form-content select {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
-  padding: 9px 20px;
-  text-align: left;
-  border: 0;
-  outline: 0;
-  border-radius: 6px;
-  background-color: #fff;
-  font-size: 15px;
-  font-weight: 300;
-  color: #8d8d8d;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  margin-top: 16px;
+  max-width: 600px;
 }
 
-.btn-primary {
-  background: linear-gradient(to left, #2c3e50, #2b4157);
-  outline: none;
-  border: 0px;
-  box-shadow: none;
+.auth-header h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--light);
+}
+
+.auth-header p {
+  font-size: 14px;
+  color: var(--light-hover);
+  margin-bottom: 20px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: var(--dark);
+}
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--light-hover);
+  margin-bottom: 20px;
+}
+
+.auth-options div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-options div label {
+  margin: 0%;
+  padding-left: 5px;
+}
+
+.auth-options a {
+  color: var(--bisque);
+  text-decoration: none;
+}
+
+.auth-options a:hover {
+  text-decoration: underline;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #2b5876, #4e4376);
+  background: var();
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.auth-button:hover {
+  background: linear-gradient(135deg, #4e4376, #2b5876);
+}
+
+.auth-footer {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}
+
+.auth-footer a {
+  color: var(--bisque);
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.auth-error {
+  color: #d9534f;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 </style>

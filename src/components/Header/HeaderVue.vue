@@ -57,7 +57,7 @@ export default {
       return authToken && authToken.length > 0;
     },
     ...mapActions({
-      logout: "header/logout",
+      logout: "auth/logout",
     }),
   },
 };

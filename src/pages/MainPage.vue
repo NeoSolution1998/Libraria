@@ -96,6 +96,9 @@ export default {
 </script>
 
 <style scoped>
+.container{
+ padding-top : 60px;
+}
 /* Стили для обложки книги */
 
 .book-cover {
