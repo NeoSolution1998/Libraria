@@ -6,16 +6,18 @@ import { chaptersModule } from "./Chapters/ChaptersModule";
 import { commentsModule } from "./Comments/CommentsModule";
 import { paginationModule } from "./UI/PaginationModule";
 import { headerModule } from "./Header/headerModule";
+import { authModule } from './Auth/AuthModule';
 
 export default createStore({
     state: {
-        domain: "http://45.131.40.15"
+        domain: process.env.VUE_APP_API_URL,
     },
     modules: {
+        auth: authModule, // Управление авторизацией и регистрацией
+        header: headerModule, // Управление состоянием хедера
         posts: postsModule,
         books: booksModule,
         comments: commentsModule,
-        header: headerModule,
         pagination: paginationModule,
         chapters: chaptersModule,
         images: imagesModule

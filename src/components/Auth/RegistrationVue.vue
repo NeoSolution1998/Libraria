@@ -1,76 +1,52 @@
 <template>
-  <div class="form-body">
-    <div class="row">
-      <div class="form-holder">
-        <div class="form-content">
-          <div class="form-items">
-            <h3>Регистрация</h3>
-            <p>Начинай читать сегодня.</p>
-            <form @submit.prevent="registerUser">
-              <div class="col-md-12">
-                <input
-                  v-model="userData.name"
-                  class="form-control"
-                  type="text"
-                  name="name"
-                  placeholder="Введите полное имя"
-                  required
-                />
-                <div class="invalid-feedback">Поле является обязательным!</div>
-              </div>
+  <div class="auth-body">
+    <div class="auth-container">
+      <div class="auth-content">
+        <div class="auth-card">
+          <h3 class="auth-title">Регистрация</h3>
+          <p class="auth-subtitle">Начинай читать сегодня.</p>
+          <form @submit.prevent="registerUser">
+            <div class="auth-input-group" :class="{ 'has-error': errors.name }">
+              <input v-model="userData.name" class="auth-input" type="text" name="name"
+                placeholder="Введите полное имя" />
+              <div v-if="errors.name" class="auth-error">{{ errors.name }}</div>
+            </div>
 
-              <div class="col-md-12">
-                <input
-                  v-model="userData.email"
-                  class="form-control"
-                  type="email"
-                  name="email"
-                  placeholder="E-mail Address"
-                  required
-                />
-                <div class="invalid-feedback">Email field cannot be blank!</div>
-              </div>
+            <div class="auth-input-group" :class="{ 'has-error': errors.email }">
+              <input v-model="userData.email" class="auth-input" type="email" name="email"
+                placeholder="E-mail Address" />
+              <div v-if="errors.email" class="auth-error">{{ errors.email }}</div>
+            </div>
 
-              <div class="col-md-12">
-                <input
-                  v-model="userData.password"
-                  class="form-control"
-                  type="password"
-                  name="password"
-                  placeholder="Введите пароль"
-                  required
-                />
-                <div class="invalid-feedback">Password field cannot be blank!</div>
-              </div>
+            <div class="auth-input-group" :class="{ 'has-error': errors.password }">
+              <input v-model="userData.password" class="auth-input" type="password" name="password"
+                placeholder="Введите пароль" />
+              <div v-if="errors.password" class="auth-error">{{ errors.password }}</div>
+            </div>
 
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="invalidCheck"
-                  required
-                />
-                <label class="form-check-label">Даю согласие на обработку данных</label>
-                <div class="invalid-feedback">
-                  Please confirm that the entered data are all correct!
-                </div>
-              </div>
+            <div class="auth-checkbox">
+              <input class="auth-checkbox-input" type="checkbox" v-model="consent" id="invalidCheck" />
+              <label for="invalidCheck" class="auth-checkbox-label">
+                Даю согласие на обработку данных
+              </label>
+              <!-- Ошибка теперь выводится под флажком -->
+              <div v-if="errors.consent" class="auth-error consent-error">{{ errors.consent }}</div>
+            </div>
 
-              <div class="form-button mt-3">
-                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-              </div>
-            </form>
-          </div>
+            <div class="auth-button-container">
+              <button type="submit" class="auth-button">Зарегистрироваться</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
 </template>
 
+
+
 <script>
-import axios from "axios";
-import Cookies from "js-cookie";
+import { mapActions } from "vuex";
 
 export default {
   name: "RegistrationVue",
@@ -81,135 +57,164 @@ export default {
         email: "",
         password: "",
       },
+      consent: false,
+      errors: {}, // Для хранения ошибок
     };
   },
   methods: {
+    ...mapActions("auth", ["register"]),
+
+    validateForm() {
+      this.errors = {}; // Сброс ошибок
+
+      if (!this.userData.name.trim()) {
+        this.errors.name = "Поле является обязательным!";
+      }
+      if (!this.userData.email.trim()) {
+        this.errors.email = "Email field cannot be blank!";
+      } else if (!/\S+@\S+\.\S+/.test(this.userData.email)) {
+        this.errors.email = "Введите корректный email!";
+      }
+      if (!this.userData.password.trim()) {
+        this.errors.password = "Password field cannot be blank!";
+      } else if (this.userData.password.length < 3) {
+        this.errors.password = "Пароль должен содержать не менее 3 символов!";
+      }
+      if (!this.consent) {
+        this.errors.consent = "Вы должны согласиться на обработку данных!";
+      }
+
+      // Возвращает true, если ошибок нет
+      return Object.keys(this.errors).length === 0;
+    },
+
     async registerUser() {
+      if (!this.validateForm()) {
+        return; // Прерываем отправку, если есть ошибки
+      }
+
       try {
-        console.log(
-          "Данные, введенные пользователем, перед отправкой запроса:",
-          this.userData
-        );
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/v1/auth/register",
-          this.userData,
-          {
-            headers: {
-              "Content-Type": "application/json", // пример заголовка
-              // Другие заголовки, если необходимо
-            },
-          }
-        );
-          const token = response.data.success.token;
-          Cookies.set("auth_token", token);
-          const prevPageUrl = localStorage.getItem("prevPageUrl");
-          this.$router.push(prevPageUrl || "/");
+        await this.register(this.userData); // Вызываем Vuex экшен
+        this.$router.push("/books"); // Перенаправляем пользователя
       } catch (error) {
-        console.error("Ошибка регистрации", error.response.data);
+        console.error("Ошибка регистрации", error);
+        if (error.errors) {
+          this.errors = error.errors; // Сохраняем детализированные ошибки
+        } else {
+          this.errors.general = error.message || "Произошла ошибка регистрации.";
+        }
       }
     },
   },
+
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;900&display=swap");
-
-*,
-body {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.form-body {
-  background-image: url("/public/images/main/4.jpg"); /* Замените на путь к вашему изображению */
-  background-size: cover; /* Изображение будет масштабироваться, чтобы полностью покрывать элемент */
-  background-position: center; /* Центрируйте изображение */
-  background-repeat: no-repeat;
-  background-size: 100%; /* Избегайте повторения изображения */
-}
-.form-holder {
+.auth-body {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  min-height: 100px;
+  height: 500px;
+  background: linear-gradient(to right, #3d3f64, #bcbed8);
+  font-family: "Rubik-Regular";
 }
 
-.form-holder .form-content {
-  position: relative;
-  text-align: center;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  align-items: center;
-  padding: 60px;
-}
-
-.form-content .form-items {
-  background-color: rgb(130, 182, 174);
-  border: 3px solid #fff;
-  padding: 40px;
-  display: inline-block;
+.auth-container {
+  max-width: 600px;
   width: 100%;
-  min-width: 540px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
+  padding: 20px;
+}
+
+.auth-content {
+  background: #ffffff;
   border-radius: 10px;
-  text-align: left;
-  -webkit-transition: all 0.4s ease;
-  transition: all 0.4s ease;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.form-content h3 {
-  color: #fff;
-  text-align: left;
-  font-size: 28px;
+.auth-card {
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 24px;
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  color: #333;
 }
 
-.form-content p {
-  color: #fff;
+.auth-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.auth-input-group {
+  margin-bottom: 20px;
   text-align: left;
-  font-size: 17px;
-  font-weight: 300;
-  line-height: 20px;
-  margin-bottom: 30px;
 }
 
-.form-content input[type="text"],
-.form-content input[type="password"],
-.form-content input[type="email"],
-.form-content select {
+.auth-input {
   width: 100%;
-  padding: 9px 20px;
-  text-align: left;
-  border: 0;
-  outline: 0;
-  border-radius: 6px;
-  background-color: #fff;
-  font-size: 15px;
-  font-weight: 300;
-  color: #8d8d8d;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  margin-top: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
 }
 
-.btn-primary {
-  background: linear-gradient(to left, #2c3e50, #2b4157);
+.auth-input:focus {
+  border-color: #4e54c8;
   outline: none;
-  border: 0px;
-  box-shadow: none;
+}
+
+.auth-error {
+  color: #d9534f;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.auth-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.auth-checkbox-input {
+  margin-right: 10px;
+}
+
+.auth-checkbox-label {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+}
+
+.auth-button-container {
+  text-align: center;
+}
+
+.auth-button {
+  background: linear-gradient(135deg, #2b5876, #4e4376);
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.auth-button:hover {
+  background: linear-gradient(135deg, #4e4376, #2b5876);
+}
+
+.auth-input-group.has-error .auth-input {
+  border-color: #d9534f;
+}
+
+.auth-input-group.has-error .auth-error {
+  color: #d9534f;
 }
 </style>
