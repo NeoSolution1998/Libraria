@@ -175,7 +175,7 @@ export default {
 
 <style scoped>
 .books__container {
-    padding: 40px 20px 0px 20px;
+    padding: 40px 20px 0px 40px;
     max-width: 1920px;
     margin: auto;
     background-color: var(--dark);
