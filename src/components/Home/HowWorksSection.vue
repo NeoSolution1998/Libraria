@@ -1,24 +1,27 @@
 <template>
-    <div class="how-works-container">
-        <h2>Как это работает?</h2>
-        <div class="icon-row">
-            <div class="icon-block">
-                <i class="icon-user-add-1"></i>
-                <h3>Регистрация</h3>
-                <p>Зарегистрируйтесь на нашем сайте</p>
-            </div>
-            <div class="icon-block">
-                <i class="icon-search"></i>
-                <h3>Поиск книг</h3>
-                <p>Найдите интересующие вас книги</p>
-            </div>
-            <div class="icon-block">
-                <i class="icon-forward"></i>
-                <h3>Читайте и делитесь</h3>
-                <p>Читайте книги и делитесь своими мыслями</p>
+    <div class="help-container">
+        <div class="how-works-container">
+            <h2>Как это работает?</h2>
+            <div class="icon-row">
+                <div class="icon-block">
+                    <i class="icon-user-add-1"></i>
+                    <h3>Регистрация</h3>
+                    <p>Зарегистрируйтесь на нашем сайте</p>
+                </div>
+                <div class="icon-block">
+                    <i class="icon-search"></i>
+                    <h3>Поиск книг</h3>
+                    <p>Найдите интересующие вас книги</p>
+                </div>
+                <div class="icon-block">
+                    <i class="icon-forward"></i>
+                    <h3>Читайте и делитесь</h3>
+                    <p>Читайте книги и делитесь своими мыслями</p>
+                </div>
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -28,16 +31,18 @@ export default {
 </script>
 
 <style scoped>
-/* Основные стили секции */
-
+.help-container {
+    max-width: 1920px;
+    margin: auto;
+    background-color: var(--white);
+}
 .how-works-container {
     background-color: #f8f9fa;
-    padding: 50px 0;
-    width: 90%;
-    max-width: 1200px;
+    padding: 50px 20px;
     margin: 0 auto;
     text-align: center;
-    font-family: 'Rubik-Medium';
+    font-family: 'Rubik-Medium', sans-serif;
+    max-width: 1200px;
 }
 
 h2 {
@@ -46,24 +51,24 @@ h2 {
     color: var(--dark);
 }
 
-/* Контейнер для иконок */
 .icon-row {
     display: flex;
-    flex-wrap: nowrap;
-    /* Блоки будут переходить на новую строку на маленьких экранах */
     justify-content: space-between;
+    align-items: stretch;
     gap: 20px;
+    flex-wrap: nowrap;
 }
 
 .icon-block {
     flex: 1 1 30%;
-    /* Блоки будут занимать 30% ширины, но будут гибкими */
-    min-width: 250px;
-    /* Минимальная ширина блока */
-    max-width: 300px;
-    /* Максимальная ширина блока */
+    max-width: calc(30% - 20px);
+    /* Гарантируем, что блоки занимают 30% */
     text-align: center;
-    margin-bottom: 30px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .icon-block i {
@@ -83,50 +88,14 @@ h2 {
     color: var(--dark);
 }
 
-/* Медиа-запросы для адаптивности */
-@media (max-width: 1920px) {
-    h2 {
-        font-size: 40px;
-    }
-
-    .icon-block i {
-        font-size: 50px;
-    }
-
-    .icon-block h3 {
-        font-size: 26px;
-    }
-
-    .icon-block p {
-        font-size: 18px;
-    }
-}
-
+/* Адаптивность */
 @media (max-width: 1024px) {
-    .icon-row {
-        justify-content: center;
-    }
-
     h2 {
         font-size: 32px;
     }
 
-    .icon-block i {
-        font-size: 44px;
-    }
-
-    .icon-block h3 {
-        font-size: 22px;
-    }
-
-    .icon-block p {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 640px) {
-    h2 {
-        font-size: 28px;
+    .icon-block {
+        max-width: calc(30% - 15px);
     }
 
     .icon-block i {
@@ -142,64 +111,52 @@ h2 {
     }
 }
 
-@media (max-width: 440px) {
-    .how-works-container {
-        padding: 20px 0;
-        width: 90%;
+@media (max-width: 768px) {
+    .icon-row {
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .icon-block {
+        flex: 1 1 30%;
+        max-width: calc(30% - 10px);
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    .icon-block i {
+        font-size: 36px;
+    }
+
+    .icon-block h3 {
+        font-size: 18px;
+    }
+
+    .icon-block p {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .icon-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .icon-block {
+        flex: 1 1 100%;
+        max-width: 100%;
     }
 
     h2 {
         font-size: 24px;
-        margin-bottom: 10px;
-
-    }
-
-
-    .icon-row {
-        justify-content: center;
-        /* Центрируем элементы */
-        gap: 5px;
-    }
-
-    .icon-block {
-        flex: 1 1 30%;
-        max-width: 33%;
-        min-width: 33%;
-        margin-bottom: 0px;
-    }
-
-    .icon-block i {
-        font-size: 20px;
-    }
-
-    .icon-block h3 {
-        font-size: 12px;
-
-    }
-
-    .icon-block p {
-        font-size: 8px;
-        margin-bottom: 0px;
-    }
-}
-
-@media (max-width: 320px) {
-    h2 {
-        font-size: 20px;
     }
 
     .icon-block i {
         font-size: 32px;
-    }
-
-    .icon-row {
-        justify-content: center;
-        align-items: center;
-    }
-
-    .icon-block {
-        flex: 1 1 30%;
-        /* Блоки продолжают занимать 30% */
     }
 
     .icon-block h3 {

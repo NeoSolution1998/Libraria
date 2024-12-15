@@ -11,6 +11,7 @@ import RatingVue from '@/components/UI/RatingVue.vue';
 /*HOME PAGE COMPONENTS */
 import WelcomeSection from '@/components/Home/WelcomeSection.vue';
 import HowWorksSection from '@/components/Home/HowWorksSection.vue';
+import PopularBooks from "./Home/PopularBooks.vue";
 /* HEADER AND FOOTER */
 import HeaderVue from "@/components/Header/HeaderVue.vue";
 import FooterVue from "@/components/FooterVue.vue";
@@ -21,7 +22,6 @@ import SubscriptionVue from "@/components/SubscriptionVue.vue";
 import BooksList from "@/components/Books/BooksList.vue";
 import BooksItem from "@/components/Books/BooksItem.vue";
 import BookVue from '@/components/Books/BookVue.vue';
-import PopularBooks from "@/components/Books/PopularBooks.vue";
 import PopularBookSeries from "@/components/Books/PopularBookSeries.vue";
 
 
@@ -51,7 +51,6 @@ export default [
     DialogVue,
     HeaderVue,
     FooterVue,
-    PopularBooks,
     BooksItem,
     BooksList,
     PaginationVue,
@@ -76,4 +75,5 @@ export default [
     PopularBookSeries,
     WelcomeSection,
     HowWorksSection,
+    PopularBooks,
 ]
