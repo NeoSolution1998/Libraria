@@ -58,7 +58,7 @@ export default {
             books: [
                 {
                     id: 1,
-                    title: "Game of Thrones",
+                    title: "Game of Thrones Game of ThronesGame of Thrones",
                     description: "Описание книги Обреченное королевство.",
                     author: "Robert Martin",
                     rating: 5,
@@ -217,6 +217,7 @@ export default {
     overflow: hidden;
     gap: 20px;
     padding: 10px;
+    padding-left: 0px;
     padding-bottom: 0px;
 }
 
@@ -333,7 +334,80 @@ export default {
 }
 
 
+@media(max-width: 1024px) {
+    .books__container {
+        padding: 20px;
+        padding-bottom: 0px;
+        max-width: 1024px;
+    }
 
+    /* HEADER */
+    .books_header h1 {
+        font-size: 22px;
+        margin-bottom: 2px;
+    }
+
+    .books_header span {
+        font-size: 16px;
+    }
+
+    /* BOOKS */
+    .books__list {
+        gap: 10px;
+    }
+
+    .books__item img {
+        height: 250px;
+        border-radius: 10px;
+    }
+
+    .icon-heart {
+        font-size: 14px;
+        padding-left: 10px;
+    }
+
+    .books__item-content {
+        padding: 10px 0px;
+
+    }
+
+    .books__item-content h2 {
+        font-size: 14px;
+        margin-bottom: 5px;
+        height: 30px;
+        overflow: hidden;
+    }
+
+    .books__description {
+        font-size: 10px;
+        margin-bottom: 5px;
+        overflow: hidden;
+        max-height: 50px;
+        color: var(--gray);
+
+    }
+
+    .books__item-footer {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+    }
+
+    .books__left-arrow,
+    .books__right-arrow {
+
+
+    height: 35px;
+    width: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+}
 
 /* Show arrows on smaller screens */
 @media(max-width: 768px) {
@@ -342,7 +416,14 @@ export default {
         /* Hide scroll on small screens */
         display: flex;
     }
+    .books__item img {
+        height: 200px;
+        border-radius: 10px;
+    }
+    .books__item-content h2 {
+        font-size: 12px;
 
+    }
     .books__left-arrow,
     .books__right-arrow {
         display: none;
