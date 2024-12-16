@@ -203,8 +203,6 @@ export default {
 }
 
 .books_header span {
-
-
     color: var(--bisque);
     font-size: 35px;
 }
@@ -248,17 +246,23 @@ export default {
 }
 
 .books__item-content h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 20px;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+
 }
 
 .books__description {
     font-size: 14px;
     color: var(--gray);
-    max-height: 60px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .books__item-footer {
@@ -397,16 +401,16 @@ export default {
     .books__right-arrow {
 
 
-    height: 35px;
-    width: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+        height: 35px;
+        width: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
 }
 
 /* Show arrows on smaller screens */
@@ -416,14 +420,17 @@ export default {
         /* Hide scroll on small screens */
         display: flex;
     }
+
     .books__item img {
         height: 200px;
         border-radius: 10px;
     }
+
     .books__item-content h2 {
         font-size: 12px;
 
     }
+
     .books__left-arrow,
     .books__right-arrow {
         display: none;
@@ -449,7 +456,7 @@ export default {
 
     .books_header span {
         font-size: 12px;
- 
+
     }
 
     /* BOOKS */
