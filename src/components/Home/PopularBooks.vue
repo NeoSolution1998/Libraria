@@ -378,15 +378,11 @@ export default {
     .books__item-content h2 {
         font-size: 14px;
         margin-bottom: 5px;
-        height: 30px;
-        overflow: hidden;
     }
 
     .books__description {
         font-size: 10px;
         margin-bottom: 5px;
-        overflow: hidden;
-        max-height: 50px;
         color: var(--gray);
 
     }
@@ -483,15 +479,15 @@ export default {
     .books__item-content h2 {
         font-size: 10px;
         margin-bottom: 5px;
-        height: 15px;
-        overflow: hidden;
+
+ 
     }
 
     .books__description {
         font-size: 8px;
         margin-bottom: 5px;
-        overflow: hidden;
-        max-height: 50px;
+ 
+ 
         color: var(--gray);
 
     }
