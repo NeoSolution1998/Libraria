@@ -268,7 +268,7 @@ export default {
 }
 
 .books__rating-star {
-    color: #f39c12;
+    color: var(--orange);
 }
 
 .no-underline {

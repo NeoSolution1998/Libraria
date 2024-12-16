@@ -1,10 +1,15 @@
 <template>
   <header-vue></header-vue>
-  <div class="container">
+  <!-- <PostsHeader></PostsHeader> -->
+
+    <PostsVue></PostsVue>
+
+
+  <!-- <div class="container">
     <div class="content">
-      <!-- <div v-if="$store.state.posts.posts.length === 0" class="no-posts">
+      <div v-if="$store.state.posts.posts.length === 0" class="no-posts">
           <p>Постов нет</p>
-        </div> -->
+        </div>
       <div class="posts-list-wrapper">
         <posts-list v-bind:posts="$store.state.posts.posts"></posts-list>
       </div>
@@ -17,14 +22,15 @@
               pageNumber: $event,
               dispatch: $store.dispatch,
             })
-          "
+          " 
         ></PaginationVue>
     </div>
-  </div>
+  </div> -->
   <footer-vue></footer-vue>
 </template>
 
 <script>
+
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
@@ -44,7 +50,7 @@ export default {
   },
 
   mounted() {
-    this.initializeStateFromURL(); 
+    this.initializeStateFromURL();
   },
 };
 </script>
