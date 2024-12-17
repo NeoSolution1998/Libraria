@@ -32,10 +32,10 @@ import HeaderVue from "@/components/Header/HeaderVue.vue";
 import FooterVue from "@/components/FooterVue.vue";
 
 /* BOOKS */
-import BooksList from "@/components/Books/BooksList.vue";
-import BooksItem from "@/components/Books/BooksItem.vue";
-import BookVue from '@/components/Books/BookVue.vue';
-import PopularBookSeries from "@/components/Books/PopularBookSeries.vue";
+import BooksList from "@/components/Books/old/BooksList.vue";
+import BooksItem from "@/components/Books/old/BooksItem.vue";
+import BookVue from '@/components/Books/old/BookVue.vue';
+import PopularBookSeries from "@/components/Books/old/PopularBookSeries.vue";
 
 /* POSTS */
 import PostsList from "@/components/Posts/old/PostsList.vue";
