@@ -68,6 +68,10 @@ import FontelloIcons from '@/components/Icons/FontelloIcons.vue';
 import Breadcrumbs from "./Breadcrumbs/Breadcrumbs.vue";
 import VuexComponent from "./vuexComponent.vue";
 
+/* Books */
+import BooksContainer from "./Books/BooksContainer.vue";
+import BooksListComponent from "./Books/BooksListComponent.vue";
+
 export default [
     /* UI */
     ButtonVue,
@@ -110,6 +114,10 @@ export default [
     PostsHeader,
     PostsVue,
     PostsListComponent,
+
+    /* Books */
+    BooksContainer,
+    BooksListComponent,
 
     /* Filters */
     FiltersVue,

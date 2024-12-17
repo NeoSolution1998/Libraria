@@ -6,11 +6,11 @@
         <div class="filters__block">
             <FiltersVue></FiltersVue>
         </div>
-        <div class="posts__section">
-        </div>
+
         <div class="posts_block">
             <posts-list-component v-if="posts && posts.length"></posts-list-component>
             <div v-else class="posts__empty">
+                <!-- TODO сделать красивую ошибку. Лучше сделать отдельными компонентами ошибки -->
                 <p>Постов пока нет или произошла ошибка при загрузке данных.</p>
             </div>
         </div>
@@ -62,6 +62,7 @@ export default {
     grid-template-areas:
         "search search "
         "filters posts ";
+    grid-template-columns: 1fr 4fr;
     gap: 15px;
 
 }
@@ -102,6 +103,7 @@ export default {
             "filters"
             "posts";
         background-color: var(--white);
+        grid-template-columns: 1fr;
         gap: 0px;
     }
 

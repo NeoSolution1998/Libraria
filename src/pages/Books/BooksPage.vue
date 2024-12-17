@@ -1,8 +1,9 @@
 <template>
   <header-vue></header-vue>
   <Breadcrumbs></Breadcrumbs>
-  <div class="container">
-    <!-- Кнопки для открытия фильтров, сортировки и боковой панели на мобильных устройствах -->
+  <BooksContainer></BooksContainer>
+<!--   <div class="container">
+    
     <div class="d-md-none mb-3">
       <button class="btn btn-outline-dark mr-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterSearchBar" aria-expanded="false" aria-controls="filterSearchBar">
         Фильтры и поиск
@@ -12,7 +13,7 @@
       </button>
     </div>
 
-    <!-- Фильтры и сортировка -->
+
     <div id="filterSearchBar" class="filter-search-bar bg-light p-3 mb-4 rounded shadow-sm collapse d-md-block">
       <div class="row align-items-center flex-column flex-md-row">
         <div class="col-md-6 col-12 mb-3 mb-md-0">
@@ -53,7 +54,7 @@
       </main>
 
 
-      <!-- Боковая панель -->
+
       <aside id="sidebar" class="col-lg-3 col-12 collapse d-lg-block">
         <div class="sidebar bg-light p-3 rounded shadow-sm mb-4">
           <h2 class="sidebar-title">Жанры</h2>
@@ -75,7 +76,7 @@
         </div>
       </aside>
     </div>
-  </div>
+  </div> -->
   <FooterVue></FooterVue>
 </template>
 
