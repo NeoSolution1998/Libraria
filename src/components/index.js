@@ -38,9 +38,10 @@ import BookVue from '@/components/Books/BookVue.vue';
 import PopularBookSeries from "@/components/Books/PopularBookSeries.vue";
 
 /* POSTS */
-import PostsList from "@/components/Posts/PostsList.vue";
-import PostsItem from "@/components/Posts/PostsItem.vue";
-import PopularPosts from "@/components/Posts/PopularPosts.vue";
+import PostsList from "@/components/Posts/old/PostsList.vue";
+import PostsItem from "@/components/Posts/old/PostsItem.vue";
+import PopularPosts from "@/components/Posts/old/PopularPosts.vue";
+
 import PostsHeader from "./Posts/PostsHeader.vue";
 import PostsVue from "./Posts/PostsVue.vue";
 import PostsListComponent from "./Posts/PostsListComponent.vue";
@@ -65,6 +66,7 @@ import SubscriptionVue from "@/components/SubscriptionVue.vue";
 import IconVue from '@/components/Icons/IconVue.vue';
 import FontelloIcons from '@/components/Icons/FontelloIcons.vue';
 import Breadcrumbs from "./Breadcrumbs/Breadcrumbs.vue";
+import VuexComponent from "./vuexComponent.vue";
 
 export default [
     /* UI */
@@ -102,6 +104,7 @@ export default [
     WelcomeSection,
     HowWorksSection,
     PopularBooks,
+    VuexComponent,
 
     /* Posts */
     PostsHeader,

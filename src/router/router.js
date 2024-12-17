@@ -12,7 +12,8 @@ import LoginPage from '@/pages/Auth/LoginPage.vue';
 import RegistrationPage from '@/pages/Auth/RegistrationPage.vue';
 import ProfilePage from '@/pages/Profile/ProfilePage.vue';
 import SettingsPage from '@/pages/Profile/SettingsPage.vue';
-import PostsItemCopy from '@/components/Posts/PostsItem copy.vue';
+
+import VuexComponent from '@/components/vuexComponent.vue'
 
 const routes = [
   {
@@ -159,20 +160,9 @@ const routes = [
     },
   },
   {
-    path: '/test',
-    name: 'Test',
-    component: PostsItemCopy,
-    meta: {
-      breadcrumb: [
-        { text: 'Главная', path: '/' },
-        { text: 'Тестовая страница', path: '/test' },
-      ],
-    },
-  },
-  {
     path: '/vuex',
     name: 'VuexTest',
-    component: PostsItemCopy,
+    component: VuexComponent,
     meta: {
       breadcrumb: [
         { text: 'Главная', path: '/' },

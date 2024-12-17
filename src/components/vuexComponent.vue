@@ -1,7 +1,7 @@
 <template>
   <header-vue></header-vue>
   <div class="vuex-container">
-    <h1 class="text-center text-body-secondary">ТУТ У НАС ПОСТЫ</h1>
+
   </div>
   <!-- Колонка с икноками -->
   <div class="container bg-white mt-5">
@@ -15,6 +15,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
+  name: "vuexComponent",
   data() {
     return {
       numbers: [4, 2, 3],
