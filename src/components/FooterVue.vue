@@ -24,12 +24,7 @@
                   <li>
                     <a class="text-white text-opacity-75" href="#">Служба поддержки</a>
                   </li>
-                  <li>
-                    <a class="text-white text-opacity-75" href="#">Политика конфиденциальности</a>
-                  </li>
-                  <li>
-                    <a class="text-white text-opacity-75" href="#">Политика использования файлов cookie</a>
-                  </li>
+       
                   <li>
                     <a class="text-white text-opacity-75" href="#">Условия использования</a>
                   </li>
@@ -86,9 +81,7 @@
             <ul
               class="nav justify-content-center justify-content-md-end list-unstyled footer-link-01 m-0"
             >
-              <li class="p-0 mx-3 ms-md-0 me-md-3">
-                <a href="#" class="text-white text-opacity-75">Политика конфиденциальности</a>
-              </li>
+
               <li class="p-0 mx-3 ms-md-0 me-md-3">
                 <a href="#" class="text-white text-opacity-75">Часто задаваемые вопросы</a>
               </li>

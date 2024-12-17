@@ -1,5 +1,6 @@
 <template>
   <header-vue></header-vue>
+  <Breadcrumbs></Breadcrumbs>
   <div class="container">
     <!-- Кнопки для открытия фильтров, сортировки и боковой панели на мобильных устройствах -->
     <div class="d-md-none mb-3">

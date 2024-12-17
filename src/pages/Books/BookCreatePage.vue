@@ -1,5 +1,6 @@
 <template>
     <header-vue></header-vue>
+    <Breadcrumbs></Breadcrumbs>
     <div class="container my-5">
         <h1 class="text-center mb-4">Добавить книгу</h1>
         <form @submit.prevent="submitBook" class="bg-light p-4 rounded shadow-sm">

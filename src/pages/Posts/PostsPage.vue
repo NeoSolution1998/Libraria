@@ -1,10 +1,16 @@
 <template>
   <header-vue></header-vue>
-  <div class="container">
+  <Breadcrumbs></Breadcrumbs>
+  <!-- <PostsHeader></PostsHeader> -->
+
+    <PostsVue></PostsVue>
+
+
+  <!-- <div class="container">
     <div class="content">
-      <!-- <div v-if="$store.state.posts.posts.length === 0" class="no-posts">
+      <div v-if="$store.state.posts.posts.length === 0" class="no-posts">
           <p>Постов нет</p>
-        </div> -->
+        </div>
       <div class="posts-list-wrapper">
         <posts-list v-bind:posts="$store.state.posts.posts"></posts-list>
       </div>
@@ -17,36 +23,14 @@
               pageNumber: $event,
               dispatch: $store.dispatch,
             })
-          "
+          " 
         ></PaginationVue>
     </div>
-  </div>
+  </div> -->
   <footer-vue></footer-vue>
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
-
-export default {
-  computed: {
-    ...mapState({
-      posts: state => state.posts.posts,
-      totalPages: state => state.posts.totalPages,
-      currentPage: state => state.posts.currentPage,
-    }),
-  },
-  methods: {
-    ...mapActions({
-      fetchPosts: "posts/fetchPosts",
-      initializeStateFromURL: "posts/initializeStateFromURL",
-    }),
-    ...mapMutations({}),
-  },
-
-  mounted() {
-    this.initializeStateFromURL(); 
-  },
-};
 </script>
 
 <style scoped>

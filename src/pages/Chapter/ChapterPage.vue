@@ -1,7 +1,7 @@
 <template>
     <div :class="[isNightMode ? 'night-mode' : 'day-mode']" :style="{ backgroundColor: pageBackgroundColor }">
         <header-vue></header-vue>
-
+        <Breadcrumbs></Breadcrumbs>
         <div class="container">
             <div class="chapter-selector-container">
                 <div class="btn-group dropend">

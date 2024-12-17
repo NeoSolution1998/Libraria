@@ -1,107 +1,196 @@
 <template>
-    <div class="icon-container m-5">
-      <div class="icon-item" v-for="icon in icons" :key="icon">
-        <icon-vue :name="icon"></icon-vue>
-        <span>{{ icon }}</span>
-      </div>
+  <div class="icon-container m-5">
+    <div class="icon-item" v-for="icon in icons" :key="icon">
+      <icon-vue :name="icon"></icon-vue>
+      <span>{{ icon }}</span>
     </div>
-  </template>
-  
-  <script>
-  export default {
+  </div>
+</template>
+
+<script>
+export default {
   name: 'FontelloIcons',
   data() {
     return {
       icons: [
-        // Ваши существующие иконки...
-        'mail',
+        'sort-alt-up',
+        'params',
         'search',
-        'heart-empty',
-        'heart',
+        'search-1',
+        'calendar',
+        'arrows-cw',
+        'arrows-cw-1',
+        'arrows-cw-2',
+        'filter',
+        'upload',
+        'download',
+        'star-half',
         'star-empty',
-        'star',
+        'th',
+        'th-list',
+        'th-large',
+        'ok',
+        'ok-circled',
+        'cancel',
+        'cancel-circled',
+        'minus-circled',
+        'minus',
+        'help-circled',
+        'home',
+        'lock-open',
+        'lock',
+        'eye',
+        'pin',
+        'eye-off',
+        'bookmark',
         'bell',
+        'folder',
+        'folder-open',
+        'trash-empty',
+        'mail',
+        'search-2',
+        'heart-empty',
+        'heart-empty-1',
+        'heart-empty-2',
+        'heart',
+        'heart-circled',
+        'heart-1',
+        'star',
+        'to-start-alt',
+        'to-start',
+        'star-1',
+        'star-empty-1',
+        'star-2',
+        'star-empty-2',
         'chat',
+        'chat-1',
+        'comment-alt',
+        'chat-2',
+        'chat-3',
         'forward',
+        'forward-outline',
+        'forward-1',
+        'forward-2',
         'basket',
         'cog',
+        'cog-1',
         'down-open',
-        'right-open',
         'up-open',
+        'right-open',
         'left-open',
-        'filter',
-        'menu',
-        'comment-empty',
-        'bell-alt',
-        'reply',
-        'reply-all',
-        'flickr',
-        'sliders',
-        'share',
-        'bell-off',
-        'cart-plus',
-        'cart-arrow-down',
-        'user-plus',
-        // Новые иконки...
-        'reply-1',
         'menu-1',
-        'dot-3',
-        'user-add-outline',
-        'user-delete-outline',
-        'user-delete',
+        'menu-3',
+        'menu-outline',
+        'comment',
+        'comment-alt-1',
+        'comment-1',
+        'comment-2',
+        'comment-3',
+        'reply-all-1',
+        'pencil',
+        'pencil-1',
+        'pencil-neg',
+        'pencil-2',
+        'pencil-3',
+        'reply-2',
+        'reply-all-2',
+        'dot-2',
+        'export',
+        'share-1',
         'user-add',
-        'play-circle2',
+        'dot-3',
+        'dot',
+        'user-add-1',
+        'user-add-outline',
         'play',
+        'play-1',
+        'stop',
+        'pause',
+        'record',
+        'to-start-1',
+        'to-end',
+        'fast-forward',
+        'fast-backward',
+        'play-circled-1',
         'vcard',
+        'vcard-1',
         'thumbs-up',
         'thumbs-down',
-        'eye',
-        'cancel',
-        'cancel-squared',
-        'cancel-circled',
-        'plus-circled',
-        'star-empty-1',
-        'star-1',
-        'heart-empty-1',
-        'user',
-        'user-add-1',
-        'users',
-        'video',
-        'picture',
-        'camera',
         'layout',
+        'thumbs-up-1',
+        'thumbs-down-1',
+        'th-list-1',
+        'th-1',
+        'th-large-1',
+        'th-2',
+        'th-large-2',
+        'view-mode',
+        'th-3',
+        'eye-1',
+        'eye-outline',
+        'eye-2',
+        'eye-3',
+        'eye-off-1',
+        'eye-4',
+        'cancel-1',
+        'cancel-2',
+        'cancel-3',
+        'cancel-alt',
+        'cancel-alt-filled',
+        'cancel-squared',
+        'cancel-circled-1',
+        'users',
+        'group',
+        'group-circled',
+        'video',
+        'videocam',
+        'video-1',
+        'videocam-1',
+        'picture',
+        'picture-1',
+        'camera',
+        'camera-alt',
+        'camera-1',
         'note',
-        'check',
-        'search-1',
-        'mail-1',
-        'attach',
+        'note-beamed',
+        'music',
         'quote',
-        'pencil',
-        'cog-1',
-        'share-1',
+        'quote-right-1',
+        'quote-left-1',
+        'quote-left-alt',
+        'quote-right-alt',
         'adjust',
+        'adjust-1',
+        'adjust-2',
         'light-up',
+        'light-down',
+        'lamp',
         'megaphone',
+        'menu-2',
+        'th-list-2',
+        'th-thumb-empty',
+
       ],
     };
   },
 };
 
-  </script>
-  
-  <style scoped>
-  .icon-container {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .icon-item {
-    width: 100px;
-    text-align: center;
-    margin: 10px;
-  }
-  .icon-item i {
-    font-size: 2em;
-    display: block;
-  }
-  </style>
-  
+</script>
+
+<style scoped>
+.icon-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.icon-item {
+  width: 100px;
+  text-align: center;
+  margin: 10px;
+}
+
+.icon-item i {
+  font-size: 2em;
+  display: block;
+}
+</style>

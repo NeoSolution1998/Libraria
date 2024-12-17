@@ -1,13 +1,41 @@
 :root {
-    --dark: #111213;    
-    --dark-muted: #2f3640;
-    --dark-blue: #2C5572;
-    --blue-hover: #0a4c7c;
-    --green: #06696C;
-    --light: #d7eaea; 
-    --light-hover: #cccccc;  
-    --blue: #32bbc7;    /* Средний аквамариновый, подходит для кнопок или второстепенных акцентов */
-    --beige: #ffe047;     /* Теплый бежевый, может быть основным фоновым цветом */
-    --bisque:  bisque;
-    --bisque-hover:  rgb(231, 218, 202);
-  }
+  --dark: #111213;
+  --dark-muted: #2f3640;
+  --dark-blue: #2C5572;
+  --blue-hover: #0a4c7c;
+  --green: #06696C;
+  --green-light:  #0c8643;
+  --light: #eeeeee;
+  --light-hover: #cccccc;
+  --beige: #ffe047;
+  --bisque: bisque;
+  --bisque-hover: rgb(231, 218, 202);
+  --white: #ffffff;
+  --red: #912016;
+  --gray: #666;
+  --orange: #f39c12;
+  --blue: #2e4ccf;
+  --default:rgb(232, 229,229);
+}
+
+.no-underline {
+  text-decoration: none;
+  color: inherit;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+   font-family: "Rubik-Medium";
+}
