@@ -18,79 +18,170 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HomePage, 
-  },
-  {
-    path: '/posts',
-    name: 'Posts',
-    component: PostsPage, 
-  },
-  {
-    path: '/books',
-    name: 'Books',
-    component: BooksPage, 
+    component: HomePage,
+    meta: { breadcrumb: [{ text: 'Главная', path: '/' }] },
   },
   {
     path: '/about',
     name: 'About',
-    component: AboutPage, 
+    component: AboutPage,
+    meta: {
+      breadcrumb: [
+        { text: "Главная", path: "/" },
+        { text: "О нас", path: "/about" },
+      ],
+    },
   },
   {
     path: '/login',
     name: 'Login',
-    component: LoginPage, 
+    component: LoginPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Вход', path: '/login' },
+      ],
+    },
   },
   {
     path: '/registration',
     name: 'Registration',
-    component: RegistrationPage, 
+    component: RegistrationPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Регистрация', path: '/registration' },
+      ],
+    },
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: ProfilePage, 
+    component: ProfilePage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Профиль', path: '/profile' },
+      ],
+    },
   },
   {
     path: '/settings',
     name: 'Settings',
-    component: SettingsPage, 
+    component: SettingsPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Настройки', path: '/settings' },
+      ],
+    },
+  },
+  {
+    path: '/books',
+    name: 'Books',
+    component: BooksPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Книги', path: '/books' },
+      ],
+    },
   },
   {
     path: '/books/:id',
     name: 'Book',
-    component: BookPage, 
+    component: BookPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Книги', path: '/books' },
+        { text: 'Детали книги', path: '' },
+      ],
+    },
   },
   {
     path: '/books/create',
     name: 'BookCreate',
-    component: BookCreatePage, 
+    component: BookCreatePage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Книги', path: '/books' },
+        { text: 'Создание книги', path: '/books/create' },
+      ],
+    },
   },
   {
     path: '/books/:bookId/chapter/:chapterId',
     name: 'Chapter',
-    component: ChapterPage, 
+    component: ChapterPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Книги', path: '/books' },
+        { text: 'Глава книги', path: '' },
+      ],
+    },
+  },
+  {
+    path: '/posts',
+    name: 'Posts',
+    component: PostsPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Посты', path: '/posts' },
+      ],
+    },
   },
   {
     path: '/posts/:id',
     name: 'Post',
-    component: PostPage, 
+    component: PostPage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Посты', path: '/posts' },
+        { text: 'Детали поста', path: '' },
+      ],
+    },
   },
   {
     path: '/posts/create',
     name: 'PostCreate',
-    component: PostCreatePage, 
+    component: PostCreatePage,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Посты', path: '/posts' },
+        { text: 'Создать пост', path: '/posts/create' },
+      ],
+    },
   },
   {
     path: '/test',
     name: 'Test',
-    component: PostsItemCopy, 
+    component: PostsItemCopy,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Тестовая страница', path: '/test' },
+      ],
+    },
   },
   {
     path: '/vuex',
-    name: 'Test',
-    component: PostsItemCopy, 
+    name: 'VuexTest',
+    component: PostsItemCopy,
+    meta: {
+      breadcrumb: [
+        { text: 'Главная', path: '/' },
+        { text: 'Vuex', path: '/vuex' },
+      ],
+    },
   },
 ];
+
 
 const router = createRouter({
   history: createWebHistory(),

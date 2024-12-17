@@ -1,6 +1,9 @@
 import ButtonVue from "@/components/UI/Buttons/ButtonVue.vue";
 import TextButton from "./UI/Buttons/TextButton.vue";
 import ResetButton from "./UI/Buttons/ResetButton.vue";
+
+import SortSelectUI from "./UI/Selects/SortSelectUI.vue";
+
 import InputVue from "@/components/UI/InputVue.vue";
 import DialogVue from "@/components/UI/DialogVue.vue";
 import PaginationVue from "@/components/UI/PaginationVue.vue";
@@ -10,12 +13,14 @@ import SortVue from "@/components/UI/SortVue.vue";
 import RatingVue from '@/components/UI/RatingVue.vue';
 
 /* FILTERS */
-import FiltersVue from "./UI/Filters/FiltersVue.vue";
-import CategoryFilter from "./UI/Filters/CategoryFilter.vue";
-import RangeFilter from "./UI/Filters/RangeFilter.vue";
-import SearchBarFilter from "./UI/Filters/SearchBarFilter.vue";
-import DateFilter from "./UI/Filters/DateFilter..vue";
-import TagFilter from "./UI/Filters/TagFilter.vue";
+import FiltersVue from "@/components/Filters/FiltersVue.vue";
+import CategoryFilter from "@/components/Filters/CategoryFilter.vue";
+import RangeFilter from "@/components/Filters/RangeFilter.vue";
+import SearchBarFilter from "@/components/Filters/Search/SearchBarFilter.vue";
+import DateFilter from "@/components/Filters/DateFilter..vue";
+import TagFilter from "@/components/Filters/TagFilter.vue";
+import SortDropdown from "./Filters/Search/SortDropdown.vue";
+import FiltersDropdown from "./Filters/Search/FiltersDropdown.vue";
 
 /* HOME PAGE COMPONENTS */
 import WelcomeSection from '@/components/Home/WelcomeSection.vue';
@@ -59,6 +64,7 @@ import SubscriptionVue from "@/components/SubscriptionVue.vue";
 /* ICONS */
 import IconVue from '@/components/Icons/IconVue.vue';
 import FontelloIcons from '@/components/Icons/FontelloIcons.vue';
+import Breadcrumbs from "./Breadcrumbs/Breadcrumbs.vue";
 
 export default [
     /* UI */
@@ -66,6 +72,7 @@ export default [
     TextButton,
     ResetButton,
 
+    SortSelectUI,
     InputVue,
     DialogVue,
     HeaderVue,
@@ -107,5 +114,9 @@ export default [
     RangeFilter,
     SearchBarFilter,
     DateFilter,
-    TagFilter
+    TagFilter,
+    SortDropdown,
+    FiltersDropdown,
+
+    Breadcrumbs,
 ];

@@ -1,5 +1,6 @@
 <template>
   <header-vue></header-vue>
+  <Breadcrumbs></Breadcrumbs>
   <!-- <PostsHeader></PostsHeader> -->
 
     <PostsVue></PostsVue>
@@ -30,7 +31,6 @@
 </template>
 
 <script>
-
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {

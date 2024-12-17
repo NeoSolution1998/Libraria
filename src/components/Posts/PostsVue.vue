@@ -6,6 +6,8 @@
         <div class="filters__block">
             <FiltersVue></FiltersVue>
         </div>
+        <div class="posts__section">
+        </div>
         <div class="posts_block">
             <posts-list-component></posts-list-component>
         </div>
@@ -14,9 +16,13 @@
 
 </template>
 <script>
-
 export default {
-    name: "PostsVue"
+    name: "PostsVue",
+    data() {
+        return {
+            filtersVisible: false,
+        }
+    }
 }
 </script>
 
@@ -34,39 +40,43 @@ export default {
 
 }
 
+.posts__section {
+    display: none;
+}
+
 .search__block {
-
     grid-area: search;
-
 }
 
 .filters__block {
-
     grid-area: filters;
 }
 
 .posts__block {
     grid-area: posts;
-
-
 }
 
 @media(max-width:1024px) {
     .posts__container {
         max-width: 1024px;
         margin: auto;
-        padding: 10px;
+        padding: 0px;
         display: grid;
         grid-template-areas:
-            "search "
+            "search"
             "filters"
-            "posts ";
-
+            "posts";
+        background-color: var(--white);
+        gap: 0px;
     }
 
     .filters__block {
         display: none;
     }
 
+    .posts__section {
+        display: block;
+        border: 2px solid var(--default);
+    }
 }
 </style>

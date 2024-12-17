@@ -13,6 +13,7 @@ export default {
   data() {
     return {
       icons: [
+        'sort-alt-up',
         'params',
         'search',
         'search-1',

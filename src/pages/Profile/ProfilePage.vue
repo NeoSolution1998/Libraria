@@ -1,5 +1,6 @@
 <template>
   <header-vue></header-vue>
+  <Breadcrumbs></Breadcrumbs>
   <div class="container">
     <div>
       <profile-vue :user="user"></profile-vue>

@@ -4,6 +4,7 @@
   <footer-vue></footer-vue>
 </template>
 
-<script></script>
+<script>
+</script>
 
 <style></style>

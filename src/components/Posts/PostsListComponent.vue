@@ -4,12 +4,19 @@
       <div class="posts__item" v-for="post in posts">
         <img :src="post.image" alt="">
         <div class="post__description">
-          <h1>{{ post.title }}</h1>
+          <div>
+            <h1>{{ post.title }}</h1>
+            <span class="icon-dot-3"></span>
+          </div>
+
           <p>{{ post.description }}</p>
         </div>
         <div class="post__footer">
           <RouterLink class="no-underline" to="/posts/1">Читать полностью</RouterLink>
           <span class="icon-chat"> 24</span>
+        </div>
+        <!--  -->
+        <div class="post__section">
         </div>
       </div>
     </div>
@@ -30,6 +37,11 @@
   grid-template-columns: repeat(3, 33.33%);
   grid-template-rows: auto;
   gap: 10px;
+}
+
+.post_section {
+  display: none;
+  border: 2px solid var(--default);
 }
 
 .posts__item {
@@ -60,6 +72,20 @@
   margin-top: 10px;
   padding-left: 0px;
   padding-right: 10px;
+}
+
+.post__description div {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.post__description div span {
+  transform: rotate(90deg);
+  font-size: 20px;
+}
+.post__description div span:hover {
+ color: var(--blue);
 }
 
 .post__description h1 {
@@ -97,7 +123,13 @@
   padding-left: 10px;
   padding-right: 10px;
 }
-
+.post__footer span:hover{
+  color: var(--blue);
+}
+.no-underline:hover{
+  color: var(--blue);
+  
+}
 @media (max-width: 1440px) {
   .posts__container {
     max-width: 1440px;
@@ -132,6 +164,15 @@
     font-size: 16px;
     padding-left: 10px;
     padding-right: 10px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .posts__container {
+
+    padding: 20px;
+    border-radius: 10px;
+
   }
 }
 
@@ -178,7 +219,6 @@
     max-width: 648px;
     padding: 0px;
     border-radius: 10px;
-    background-color: var(--default);
   }
 
   .posts__list {
@@ -188,9 +228,15 @@
     grid-template-rows: auto;
     gap: 15px;
   }
-.posts__item{
-  padding: 10px;
-}
+
+  .post__section {
+    border: 1px solid var(--default);
+  }
+
+  .posts__item {
+    padding: 10px;
+  }
+
   .posts__item img {
     max-height: 250px;
     min-height: 250px;

@@ -64,7 +64,7 @@ export default {
 }
 
 .filters__date_input {
-    border: 1px solid #ccc;
+    border: none;
     background-color: var(--light);
     padding: 10px;
     padding-left: 15px;

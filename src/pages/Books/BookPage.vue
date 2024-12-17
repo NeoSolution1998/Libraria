@@ -1,5 +1,6 @@
 <template>
   <header-vue></header-vue>
+  <Breadcrumbs></Breadcrumbs>
   <book-vue :book="$store.state.books.book"></book-vue>
 
   <div class="container">

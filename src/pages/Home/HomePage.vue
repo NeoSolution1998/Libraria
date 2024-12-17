@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <header-vue></header-vue>
-
+    
     <!-- Главное содержимое -->
     <main class="main-container">
       <!-- Главный баннер -->

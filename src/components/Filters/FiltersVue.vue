@@ -19,7 +19,7 @@
         </div>
 
         <div class="filters__button">
-            <TextButton>Сбросить фильтры</TextButton>
+            <TextButton>Сбросить все фильтры</TextButton>
         </div>
     </div>
 </template>
@@ -52,6 +52,8 @@ export default {
 }
 
 .filters__button {
+    display: flex;
+    justify-content: center;
     margin-top: 10px;
 }
 

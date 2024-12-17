@@ -1,6 +1,7 @@
 <template>
     <div class="container-fluid">
       <header-vue></header-vue>
+      <Breadcrumbs></Breadcrumbs>
       <posts-item :post="$store.state.posts.post"></posts-item>
   
       <div class="container"><comments-vue :commentableType="'App\\Models\\Post'" :commentableId="this.$route.params.id"></comments-vue></div>
