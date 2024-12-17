@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+<!--   <div class="container">
     <h2 class="mb-4">Популярные посты</h2>
     <div class="row">
       <div class="col-sm-6 col-md-4 col-lg-3 mb-5" v-for="post in posts" :key="post.id">
@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -71,7 +71,7 @@ export default {
       required: true,
     },
   },
-  methods: {
+ /*  methods: {
     async fetchPosts(page = 1, perPage = 4) {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/v1/posts", {
@@ -80,7 +80,7 @@ export default {
             per_page: perPage,
           },
           headers: {
-            Authorization: `Bearer CIFZiME42jOGAdciZfkD6FKuN3XL3Pwx0kOQb9lzf5ac247a`, // Замените на ваш токен авторизации
+            Authorization: `Bearer CIFZiME42jOGAdciZfkD6FKuN3XL3Pwx0kOQb9lzf5ac247a`, 
           },
         });
         console.log("Get response", response.data.posts);
@@ -118,7 +118,7 @@ export default {
   },
   mounted() {
     this.fetchPosts();
-  },
+  }, */
 };
 </script>
 

@@ -1,28 +1,43 @@
 <template>
   <div class="posts__container">
     <div class="posts__list">
-      <div class="posts__item" v-for="post in posts">
-        <img :src="post.image" alt="">
+      <div class="posts__item" v-for="post in posts" :key="post.id">
+        <img :src="post.image ? post.image : '/images/posts/post_default.jpg'" alt="Post cover">
         <div class="post__description">
           <div>
             <h1>{{ post.title }}</h1>
             <span class="icon-dot-3"></span>
           </div>
-
-          <p>{{ post.description }}</p>
+          <p>{{ post.content }}</p>
         </div>
         <div class="post__footer">
-          <RouterLink class="no-underline" to="/posts/1">Читать полностью</RouterLink>
+          <RouterLink class="no-underline" :to="`posts/${post.id}`">Читать полностью</RouterLink>
           <span class="icon-chat"> 24</span>
         </div>
-        <!--  -->
-        <div class="post__section">
-        </div>
+        <div class="post__section"></div>
       </div>
     </div>
+
   </div>
 </template>
 
+<script>
+import { mapActions, mapState } from "vuex";
+
+export default {
+  name: "PostsListComponent",
+  computed: {
+    ...mapState({
+      posts: state => state.posts.posts
+    })
+  },
+  methods: {
+  },
+
+  mounted() {
+  },
+};
+</script>
 <style scoped>
 .posts__container {
   max-width: 1920px;
@@ -84,8 +99,9 @@
   transform: rotate(90deg);
   font-size: 20px;
 }
+
 .post__description div span:hover {
- color: var(--blue);
+  color: var(--blue);
 }
 
 .post__description h1 {
@@ -123,13 +139,16 @@
   padding-left: 10px;
   padding-right: 10px;
 }
-.post__footer span:hover{
+
+.post__footer span:hover {
   color: var(--blue);
 }
-.no-underline:hover{
+
+.no-underline:hover {
   color: var(--blue);
-  
+
 }
+
 @media (max-width: 1440px) {
   .posts__container {
     max-width: 1440px;
@@ -260,58 +279,3 @@
   }
 }
 </style>
-
-<script>
-export default {
-  name: "PostsListComponent",
-  components: {
-  },
-  data() {
-    return {
-      posts: [
-        {
-          id: 1,
-          title: " Заголовок статьи ",
-          description: "Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.",
-          author: "Robert Martin",
-          image: "/images/books/potter.png",
-        },
-        {
-          id: 1,
-          title: " Заголовок статьи тут может быть очень много строчек, но лишнее обрезаетсястроки - максимум...",
-          description: "Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.",
-          author: "Robert Martin",
-          image: "/images/posts/article1.jpg",
-        },
-        {
-          id: 1,
-          title: " Заголовок статьи тут может быть очень много строчек, но лишнее обрезаетсястроки - максимум...",
-          description: "Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.",
-          author: "Robert Martin",
-          image: "/images/posts/article2.jpg",
-        }, {
-          id: 1,
-          title: " Заголовок статьи тут может быть очень много строчек, но лишнее обрезаетсястроки - максимум...",
-          description: "Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.",
-          author: "Robert Martin",
-          image: "images/posts/article3.jpg",
-        },
-        {
-          id: 1,
-          title: " Заголовок статьи тут может быть очень много строчек, но лишнее обрезаетсястроки - максимум...",
-          description: "Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.",
-          author: "Robert Martin",
-          image: "images/posts/article4.jpg",
-        },
-        {
-          id: 1,
-          title: " Заголовок статьи тут может быть очень много строчек, но лишнее обрезаетсястроки - максимум...",
-          description: "Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.Описание книги Обреченное королевство.",
-          author: "Robert Martin",
-          image: "images/posts/article5.jpg",
-        },
-      ]
-    }
-  }
-};
-</script>

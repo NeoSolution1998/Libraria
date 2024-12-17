@@ -7,7 +7,7 @@ export const postsModule = {
         post: [],
         totalPages: 0,
         currentPage: 1,
-        perPage: 12,
+        perPage: 6,
         page: 1,
         searchQuery: '',
         sortByDate: '',
@@ -46,15 +46,9 @@ export const postsModule = {
         async fetchPosts({ state, commit, rootState }, page = state.currentPage, per_page = state.perPage) {
             try {
                 const authToken = Cookies.get("auth_token") ?? "";
+                const apiUrl = `${process.env.VUE_APP_API_URL}/api/v1/posts`;
 
-                const url = new URL(window.location.href);
-                url.searchParams.set('page', page);
-                url.searchParams.set('search', state.searchQuery);
-                url.searchParams.set('sortDate', state.sortByDate);
-                url.searchParams.set('sortName', state.sortByName);
-                window.history.pushState({}, '', url);
-
-                const response = await axios.get(rootState.domain + "/api/v1/posts", {
+                const response = await axios.get(apiUrl, {
                     params: {
                         page: page,
                         per_page: per_page,
@@ -64,11 +58,12 @@ export const postsModule = {
                     },
                     headers: {
                         Authorization: `Bearer ${authToken}`,
+                        headers: { "Content-Type": "application/json" },
                     },
                 });
-
+                console.log(response.data.total_posts);
                 commit('setPosts', response.data.posts);
-                commit('setTotalPages', Math.ceil(response.data.meta.total_posts / response.data.meta.per_page));
+                commit('setTotalPages', Math.ceil(response.data.total_posts / response.data.per_page));
                 commit('setCurrentPage', state.currentPage++);
             } catch (e) {
                 console.error(e);
@@ -77,30 +72,19 @@ export const postsModule = {
         async getPost({ commit, state, rootState }, postId) {
             try {
                 const authToken = Cookies.get("auth_token") ?? "";
-                const response = await axios.get(rootState.domain + `/api/v1/posts/${postId}`, {
+                const apiUrl = `${process.env.VUE_APP_API_URL}/api/v1/posts/${postId}`;
+
+                const response = await axios.get(apiUrl, {
                     headers: {
                         Authorization: `Bearer ${authToken}`,
                     },
                 });
-
+                console.log(response.data);
                 state.post = response.data;
             } catch (e) {
                 console.error(e);
             }
         },
-        initializeStateFromURL({ commit, dispatch }) {
-            const url = new URL(window.location.href);
-            const page = parseInt(url.searchParams.get('page')) || 1;
-            const searchQuery = url.searchParams.get('search') || '';
-            const sortByDate = url.searchParams.get('sortDate') || 'date_desc';
-            const sortByName = url.searchParams.get('sortName') || '';
-
-            commit('setCurrentPage', page);
-            commit('setSearchQuery', searchQuery);
-            commit('setSortByDate', sortByDate);
-            commit('setSortByName', sortByName);
-            dispatch('fetchPosts', page);
-        }
     },
     namespaced: true
 };

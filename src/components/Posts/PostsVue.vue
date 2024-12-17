@@ -9,21 +9,47 @@
         <div class="posts__section">
         </div>
         <div class="posts_block">
-            <posts-list-component></posts-list-component>
+            <posts-list-component v-if="posts && posts.length"></posts-list-component>
+            <div v-else class="posts__empty">
+                <p>Постов пока нет или произошла ошибка при загрузке данных.</p>
+            </div>
         </div>
 
     </div>
 
 </template>
 <script>
+
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+
 export default {
+
     name: "PostsVue",
     data() {
         return {
             filtersVisible: false,
         }
-    }
-}
+    },
+
+    computed: {
+        ...mapState({
+            posts: state => state.posts.posts,
+            totalPages: state => state.posts.totalPages,
+            currentPage: state => state.posts.currentPage,
+        }),
+    },
+    methods: {
+        ...mapActions({
+            fetchPosts: "posts/fetchPosts",
+
+        }),
+        ...mapMutations({}),
+    },
+
+    mounted() {
+        this.fetchPosts();
+    },
+};
 </script>
 
 <style>
@@ -54,6 +80,15 @@ export default {
 
 .posts__block {
     grid-area: posts;
+    display: flex;
+    justify-content: start;
+}
+
+.posts__empty {
+    background-color: aliceblue;
+    width: 100%;
+    padding: 40px;
+    border-radius: 10px;
 }
 
 @media(max-width:1024px) {

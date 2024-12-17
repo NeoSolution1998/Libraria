@@ -140,7 +140,7 @@ export default {
       searchQuery: state => state.posts.searchQuery,
     }),
   },
-  watch: {
+/*   watch: {
     searchQuery: {
       immediate: true,
       handler(newVal) {
@@ -187,7 +187,7 @@ export default {
     toggleFilters() {
       this.showFilters = !this.showFilters;
     }
-  },
+  }, */
 };
 </script>
 

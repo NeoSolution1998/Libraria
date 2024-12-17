@@ -31,28 +31,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
-
-export default {
-  computed: {
-    ...mapState({
-      posts: state => state.posts.posts,
-      totalPages: state => state.posts.totalPages,
-      currentPage: state => state.posts.currentPage,
-    }),
-  },
-  methods: {
-    ...mapActions({
-      fetchPosts: "posts/fetchPosts",
-      initializeStateFromURL: "posts/initializeStateFromURL",
-    }),
-    ...mapMutations({}),
-  },
-
-  mounted() {
-    this.initializeStateFromURL();
-  },
-};
 </script>
 
 <style scoped>
