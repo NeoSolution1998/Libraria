@@ -61,7 +61,6 @@ export const postsModule = {
                         headers: { "Content-Type": "application/json" },
                     },
                 });
-                console.log(response.data.total_posts);
                 commit('setPosts', response.data.posts);
                 commit('setTotalPages', Math.ceil(response.data.total_posts / response.data.per_page));
                 commit('setCurrentPage', state.currentPage++);
