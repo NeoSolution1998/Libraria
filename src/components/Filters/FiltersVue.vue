@@ -32,7 +32,7 @@ export default {
 
 <style scoped>
 .filters__container {
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
     padding: 30px;
     border-radius: 8px;

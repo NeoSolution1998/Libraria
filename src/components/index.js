@@ -43,7 +43,7 @@ import PostsItem from "@/components/Posts/old/PostsItem.vue";
 import PopularPosts from "@/components/Posts/old/PopularPosts.vue";
 
 import PostsHeader from "./Posts/PostsHeader.vue";
-import PostsVue from "./Posts/PostsVue.vue";
+import PostsContainer from "./Posts/PostsContainer.vue";
 import PostsListComponent from "./Posts/PostsListComponent.vue";
 
 /* PROFILE */
@@ -71,6 +71,7 @@ import VuexComponent from "./vuexComponent.vue";
 /* Books */
 import BooksContainer from "./Books/BooksContainer.vue";
 import BooksListComponent from "./Books/BooksListComponent.vue";
+import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
 
 export default [
     /* UI */
@@ -112,12 +113,13 @@ export default [
 
     /* Posts */
     PostsHeader,
-    PostsVue,
+    PostsContainer,
     PostsListComponent,
 
     /* Books */
     BooksContainer,
     BooksListComponent,
+    BooksFilterComponent,
 
     /* Filters */
     FiltersVue,

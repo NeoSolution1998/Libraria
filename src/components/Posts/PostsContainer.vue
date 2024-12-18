@@ -1,9 +1,9 @@
 <template>
     <div class="posts__container">
-        <div class="search__block">
+        <div class="posts_search__block">
             <SearchBarFilter></SearchBarFilter>
         </div>
-        <div class="filters__block">
+        <div class="posts_filters__block">
             <FiltersVue></FiltersVue>
         </div>
 
@@ -24,7 +24,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
 
-    name: "PostsVue",
+    name: "PostsContainer",
     data() {
         return {
             filtersVisible: false,
@@ -56,14 +56,14 @@ export default {
 .posts__container {
     max-width: 1920px;
     margin: auto;
-    padding-top: 10px;
-    padding: 10px;
     display: grid;
     grid-template-areas:
         "search search "
         "filters posts ";
-    grid-template-columns: 1fr 4fr;
-    gap: 15px;
+    grid-template-columns: 1fr 3.5fr;
+
+    row-gap: 10px;
+    column-gap: 10px;
 
 }
 
@@ -71,11 +71,12 @@ export default {
     display: none;
 }
 
-.search__block {
+.posts_search__block {
     grid-area: search;
+    background-color: var(--white);
 }
 
-.filters__block {
+.posts_filters__block {
     grid-area: filters;
 }
 
@@ -107,7 +108,7 @@ export default {
         gap: 0px;
     }
 
-    .filters__block {
+    .posts_filters__block {
         display: none;
     }
 
