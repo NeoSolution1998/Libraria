@@ -1,20 +1,26 @@
 <template>
     <div class="posts__container">
-        <div class="posts_search__block">
-            <SearchBarFilter></SearchBarFilter>
-        </div>
-        <div class="posts_filters__block">
-            <FiltersVue></FiltersVue>
-        </div>
+        <div class="posts__container_blocks">
+            <div class="posts_search__block">
+                <SearchBarFilter></SearchBarFilter>
+            </div>
+            <div class="posts_filters__block">
+                <FiltersVue></FiltersVue>
+            </div>
 
-        <div class="posts_block">
-            <posts-list-component v-if="posts && posts.length"></posts-list-component>
-            <div v-else class="posts__empty">
-                <!-- TODO сделать красивую ошибку. Лучше сделать отдельными компонентами ошибки -->
-                <p>Постов пока нет или произошла ошибка при загрузке данных.</p>
+            <div class="posts_block">
+                <posts-list-component v-if="posts && posts.length"></posts-list-component>
+                <div v-else class="posts__empty">
+                    <!-- TODO сделать красивую ошибку. Лучше сделать отдельными компонентами ошибки -->
+                    <p>Постов пока нет или произошла ошибка при загрузке данных.</p>
+                </div>
             </div>
         </div>
 
+        <div class="posts_pagination">
+            <PaginationUI :totalPages="totalPages" :currentPage="currentPage" @page-changed="handlePageChange">
+            </PaginationUI>
+        </div>
     </div>
 
 </template>
@@ -43,7 +49,13 @@ export default {
             fetchPosts: "posts/fetchPosts",
 
         }),
-        ...mapMutations({}),
+        ...mapMutations({
+            setCurrentPage: "posts/setCurrentPage",
+        }),
+        handlePageChange(newPage) {
+            this.setCurrentPage(newPage);
+            this.fetchPosts();
+        },
     },
 
     mounted() {
@@ -54,6 +66,13 @@ export default {
 
 <style>
 .posts__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.posts__container_blocks {
     max-width: 1920px;
     margin: auto;
     display: grid;
@@ -61,10 +80,8 @@ export default {
         "search search "
         "filters posts ";
     grid-template-columns: 1fr 3.5fr;
-
     row-gap: 10px;
     column-gap: 10px;
-
 }
 
 .posts__section {
@@ -86,6 +103,8 @@ export default {
     justify-content: start;
 }
 
+.posts_pagination {}
+
 .posts__empty {
     background-color: aliceblue;
     width: 100%;
@@ -104,7 +123,7 @@ export default {
             "filters"
             "posts";
         background-color: var(--white);
-        grid-template-columns: 1fr;
+        grid-template-columns: auto;
         gap: 0px;
     }
 

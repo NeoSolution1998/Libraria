@@ -72,6 +72,7 @@ import VuexComponent from "./vuexComponent.vue";
 import BooksContainer from "./Books/BooksContainer.vue";
 import BooksListComponent from "./Books/BooksListComponent.vue";
 import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
+import PaginationUI from "./UI/Pagination/PaginationUI.vue";
 
 export default [
     /* UI */
@@ -132,4 +133,5 @@ export default [
     FiltersDropdown,
 
     Breadcrumbs,
+    PaginationUI
 ];
