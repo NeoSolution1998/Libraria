@@ -32,7 +32,7 @@ export default {
 
 <style scoped>
 .filters__container {
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
     padding: 30px;
     border-radius: 8px;
@@ -57,28 +57,5 @@ export default {
     margin-top: 10px;
 }
 
-@media (max-width: 1580px) {
-    .filters__container {
-        max-width: 350px;
-    }
-.filters__container h1{
-        font-size: 35px;
-    }
-}
-@media (max-width: 1366px) {
-    .filters__container {
-        max-width: 300px;
-    }
-    .filters__container h1{
-        font-size: 30px;
-    }
-}
-@media (max-width: 1280px) {
-    .filters__container {
-        max-width: 250px;
-    }
-    .filters__container h1{
-        font-size: 30px;
-    }
-}
+
 </style>

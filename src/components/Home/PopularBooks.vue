@@ -1,5 +1,5 @@
 <template>
-    <section class="books__container">
+    <section class="popular-books__container">
         <RouterLink class="no-underline" to="/books/1">
             <div class="books_header">
 
@@ -10,36 +10,37 @@
         </RouterLink>
 
 
-        <div class="books__section">
+        <div class="popular-books__section">
             <!-- button -->
-            <div class="books__left-arrow">
+            <div class="popular-books__left-arrow">
                 <span class="icon-left-open" @click="scrollLeft"></span>
             </div>
             <!--  -->
-            <div class="books__list">
+            <div class="popular-books__list">
 
-                <div class="books__item" v-for="book in books" :key="book.id">
+                <div class="popular-books__item" v-for="book in books" :key="book.id">
                     <RouterLink class="no-underline" to="/books/1">
-                        <div class="books_banner">
+                        <div class="popular-books_banner">
                             <img :src="book.image" :alt="book.title" loading="lazy" />
                         </div>
-                        <article class="books__item-content">
-                            <div class="books_item-header">
+                        <article class="popular-books__item-content">
+                            <div class="popular-books_item-header">
                                 <h2>{{ book.title }}</h2>
                                 <span class="icon-heart"></span>
                             </div>
 
                             <p class="books__description">{{ book.description }}</p>
-                            <footer class="books__item-footer">
-                                <p class="books__author">{{ book.author }}</p>
-                                <p class="books__rating-star icon-star" aria-label="Rating">{{ book.rating }}</p>
+                            <footer class="popular-books__item-footer">
+                                <p class="popular-books__author">{{ book.author }}</p>
+                                <p class="popular-books__rating-star icon-star" aria-label="Rating">{{ book.rating }}
+                                </p>
                             </footer>
                         </article>
                     </RouterLink>
                 </div>
             </div>
             <!-- button -->
-            <div class="books__right-arrow">
+            <div class="popular-books__right-arrow">
                 <span class="icon-right-open" @click="scrollRight"></span>
             </div>
             <!--  -->
@@ -156,14 +157,14 @@ export default {
     },
     methods: {
         scrollLeft() {
-            const list = document.querySelector('.books__list');
+            const list = document.querySelector('.popular-books__list');
             list.scrollBy({
                 left: -200,
                 behavior: 'smooth'
             });
         },
         scrollRight() {
-            const list = document.querySelector('.books__list');
+            const list = document.querySelector('.popular-books__list');
             list.scrollBy({
                 left: 200,
                 behavior: 'smooth'
@@ -174,7 +175,7 @@ export default {
 </script>
 
 <style scoped>
-.books__container {
+.popular-books__container {
     padding: 40px 20px 0px 40px;
     max-width: 1920px;
     margin: auto;
@@ -208,7 +209,7 @@ export default {
 }
 
 /* Books LIST */
-.books__list {
+.popular-books__list {
     display: grid;
     grid-auto-flow: column;
     grid-template-rows: auto;
@@ -219,33 +220,33 @@ export default {
     padding-bottom: 0px;
 }
 
-.books__item {
+.popular-books__item {
     transition: transform 0.5s cubic-bezier(0.2, 0, 0.2, 1),
 }
 
-.books__item:hover {
+.popular-books__item:hover {
     transform: scale(1.04);
 }
 
-.books_banner {
+.popular-books_banner {
     position: relative;
 }
 
-.books__item img {
+.popular-books__item img {
     height: 400px;
     border-radius: 20px;
 }
 
-.books__item-content {
+.popular-books__item-content {
     padding: 10px 0px;
 }
 
-.books_item-header {
+.popular-books_item-header {
     display: flex;
     justify-content: space-between;
 }
 
-.books__item-content h2 {
+.popular-books__item-content h2 {
     font-size: 20px;
     margin-bottom: 5px;
     display: -webkit-box;
@@ -265,13 +266,13 @@ export default {
     -webkit-box-orient: vertical;
 }
 
-.books__item-footer {
+.popular-books__item-footer {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
 }
 
-.books__rating-star {
+.popular-books__rating-star {
     color: var(--orange);
 }
 
@@ -282,12 +283,12 @@ export default {
 
 
 /* СТРЕЛКИ */
-.books__section {
+.popular-books__section {
     position: relative;
 }
 
-.books__left-arrow,
-.books__right-arrow {
+.popular-books__left-arrow,
+.popular-books__right-arrow {
     position: absolute;
     z-index: 100;
     color: var(--white);
@@ -304,21 +305,21 @@ export default {
     cursor: pointer;
 }
 
-.books__left-arrow {
+.popular-books__left-arrow {
     left: -10px;
     top: 40%;
     transform: translateY(-50%);
 }
 
-.books__right-arrow {
+.popular-books__right-arrow {
     right: -10px;
     top: 40%;
     transform: translateY(-50%);
 }
 
 /* Эффект наведения */
-.books__left-arrow:hover,
-.books__right-arrow:hover {
+.popular-books__left-arrow:hover,
+.popular-books__right-arrow:hover {
     background-color: #f39c12;
     color: var(--white);
     transform: translateY(-50%) scale(1.1);
@@ -326,20 +327,20 @@ export default {
 }
 
 /* Эффект нажатия */
-.books__left-arrow:active,
-.books__right-arrow:active {
+.popular-books__left-arrow:active,
+.popular-books__right-arrow:active {
     transform: translateY(-50%) scale(0.95);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.books__left-arrow,
-.books__right-arrow {
+.popular-books__left-arrow,
+.popular-books__right-arrow {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 
 @media(max-width: 1024px) {
-    .books__container {
+    .popular-books__container {
         padding: 20px;
         padding-bottom: 0px;
         max-width: 1024px;
@@ -356,11 +357,11 @@ export default {
     }
 
     /* BOOKS */
-    .books__list {
+    .popular-books__list {
         gap: 10px;
     }
 
-    .books__item img {
+    .popular-books__item img {
         height: 250px;
         border-radius: 10px;
     }
@@ -370,12 +371,12 @@ export default {
         padding-left: 10px;
     }
 
-    .books__item-content {
+    .popular-books__item-content {
         padding: 10px 0px;
 
     }
 
-    .books__item-content h2 {
+    .popular-books__item-content h2 {
         font-size: 14px;
         margin-bottom: 5px;
     }
@@ -387,14 +388,14 @@ export default {
 
     }
 
-    .books__item-footer {
+    .popular-books__item-footer {
         display: flex;
         justify-content: space-between;
         font-size: 10px;
     }
 
-    .books__left-arrow,
-    .books__right-arrow {
+    .popular-books__left-arrow,
+    .popular-books__right-arrow {
 
 
         height: 35px;
@@ -411,30 +412,30 @@ export default {
 
 /* Show arrows on smaller screens */
 @media(max-width: 768px) {
-    .books__list {
+    .popular-books__list {
         overflow: scroll;
         /* Hide scroll on small screens */
         display: flex;
     }
 
-    .books__item img {
+    .popular-books__item img {
         height: 200px;
         border-radius: 10px;
     }
 
-    .books__item-content h2 {
+    .popular-books__item-content h2 {
         font-size: 12px;
 
     }
 
-    .books__left-arrow,
-    .books__right-arrow {
+    .popular-books__left-arrow,
+    .popular-books__right-arrow {
         display: none;
     }
 }
 
 @media(max-width:440px) {
-    .books__container {
+    .popular-books__container {
         padding: 10px;
         padding-bottom: 0px;
         max-width: 440px;
@@ -456,12 +457,12 @@ export default {
     }
 
     /* BOOKS */
-    .books__list {
+    .popular-books__list {
 
         gap: 10px;
     }
 
-    .books__item img {
+    .popular-books__item img {
         height: 170px;
         border-radius: 10px;
     }
@@ -471,28 +472,28 @@ export default {
         padding-left: 10px;
     }
 
-    .books__item-content {
+    .popular-books__item-content {
         padding: 5px 0px;
 
     }
 
-    .books__item-content h2 {
+    .popular-books__item-content h2 {
         font-size: 10px;
         margin-bottom: 5px;
 
- 
+
     }
 
     .books__description {
         font-size: 8px;
         margin-bottom: 5px;
- 
- 
+
+
         color: var(--gray);
 
     }
 
-    .books__item-footer {
+    .popular-books__item-footer {
         display: flex;
         justify-content: space-between;
         font-size: 10px;

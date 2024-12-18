@@ -3,7 +3,7 @@
   <Breadcrumbs></Breadcrumbs>
   <!-- <PostsHeader></PostsHeader> -->
 
-    <PostsVue></PostsVue>
+    <PostsContainer></PostsContainer>
 
 
   <!-- <div class="container">

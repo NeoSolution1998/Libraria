@@ -1,5 +1,5 @@
 <template>
-  <div class="posts__container">
+  <div class="posts_list__container">
     <div class="posts__list">
       <div class="posts__item" v-for="post in posts" :key="post.id">
         <img :src="post.image ? post.image : '/images/posts/post_default.jpg'" alt="Post cover">
@@ -17,7 +17,6 @@
         <div class="post__section"></div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -39,8 +38,9 @@ export default {
 };
 </script>
 <style scoped>
-.posts__container {
+.posts_list__container {
   max-width: 1920px;
+
   padding: 40px;
   background-color: var(--white);
   border-radius: 10px;
@@ -150,7 +150,7 @@ export default {
 }
 
 @media (max-width: 1440px) {
-  .posts__container {
+  .posts_list__container {
     max-width: 1440px;
     padding: 20px;
     border-radius: 10px;
@@ -187,7 +187,7 @@ export default {
 }
 
 @media (max-width: 1024px) {
-  .posts__container {
+  .posts_list__container {
 
     padding: 20px;
     border-radius: 10px;
@@ -196,7 +196,7 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .posts__container {
+  .posts_list__container {
     max-width: 768px;
     padding: 10px;
     border-radius: 10px;
@@ -234,7 +234,7 @@ export default {
 }
 
 @media (max-width: 640px) {
-  .posts__container {
+  .posts_list__container {
     max-width: 648px;
     padding: 0px;
     border-radius: 10px;

@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 export const booksModule = {
   state: () => ({
     books: [],
-    book: null,
+    book: [],
     category: [],
     totalPages: 0,
     currentPage: 1,
@@ -61,17 +61,9 @@ export const booksModule = {
     async fetchBooks({ commit, state, rootState }, page = state.currentPage, perPage = state.perPage) {
       try {
         const authToken = Cookies.get("auth_token") ?? "";
+        const apiUrl = `${process.env.VUE_APP_API_URL}/api/v1/books`;
 
-        // Обновление URL с новыми параметрами
-        const url = new URL(window.location.href);
-        url.searchParams.set('page', page);
-        url.searchParams.set('search', state.searchQuery);
-        url.searchParams.set('category', state.selectedCategory);
-        url.searchParams.set('sortDate', state.sortByDate);
-        url.searchParams.set('sortName', state.sortByName);
-        window.history.pushState({}, '', url);
-
-        const response = await axios.get(`${rootState.domain}/api/v1/books`, {
+        const response = await axios.get(apiUrl, {
           params: {
             page: page,
             per_page: perPage,
@@ -85,9 +77,11 @@ export const booksModule = {
           },
         });
 
+        console.log(response.data);
+        
         commit('setBooks', response.data.books);
         commit('setCategory', response.data.category);
-        commit('setTotalPages', Math.ceil(response.data.meta.total_books / response.data.meta.per_page));
+        commit('setTotalPages', Math.ceil(response.data.total_books / response.data.per_page));
         commit('setCurrentPage', page);
       } catch (e) {
         console.error('Ошибка при получении данных о книгах:', e);

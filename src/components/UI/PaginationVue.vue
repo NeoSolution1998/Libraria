@@ -3,7 +3,7 @@
     <nav class="pagination-outer" aria-label="Page navigation">
       <ul class="pagination">
         <li class="page-item">
-          <a class="page-link" @click="goToPage(1)" aria-label="First">
+          <a class="page-link" @click.prevent="goToPage(1)" aria-label="First">
             <span aria-hidden="true">«</span>
           </a>
         </li>
@@ -13,15 +13,15 @@
           </a>
         </li>
         <li class="page-item" v-for="page in pagesToShow" :key="page" :class="{ active: page === currentPage }">
-          <a class="page-link" @click="goToPage(page)">{{ page }}</a>
+          <a class="page-link" @click.prevent="goToPage(page)">{{ page }}</a>
         </li>
         <li class="page-item">
-          <a class="page-link" @click="nextPage" aria-label="Next">
+          <a class="page-link" @click.prevent="nextPage" aria-label="Next">
             <span aria-hidden="true">Вперед</span>
           </a>
         </li>
         <li class="page-item">
-          <a class="page-link" @click="goToPage(totalPages)" aria-label="Last">
+          <a class="page-link" @click.prevent="goToPage(totalPages)" aria-label="Last">
             <span aria-hidden="true">»</span>
           </a>
         </li>
@@ -64,15 +64,19 @@ export default {
   methods: {
     prevPage() {
       if (this.currentPage > 1) {
+        console.log('prev page ', this.currentPage - 1);
         this.$emit("page-changed", this.currentPage - 1);
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
+        console.log('next page ', this.currentPage + 1);
         this.$emit("page-changed", this.currentPage + 1);
       }
     },
     goToPage(page) {
+      console.log('go to page ', page);
+
       this.$emit("page-changed", page);
     },
   },
@@ -80,18 +84,18 @@ export default {
 </script>
 
 <style scoped>
-.pagination > .active > a,
-.pagination > .active > a:focus,
-.pagination > .active > a:hover,
-.pagination > .active > span,
-.pagination > .active > span:focus,
-.pagination > .active > span:hover {
-  background-color: #3b4952;
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover {
+  background-color: #104769;
   border-color: #3b4952;
 }
 
-.pagination > li > a,
-.pagination > li > span {
+.pagination>li>a,
+.pagination>li>span {
   color: #2c3840;
   margin: 0 5px;
   border-radius: 3px;
@@ -102,10 +106,10 @@ export default {
   font-size: 16px;
 }
 
-.pagination > li > a:focus,
-.pagination > li > a:hover,
-.pagination > li > span:focus,
-.pagination > li > span:hover {
+.pagination>li>a:focus,
+.pagination>li>a:hover,
+.pagination>li>span:focus,
+.pagination>li>span:hover {
   background-color: #2756ad;
   border-color: #e74c3c;
   color: #fff;
@@ -168,9 +172,11 @@ export default {
     flex-wrap: nowrap;
     justify-content: space-between;
   }
+
   .pagination li {
     display: inline-block;
   }
+
   .pagination li a.page-link {
     font-size: 14px;
     padding: 4px 10px;
