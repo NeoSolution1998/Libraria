@@ -3,9 +3,11 @@
         <div class="posts__container_blocks">
             <div class="posts_search__block">
                 <SearchBarFilter></SearchBarFilter>
+                <div class="posts_search__block-separator">
+                </div>
             </div>
             <div class="posts_filters__block">
-                <FiltersVue></FiltersVue>
+                <FiltersComponent></FiltersComponent>
             </div>
 
             <div class="posts_block">
@@ -134,6 +136,15 @@ export default {
     .posts__section {
         display: block;
         border: 2px solid var(--default);
+    }
+
+
+
+    .posts_search__block-separator {
+        height: 2.5px;
+        border-radius: 30px;
+        background-color: var(--default);
+        margin: 0px 10px;
     }
 }
 </style>

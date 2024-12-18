@@ -199,6 +199,7 @@ export default {
   .posts_list__container {
     max-width: 768px;
     padding: 10px;
+    padding-top: 15px;
     border-radius: 10px;
   }
 
@@ -237,6 +238,7 @@ export default {
   .posts_list__container {
     max-width: 648px;
     padding: 0px;
+    padding-top: 0px;
     border-radius: 10px;
   }
 
@@ -259,6 +261,7 @@ export default {
   .posts__item img {
     max-height: 250px;
     min-height: 250px;
+    border-radius: 10px;
   }
 
   .post__description h1 {

@@ -3,10 +3,12 @@
         <div class="books__container_blocks">
             <div class="books_search__block">
                 <SearchBarFilter></SearchBarFilter>
+                <div class="books_search__block-separator">
+                </div>
             </div>
 
             <div class="books_filters__block">
-                <FiltersVue></FiltersVue>
+                <FiltersComponent></FiltersComponent>
             </div>
 
 
@@ -122,6 +124,9 @@ export default {
     .books__section {
         display: block;
         border: 2px solid var(--default);
+    }
+    .books_search__block-separator{
+
     }
 }
 </style>

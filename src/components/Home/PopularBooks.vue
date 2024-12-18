@@ -63,7 +63,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "Robert Martin",
                     rating: 5,
-                    image: "/images/books/potter.png",
+                    image: "/images/books/books_default12.jpg",
                 },
                 {
                     id: 1,
@@ -79,7 +79,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "Sarah J. Maas",
                     rating: 4.8,
-                    image: "/images/books/Kingdom.png",
+                    image: "/images/books/books_default4.jpg",
                 },
                 {
                     id: 3,
@@ -95,14 +95,14 @@ export default {
                     description: "Описание книги Обреченное королевство.Описание книги Обреченное королевство.писание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/default.png",
+                    image: "/images/books/books_default2.jpg",
                 }, {
                     id: 5,
                     title: "Default Book",
                     description: "Описание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/default.png",
+                    image: "/images/books/books_default3.jpg",
                 },
                 {
                     id: 6,
@@ -110,7 +110,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/default.png",
+                    image: "/images/books/books_default4.jpg",
                 },
                 {
                     id: 7,
@@ -118,7 +118,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/1.webp",
+                    image: "/images/books/books_default5.jpg",
                 },
                 {
                     id: 8,
@@ -126,7 +126,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/2.jpg",
+                    image: "/images/books/books_default5.jpg",
                 },
                 {
                     id: 9,
@@ -134,7 +134,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/3.webp",
+                    image: "/images/books/books_default2.jpg",
                 },
                 {
                     id: 10,
@@ -142,7 +142,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/4.jpg",
+                    image: "/images/books/books_default3.jpg",
                 },
                 {
                     id: 11,
@@ -150,7 +150,7 @@ export default {
                     description: "Описание книги Обреченное королевство.",
                     author: "John Doe",
                     rating: 4.7,
-                    image: "/images/books/5.jpg",
+                    image: "/images/books/books_default8.jpg",
                 },
             ],
         }

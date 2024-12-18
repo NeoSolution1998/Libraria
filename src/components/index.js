@@ -13,7 +13,7 @@ import SortVue from "@/components/UI/SortVue.vue";
 import RatingVue from '@/components/UI/RatingVue.vue';
 
 /* FILTERS */
-import FiltersVue from "@/components/Filters/FiltersVue.vue";
+import FiltersComponent from "@/components/Filters/FiltersComponent.vue";
 import CategoryFilter from "@/components/Filters/CategoryFilter.vue";
 import RangeFilter from "@/components/Filters/RangeFilter.vue";
 import SearchBarFilter from "@/components/Filters/Search/SearchBarFilter.vue";
@@ -123,7 +123,7 @@ export default [
     BooksFilterComponent,
 
     /* Filters */
-    FiltersVue,
+    FiltersComponent,
     CategoryFilter,
     RangeFilter,
     SearchBarFilter,

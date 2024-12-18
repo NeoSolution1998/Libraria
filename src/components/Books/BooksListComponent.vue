@@ -327,7 +327,7 @@ export default {
     }
 
     .books-item__image_block {
-        box-shadow: 0px 1px 8px var(--gray);
+        box-shadow: 0px 1px 2px var(--gray);
         border-radius: 10px;
 
     }

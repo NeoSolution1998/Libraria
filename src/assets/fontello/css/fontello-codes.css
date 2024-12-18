@@ -151,6 +151,17 @@
 .icon-light-down:before { content: '\e895'; } /* '' */
 .icon-lamp:before { content: '\e896'; } /* '' */
 .icon-megaphone:before { content: '\e897'; } /* '' */
+.icon-right-open-1:before { content: '\e898'; } /* '' */
+.icon-right-open-outline:before { content: '\e899'; } /* '' */
+.icon-left-open-1:before { content: '\e89a'; } /* '' */
+.icon-left-open-outline:before { content: '\e89b'; } /* '' */
+.icon-loop:before { content: '\e89c'; } /* '' */
+.icon-exchange:before { content: '\e89d'; } /* '' */
+.icon-loop-alt:before { content: '\e89e'; } /* '' */
+.icon-split:before { content: '\e89f'; } /* '' */
+.icon-cw:before { content: '\e8a0'; } /* '' */
+.icon-to-end-2:before { content: '\e8a1'; } /* '' */
+.icon-to-end-alt:before { content: '\e8a2'; } /* '' */
 .icon-menu-2:before { content: '\f008'; } /* '' */
 .icon-th-list-2:before { content: '\f009'; } /* '' */
 .icon-th-thumb-empty:before { content: '\f00b'; } /* '' */
@@ -159,6 +170,7 @@
 .icon-to-end-1:before { content: '\f010'; } /* '' */
 .icon-to-start-2:before { content: '\f011'; } /* '' */
 .icon-fast-forward-1:before { content: '\f012'; } /* '' */
+.icon-fast-backward-1:before { content: '\f013'; } /* '' */
 .icon-color-adjust:before { content: '\f020'; } /* '' */
 .icon-star-half-1:before { content: '\f022'; } /* '' */
 .icon-star-half_empty:before { content: '\f024'; } /* '' */
