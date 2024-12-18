@@ -17,9 +17,9 @@
       <SubscriptionsComponent></SubscriptionsComponent>
 
       <!-- Популярные посты -->
-      <section id="popular-posts" class="mt-3 py-5 bg-dark text-white">
+    <!--   <section id="popular-posts" class="mt-3 py-5 bg-dark text-white">
         <popular-posts></popular-posts>
-      </section>
+      </section> -->
 
       <!-- Подписка -->
       <!-- <section id="subscribe" class="py-5 bg-primary text-white">
@@ -32,6 +32,7 @@
     </main>
 
     <!-- Подвал -->
+     <!-- <FooterComponent></FooterComponent> -->
     <footer-vue id="footer"></footer-vue>
   </div>
   <!-- Шапка -->
