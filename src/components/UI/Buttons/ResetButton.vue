@@ -36,4 +36,9 @@ export default {
 .reset-button:hover {
   color: var(--red);
 }
+@media(max-width:440px) {
+    .reset-button{
+      font-size: 14px;
+    }
+}
 </style>

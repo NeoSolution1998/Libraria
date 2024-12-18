@@ -119,7 +119,7 @@ span {
 }
 
 span.selected {
-    background-color:var(--green-light);
+    background-color: var(--green-light);
     color: white;
     border-color: var(--green-light);
 }
@@ -127,7 +127,7 @@ span.selected {
 .show-more-button {
     margin-top: 15px;
     margin-bottom: 15px;
-    background-color:var(--green-light);
+    background-color: var(--green-light);
     color: white;
     border: none;
     border-radius: 4px;
@@ -142,7 +142,7 @@ span.selected {
 }
 
 .selected-tags {
-   
+
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -163,5 +163,66 @@ span.selected {
     color: red;
     font-size: 16px;
     margin-top: 10px;
+}
+
+@media(max-width:440px) {
+    .filters__tag {
+        margin-bottom: 6px;
+    }
+
+    .filters__tag_header label {
+        font-size: 14px;
+    }
+
+    .tags {
+        gap: 3px;
+        flex-wrap: wrap;
+    }
+
+    span {
+        padding: 3px 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 10px;
+    }
+
+    .show-more-button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .show-more-button:hover {
+        background-color: #0056b3;
+    }
+
+    .selected-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .selected-tags p {
+        font-size: 14px;
+        margin-bottom: 0px;
+    }
+
+    .selected-tag {
+        background-color: var(--green);
+        padding: 4px 4px;
+        border-radius: 4px;
+    }
+
+    .max-tags-warning {
+        color: red;
+        font-size: 12px;
+        margin-top: 10px;
+        margin: 0px
+    }
+
+
 }
 </style>

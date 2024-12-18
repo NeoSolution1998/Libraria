@@ -1,11 +1,9 @@
 <template>
     <section class="popular-books__container">
-        <RouterLink class="no-underline" to="/books/1">
+        <RouterLink class="no-underline" to="/books">
             <div class="books_header">
-
                 <h1 class="books_header_text">Популярные книги</h1>
                 <span class="icon-right-open"></span>
-
             </div>
         </RouterLink>
 
@@ -19,9 +17,9 @@
             <div class="popular-books__list">
 
                 <div class="popular-books__item" v-for="book in books" :key="book.id">
-                    <RouterLink class="no-underline" to="/books/1">
+                 
                         <div class="popular-books_banner">
-                            <img :src="book.image" :alt="book.title" loading="lazy" />
+                            <RouterLink class="no-underline" to="/books/1"><img :src="book.image" :alt="book.title" loading="lazy" /></RouterLink>
                         </div>
                         <article class="popular-books__item-content">
                             <div class="popular-books_item-header">
@@ -36,7 +34,7 @@
                                 </p>
                             </footer>
                         </article>
-                    </RouterLink>
+              
                 </div>
             </div>
             <!-- button -->

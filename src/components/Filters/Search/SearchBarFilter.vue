@@ -10,7 +10,7 @@
 
         <!-- Иконка сортировки для мобильной версии -->
         <div class="search_bar__sorts_mobile">
-            <div @click="toggleFiltersDropdown" title="сортировка" class="search_bar__sort_mobile">
+            <div @click="toggleFiltersDropdown" title="сортировка" class="search_bar__sort_mobile open-modal-btn">
                 <span class="icon-filter-1"></span>
             </div>
             <div title="сортировка" class="search_bar__sort_mobile">
@@ -21,11 +21,12 @@
             <SortDropdown v-if="isSortDropdownOpen" @click="toggleSortDropdown"></SortDropdown>
         </div>
 
-    </div> 
-    <div class="search_bar__dropdown-block">
-    <FiltersDropdown v-if="isFiltersDropdownOpen" @click="toggleFiltersDropdown"  ></FiltersDropdown>    
     </div>
-    
+    <div class="search_bar__dropdown-block">
+        <FiltersDropdown v-if="isFiltersDropdownOpen" :isVisible="isFiltersDropdownOpen" @toggleFiltersDropdown="toggleFiltersDropdown">
+        </FiltersDropdown>
+    </div>
+
 </template>
 
 <style scoped>
@@ -164,6 +165,15 @@
         align-items: center;
         grid-area: dropdown;
     }
+    .open-modal-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 }
 
 @media(max-width:640px) {
@@ -236,7 +246,7 @@ export default {
                 { value: "popular_desc", label: "По популярности (по убыванию)" },
                 { value: "popular_ask", label: "По популярности (по убыванию)" },
             ],
-            selectedSort: "name_asc", 
+            selectedSort: "name_asc",
             isSortDropdownOpen: false,
             isFiltersDropdownOpen: false,
         };
