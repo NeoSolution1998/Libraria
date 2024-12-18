@@ -113,7 +113,7 @@ export default {
 }
 
 @media(max-width:1024px) {
-    .posts__container {
+    .posts__container_blocks {
         max-width: 1024px;
         margin: auto;
         padding: 0px;
@@ -123,7 +123,7 @@ export default {
             "filters"
             "posts";
         background-color: var(--white);
-        grid-template-columns: auto;
+        grid-template-columns: 1fr;
         gap: 0px;
     }
 
