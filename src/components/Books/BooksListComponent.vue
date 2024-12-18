@@ -9,7 +9,8 @@
             <div class="books-item__description_block">
                 <div>
                     <div class="books-item__header">
-                        <h1>{{ book.title }}</h1>
+                        <RouterLink class="no-underline" :to="`books/${book.id}`"><h1>{{ book.title }}</h1></RouterLink>
+                       
                         <span class="icon-bookmark-empty"></span>
                     </div>
 

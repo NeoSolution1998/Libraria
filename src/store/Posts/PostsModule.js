@@ -7,7 +7,7 @@ export const postsModule = {
         post: [],
         totalPages: 0,
         currentPage: 1,
-        perPage: 6,
+        perPage: 12,
         page: 1,
         searchQuery: '',
         sortByDate: '',
