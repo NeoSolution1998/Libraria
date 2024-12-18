@@ -7,6 +7,7 @@ import { commentsModule } from "./Comments/CommentsModule";
 import { paginationModule } from "./UI/PaginationModule";
 import { headerModule } from "./Header/headerModule";
 import { authModule } from './Auth/AuthModule';
+import { SubscriptionsModule } from "./Subscriptions/SubscriptionsModule";
 
 export default createStore({
     state: {
@@ -20,6 +21,7 @@ export default createStore({
         comments: commentsModule,
         pagination: paginationModule,
         chapters: chaptersModule,
-        images: imagesModule
+        images: imagesModule,
+        subscriptions: SubscriptionsModule,
     }
 })

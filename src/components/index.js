@@ -60,7 +60,7 @@ import LoginVue from "@/components/Auth/LoginVue.vue";
 import RegistrationVue from "@/components/Auth/RegistrationVue.vue";
 
 /* SUBSCRIPTION */
-import SubscriptionVue from "@/components/SubscriptionVue.vue";
+import SubscriptionsComponent from "./Subscriptions/SubscriptionsComponent.vue";
 
 /* ICONS */
 import IconVue from '@/components/Icons/IconVue.vue';
@@ -73,6 +73,7 @@ import BooksContainer from "./Books/BooksContainer.vue";
 import BooksListComponent from "./Books/BooksListComponent.vue";
 import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
 import PaginationUI from "./UI/Pagination/PaginationUI.vue";
+
 
 export default [
     /* UI */
@@ -99,7 +100,6 @@ export default [
     SettingsVue,
     ProfileVue,
     BookVue,
-    SubscriptionVue,
     CommentsVue,
     Comments,
     IconVue,
@@ -133,5 +133,8 @@ export default [
     FiltersDropdown,
 
     Breadcrumbs,
-    PaginationUI
+    PaginationUI,
+
+    SubscriptionsComponent,
+
 ];
