@@ -3,9 +3,11 @@
         <div class="posts__container_blocks">
             <div class="posts_search__block">
                 <SearchBarFilter></SearchBarFilter>
+                <div class="posts_search__block-separator">
+                </div>
             </div>
             <div class="posts_filters__block">
-                <FiltersVue></FiltersVue>
+                <FiltersComponent></FiltersComponent>
             </div>
 
             <div class="posts_block">
@@ -113,7 +115,7 @@ export default {
 }
 
 @media(max-width:1024px) {
-    .posts__container {
+    .posts__container_blocks {
         max-width: 1024px;
         margin: auto;
         padding: 0px;
@@ -123,7 +125,7 @@ export default {
             "filters"
             "posts";
         background-color: var(--white);
-        grid-template-columns: auto;
+        grid-template-columns: 1fr;
         gap: 0px;
     }
 
@@ -134,6 +136,15 @@ export default {
     .posts__section {
         display: block;
         border: 2px solid var(--default);
+    }
+
+
+
+    .posts_search__block-separator {
+        height: 2.5px;
+        border-radius: 30px;
+        background-color: var(--default);
+        margin: 0px 10px;
     }
 }
 </style>

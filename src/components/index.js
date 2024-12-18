@@ -13,7 +13,7 @@ import SortVue from "@/components/UI/SortVue.vue";
 import RatingVue from '@/components/UI/RatingVue.vue';
 
 /* FILTERS */
-import FiltersVue from "@/components/Filters/FiltersVue.vue";
+import FiltersComponent from "@/components/Filters/FiltersComponent.vue";
 import CategoryFilter from "@/components/Filters/CategoryFilter.vue";
 import RangeFilter from "@/components/Filters/RangeFilter.vue";
 import SearchBarFilter from "@/components/Filters/Search/SearchBarFilter.vue";
@@ -60,7 +60,7 @@ import LoginVue from "@/components/Auth/LoginVue.vue";
 import RegistrationVue from "@/components/Auth/RegistrationVue.vue";
 
 /* SUBSCRIPTION */
-import SubscriptionVue from "@/components/SubscriptionVue.vue";
+import SubscriptionsComponent from "./Subscriptions/SubscriptionsComponent.vue";
 
 /* ICONS */
 import IconVue from '@/components/Icons/IconVue.vue';
@@ -74,6 +74,7 @@ import BooksListComponent from "./Books/BooksListComponent.vue";
 import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
 import PaginationUI from "./UI/Pagination/PaginationUI.vue";
 import FooterComponent from "./Header/FooterComponent.vue";
+
 
 export default [
     /* UI */
@@ -100,7 +101,6 @@ export default [
     SettingsVue,
     ProfileVue,
     BookVue,
-    SubscriptionVue,
     CommentsVue,
     Comments,
     IconVue,
@@ -124,7 +124,7 @@ export default [
     BooksFilterComponent,
 
     /* Filters */
-    FiltersVue,
+    FiltersComponent,
     CategoryFilter,
     RangeFilter,
     SearchBarFilter,
@@ -135,6 +135,7 @@ export default [
 
     Breadcrumbs,
     PaginationUI,
-
+    SubscriptionsComponent,
     FooterComponent,
+
 ];

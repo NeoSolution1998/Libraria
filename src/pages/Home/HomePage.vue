@@ -14,8 +14,7 @@
            <popular-books></popular-books>
 
       <!-- Подписка -->
-
-      <subscription-vue></subscription-vue>
+      <SubscriptionsComponent></SubscriptionsComponent>
 
       <!-- Популярные посты -->
     <!--   <section id="popular-posts" class="mt-3 py-5 bg-dark text-white">
@@ -41,6 +40,7 @@
 </template>
 
 <script>
+
 export default {
   name: "Home",
   data() {

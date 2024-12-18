@@ -34,7 +34,7 @@ export default {
         resetHover() {
             this.hoveredRating = 0; // Сбрасываем hover, если мышь ушла
         },
-        resetRangeFilter(){
+        resetRangeFilter() {
             this.selectedRating = 0;
         }
     }
@@ -45,19 +45,23 @@ export default {
 .filters__range {
     display: flex;
     flex-direction: column;
-   
+
 }
-.filters__range_header{
+
+.filters__range_header {
     display: flex;
     justify-content: space-between
 }
+
 .filters__range_header label {
     font-size: 18px;
 }
-.filters__range p{
+
+.filters__range p {
     color: var(--blue);
     margin-bottom: 5px;
 }
+
 .rating {
     display: flex;
     gap: 0px;
@@ -78,5 +82,41 @@ export default {
 .rating span:hover {
     transform: scale(1.2);
     /* Небольшое увеличение при наведении */
+}
+
+@media(max-width:440px) {
+
+
+    .filters__range_header label {
+        font-size: 14px;
+    }
+
+    .filters__range p {
+        color: var(--blue);
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .rating {
+        display: flex;
+        gap: 0px;
+        font-size: 18px;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .rating span {
+        transition: color 0.2s ease-in-out;
+    }
+
+    .rating span.filled {
+        color: #ffc107;
+        /* Цвет для заполненной звезды (золотой) */
+    }
+
+    .rating span:hover {
+        transform: scale(1.2);
+        /* Небольшое увеличение при наведении */
+    }
 }
 </style>

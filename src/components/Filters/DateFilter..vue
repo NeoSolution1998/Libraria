@@ -77,4 +77,40 @@ export default {
     border-color: var(--primary);
     box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
 }
+
+@media(max-width:440px) {
+    .filters__date {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    .filters__date label {
+        font-size: 14px;
+
+    }
+
+    .filters__date_inputs {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .filters__date_input {
+        border: none;
+        background-color: var(--light);
+        padding: 6px;
+        padding-left: 10px;
+        font-size: 14px;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .filters__date_input:focus {
+       
+        border-color: var(--primary);
+        box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+    }
+
+}
 </style>
