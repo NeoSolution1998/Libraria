@@ -29,7 +29,7 @@ import PopularBooks from "./Home/PopularBooks.vue";
 
 /* HEADER AND FOOTER */
 import HeaderVue from "@/components/Header/HeaderVue.vue";
-import FooterVue from "@/components/FooterVue.vue";
+import FooterVue from "@/components/Footer/FooterVue.vue";
 
 /* BOOKS */
 import BooksList from "@/components/Books/old/BooksList.vue";
@@ -73,7 +73,7 @@ import BooksContainer from "./Books/BooksContainer.vue";
 import BooksListComponent from "./Books/BooksListComponent.vue";
 import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
 import PaginationUI from "./UI/Pagination/PaginationUI.vue";
-import FooterComponent from "./Header/FooterComponent.vue";
+import FooterComponent from "./Footer/FooterComponent.vue";
 
 
 export default [

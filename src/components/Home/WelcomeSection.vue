@@ -101,7 +101,7 @@ export default {
 }
 
 .welcome-banner img:hover {
-    transform: translate(-50%, -50%) scale(1.15) rotate(3deg);
+    transform: translate(-50%, -50%) scale(1.05) ;
     /* Увеличение и легкий наклон */
     filter: brightness(1.1);
     /* Легкое осветление изображения */
