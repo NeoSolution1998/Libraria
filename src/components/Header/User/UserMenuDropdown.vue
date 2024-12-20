@@ -87,7 +87,7 @@
   .dropdown-item {
     font-family: "Rubik-Medium", sans-serif;
     font-size: 16px;
-    color: var(--bisque);
+    color: var(--white);
     text-decoration: none;
     text-align: center;
     padding: 12px;
@@ -104,7 +104,7 @@
   /* Разделитель */
   .dropdown-divider {
     border: none;
-    border-top: 1px solid var(--bisque);
+    border-top: 1px solid var(--white);
     margin: 0;
   }
   
@@ -113,7 +113,7 @@
     font-family: "Rubik-Medium", sans-serif;
     font-size: 14px;
     color: var(--dark);
-    background-color: var(--bisque);
+    background-color: var(--white);
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
