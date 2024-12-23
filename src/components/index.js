@@ -29,7 +29,7 @@ import PopularBooks from "./Home/PopularBooks.vue";
 
 /* HEADER AND FOOTER */
 import HeaderVue from "@/components/Header/HeaderVue.vue";
-import FooterVue from "@/components/FooterVue.vue";
+import FooterVue from "@/components/Footer/FooterVue.vue";
 
 /* BOOKS */
 import BooksList from "@/components/Books/old/BooksList.vue";
@@ -48,7 +48,7 @@ import PostsListComponent from "./Posts/PostsListComponent.vue";
 
 /* PROFILE */
 import ProfileVue from "@/components/Profile/ProfileVue.vue";
-import SettingsVue from "@/components/Profile/SettingsVue.vue";
+
 
 /* COMMENTS */
 import CommentsVue from "@/components/Comments/CommentsVue.vue";
@@ -73,7 +73,24 @@ import BooksContainer from "./Books/BooksContainer.vue";
 import BooksListComponent from "./Books/BooksListComponent.vue";
 import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
 import PaginationUI from "./UI/Pagination/PaginationUI.vue";
-import FooterComponent from "./Header/FooterComponent.vue";
+import FooterComponent from "./Footer/FooterComponent.vue";
+import ProfileComponent from "./Profile/ProfileComponent.vue";
+
+
+/* PROFILE */
+import ProfileHeader from "./Profile/UserProfile/ProfileHeader.vue";
+import ProfileSidebar from "./Profile/UserProfile/ProfileSidebar.vue";
+import ProfileMain from "./Profile/UserProfile/ProfileMain.vue";
+import FollowersSection from "./Profile/UserProfile/ProfileSections/FollowersSection.vue";
+import FriendsSection from "./Profile/UserProfile/ProfileSections/FriendsSection.vue";
+import UserSection from "./Profile/UserProfile/ProfileSections/UserSection.vue";
+import WallSection from "./Profile/UserProfile/ProfileSections/WallSection.vue";
+
+import SettingsVue from "./Profile/UserSettings/SettingsVue.vue";
+import MainSection from "./Profile/UserProfile/ProfileSections/MainSection.vue";
+import SocialSection from "./Profile/UserProfile/ProfileSections/SocialSection.vue";
+/* Wall */
+
 
 
 export default [
@@ -98,7 +115,6 @@ export default [
     AuthVue,
     RegistrationVue,
     LoginVue,
-    SettingsVue,
     ProfileVue,
     BookVue,
     CommentsVue,
@@ -137,5 +153,24 @@ export default [
     PaginationUI,
     SubscriptionsComponent,
     FooterComponent,
+
+    /* Profile */
+    ProfileVue,
+    ProfileComponent,
+
+    ProfileHeader,
+    ProfileSidebar,
+    ProfileMain,  
+    FollowersSection,
+    FriendsSection,
+    UserSection,
+    WallSection,
+    MainSection,
+    SocialSection,
+
+    SettingsVue,
+
+
+
 
 ];

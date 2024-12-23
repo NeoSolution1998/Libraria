@@ -24,9 +24,9 @@ export default {
 }
 
 .btn:hover {
-  background-color: var(--green);
+  background-color: var(--dark-blue);
   transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--green);
   box-shadow: 0 0 20px 5px var(--dark-blue); /* Голубое свечение */
   border-radius: 10px;

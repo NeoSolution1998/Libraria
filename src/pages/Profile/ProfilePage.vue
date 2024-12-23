@@ -1,11 +1,10 @@
 <template>
   <header-vue></header-vue>
   <Breadcrumbs></Breadcrumbs>
-  <div class="container">
-    <div>
-      <profile-vue :user="user"></profile-vue>
-    </div>
-  </div>
+
+  <ProfileComponent></ProfileComponent>
+<!--   <profile-vue :user="user"></profile-vue> -->
+
   <footer-vue></footer-vue>
 </template>
 

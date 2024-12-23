@@ -1,7 +1,7 @@
 <template>
   <footer class="footer ">
-    <div class="footer-top bg-dark  border-top  border-opacity-10 py-8">
-      <div class="container bg-dark">
+    <div class="footer-top   border-top  border-opacity-10 py-3">
+      <div class="container ">
         <div class="row gy-5">
           <div class="col-lg-8 pe-xxl-10">
             <div class="row gy-5">
@@ -30,7 +30,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="col-6 col-lg-4">
+              <div class="footer_help col-6 col-lg-4">
                 <h5 class="text-white footer-title-01">Помощь</h5>
                 <ul class="list-unstyled footer-link-01 m-0">
                   <li><a class="text-white text-opacity-75" href="#">Свяжитесь с нами</a></li>
@@ -46,7 +46,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
+          <div class=" footer-email col-lg-4">
             <h5 class="text-white footer-title-01 fs-5">
               Подпишитесь на нашу рассылку и получите 15% скидку на следующую книгу.
             </h5>
@@ -69,7 +69,7 @@
         </div>
       </div>
     </div>
-    <div class="footer-bottom bg-dark small py-3 border-top border-white border-opacity-10">
+    <div class="footer-bottom  small py-3 border-top border-white border-opacity-10">
       <div class="container">
         <div class="row">
           <div class="col-md-6 text-center text-md-start py-1">
@@ -85,9 +85,7 @@
               <li class="p-0 mx-3 ms-md-0 me-md-3">
                 <a href="#" class="text-white text-opacity-75">Часто задаваемые вопросы</a>
               </li>
-              <li class="p-0 mx-3 ms-md-0 me-md-3">
-                <a href="#" class="text-white text-opacity-75">Получить котировку</a>
-              </li>
+  
             </ul>
           </div>
         </div>
@@ -104,8 +102,10 @@ export default {
 
 <style>
 .footer {
-  background: linear-gradient(to left, #000000, #000102); /* Градиентный фон */
+  background: linear-gradient(to left, var(--dark), var(--dark)); /* Градиентный фон */
   color: #fff;
+  max-width: 1920px;
+  margin: auto;
 }
 .wrapper > * {
   flex: 0 0 auto;
@@ -141,9 +141,18 @@ a {
   padding-top: 0.8rem;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1024px) {
   .footer-link-01 li + li {
     padding-top: 0.6rem;
+  }
+  .footer_help{
+    display: none;
+  }
+  .footer-email h5{
+     display: none;
+  }
+  .footer-email{
+    margin-top:10px
   }
 }
 

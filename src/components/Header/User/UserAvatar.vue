@@ -61,8 +61,8 @@ export default {
   width: 60px;
   height: 60px;
   overflow: hidden;
-  border: 2px solid var(--bisque);
-  border-radius: 50%;
+  border: 3px solid var(--bisque);
+  border-radius: 20%;
 }
 
 .user-avatar img {
@@ -155,6 +155,12 @@ export default {
     padding: 4px;
     margin: 0%;
   }
+  .header-dropdown-avatar {
+
+  overflow: hidden;
+  border: 2px solid var(--bisque);
+ 
+}
 
   .header-dropdown-item {
     height: 30px;
