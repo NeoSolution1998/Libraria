@@ -11,11 +11,11 @@
             </div>
             <hr class="social_section__separator">
             <div class="social_section__item">
-                <p>vk</p> 
+                <p>vk</p> <p>www.vk.ru</p>
             </div>
             <hr class="social_section__separator">
             <div class="social_section__item">
-                <p>Habr</p>
+                <p>Habr</p><p>wwww.habr.ru</p>
             </div>
         </div>
     </div>
