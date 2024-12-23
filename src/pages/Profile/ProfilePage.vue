@@ -3,7 +3,7 @@
   <Breadcrumbs></Breadcrumbs>
 
   <ProfileComponent></ProfileComponent>
-  <profile-vue :user="user"></profile-vue>
+<!--   <profile-vue :user="user"></profile-vue> -->
 
   <footer-vue></footer-vue>
 </template>

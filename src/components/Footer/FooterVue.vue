@@ -104,6 +104,8 @@ export default {
 .footer {
   background: linear-gradient(to left, var(--dark), var(--dark)); /* Градиентный фон */
   color: #fff;
+  max-width: 1920px;
+  margin: auto;
 }
 .wrapper > * {
   flex: 0 0 auto;

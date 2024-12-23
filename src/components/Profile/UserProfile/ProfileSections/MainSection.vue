@@ -10,8 +10,8 @@
 
             <div class="profile_main_section__details">
                 <div class="profile_main_section__details-column">
-                    <h5>Дата регистрации:</h5>
-                    <p>17.01.2024</p>
+                    <h5>Дата роджения:</h5>
+                    <p>14.11.1967</p>
                 </div>
                 <hr class="profile__separator" />
                 <div class="profile_main_section__details-column">
@@ -35,33 +35,43 @@
                 </div>
             </div>
 
-            <div class="profile_main_section__links">
+            <!--  <div class="profile_main_section__links">
                 <p class="profile_main_section__link">Мои книги</p>
                 <p class="profile_main_section__link">Мои статьи</p>
-            </div>
+            </div> -->
 
-            <div class="profile_main_section__stats">
+            <!-- <div class="profile_main_section__stats">
                 <div class="profile_main_section__stats-item">
-                    <p class="profile_main_section__stats-number">12</p>
+
                     <p class="profile_main_section__stats-label">Книг</p>
+                    <p class="profile_main_section__stats-number">12</p>
                 </div>
                 <div class="profile_main_section__stats-item">
-                    <p class="profile_main_section__stats-number">16</p>
-                    <p class="profile_main_section__stats-label">Подписок</p>
+
+                    <p class="profile_main_section__stats-label">Прочитано</p>
+                    <p class="profile_main_section__stats-number">10</p>
                 </div>
                 <div class="profile_main_section__stats-item">
-                    <p class="profile_main_section__stats-number">1147</p>
-                    <p class="profile_main_section__stats-label">Статей</p>
+
+                    <p class="profile_main_section__stats-label">Сохранено</p>
+                    <p class="profile_main_section__stats-number">57</p>
                 </div>
                 <div class="profile_main_section__stats-item">
+
+                    <p class="profile_main_section__stats-label">Лайки</p>
                     <p class="profile_main_section__stats-number">245</p>
-                    <p class="profile_main_section__stats-label">Лайка</p>
                 </div>
                 <div class="profile_main_section__stats-item">
+
+                    <p class="profile_main_section__stats-label">Друзья</p>
                     <p class="profile_main_section__stats-number">24</p>
-                    <p class="profile_main_section__stats-label">Друга</p>
                 </div>
-            </div>
+                <div class="profile_main_section__stats-item">
+
+                    <p class="profile_main_section__stats-label">Подписчики</p>
+                    <p class="profile_main_section__stats-number">56</p>
+                </div>
+            </div> -->
         </div>
     </div>
 
@@ -108,7 +118,7 @@ export default {
 .profile_main_section__content {
     display: grid;
     grid-template-areas:
-        "details links"
+        "details details"
         'stats stats';
     grid-template-columns: 2fr 4fr;
     gap: 10px;
@@ -118,8 +128,8 @@ export default {
     grid-area: details;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    background-color: var(--light);
+
+    background-color: var(--white);
     border-radius: 20px;
     padding: 10px 20px;
     margin-top: 10px;
@@ -138,14 +148,14 @@ export default {
     flex-direction: column;
     align-items: end;
     color: var(--gray);
-    font-size: 16px;
+    font-size: 22px;
 
 }
 
 .profile_main_section__details-column h5 {
     display: flex;
     flex-direction: column;
-    font-size: 18px;
+    font-size: 22px;
     font-family: Russo;
     color: var(--dark-muted);
 
@@ -197,7 +207,7 @@ export default {
 @media(max-width:640px) {
     .profile_main_section__container {
         background-color: var(--white);
-        padding: 20px;
+        padding: 20px 15px;
         border-radius: 10px;
     }
 
@@ -217,6 +227,14 @@ export default {
         font-size: 14px;
     }
 
+    .profile_main_section__links {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .profile_main_section__link {}
+
     .profile_main_section__content {
         display: grid;
         grid-template-areas:
@@ -232,25 +250,17 @@ export default {
         display: flex;
         justify-content: space-between;
         background-color: var(--light);
-        border-radius: 20px;
-        padding: 10px 20px;
+        border-radius: 10px;
+        padding: 1px 10px;
         margin-top: 10px;
     }
 
-    .profile_main_section__details-column--values {
-        display: flex;
-        flex-direction: column;
-        align-items: end;
-        color: var(--gray);
-        gap: 5px;
+    .profile_main_section__details-column h5 {
+        font-size: 16px;
     }
 
-    .profile_main_section__details-column--labels {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        font-family: Russo;
-        color: var(--green-light);
+    .profile_main_section__details-column p {
+        font-size: 14px;
 
     }
 

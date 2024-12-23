@@ -75,6 +75,8 @@ import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
 import PaginationUI from "./UI/Pagination/PaginationUI.vue";
 import FooterComponent from "./Footer/FooterComponent.vue";
 import ProfileComponent from "./Profile/ProfileComponent.vue";
+
+
 /* PROFILE */
 import ProfileHeader from "./Profile/UserProfile/ProfileHeader.vue";
 import ProfileSidebar from "./Profile/UserProfile/ProfileSidebar.vue";
@@ -86,6 +88,9 @@ import WallSection from "./Profile/UserProfile/ProfileSections/WallSection.vue";
 
 import SettingsVue from "./Profile/UserSettings/SettingsVue.vue";
 import MainSection from "./Profile/UserProfile/ProfileSections/MainSection.vue";
+import SocialSection from "./Profile/UserProfile/ProfileSections/SocialSection.vue";
+/* Wall */
+
 
 
 export default [
@@ -161,6 +166,7 @@ export default [
     UserSection,
     WallSection,
     MainSection,
+    SocialSection,
 
     SettingsVue,
 

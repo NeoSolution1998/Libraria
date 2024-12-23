@@ -3,8 +3,8 @@
     <ul>
       <li v-for="(crumb, index) in breadcrumbs" :key="index">
         <!-- Если это не последний элемент, делаем ссылку -->
-        <router-link v-if="crumb.path && index < breadcrumbs.length - 1" :to="crumb.path">
-          {{ crumb.text }}
+        <router-link v-if="crumb.path && index < breadcrumbs.length - 1" :to="crumb.path"><a> {{ crumb.text }}</a>
+
         </router-link>
         <!-- Последний элемент не является ссылкой -->
         <span v-else>{{ crumb.text }}</span>
@@ -47,7 +47,9 @@ export default {
   font-size: 16px;
   color: var(--gray);
 }
-
+.breadcrumbs li a{
+  color: var(--dark-muted);
+}
 .breadcrumbs li::after {
   content: ">";
   margin-left: 10px;
@@ -73,7 +75,7 @@ export default {
 @media(max-width:440px) {
   .breadcrumbs {
 
-    padding: 5px;
+    padding: 10px;
     padding-left: 10px;
   }
 

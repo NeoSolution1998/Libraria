@@ -1,14 +1,17 @@
 <template>
     <div class="profile_sidebar__container">
-        <div class="sidebar__user_section">
+        <div class="sidebar_user_section">
             <UserSection></UserSection>
         </div>
-        <div class="sidebar__friends_section">
+        <div class="sidebar_social__section">
+            <SocialSection></SocialSection>
+        </div>
+     <!--    <div class="sidebar_friends__section">
             <FriendsSection></FriendsSection>
         </div>
-        <div class="sidebar__followers_section">
+        <div class="sidebar_followers__section">
             <FollowersSection></FollowersSection>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
@@ -31,11 +34,15 @@ export default {
 @media(max-width:1024px) {
     .profile_sidebar__container {}
 
-    .sidebar__friends_section {
+    .sidebar_friends__section {
         display: none;
     }
 
-    .sidebar__followers_section {
+    .sidebar_followers__section {
+        display: none;
+    }
+
+    .sidebar_social__section {
         display: none;
     }
 }
