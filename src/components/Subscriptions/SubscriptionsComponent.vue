@@ -1,8 +1,8 @@
 <template>
-    <div class="subscriptions__container">
-        <div class="subscriptions__header">
-            <!-- <h1>Выберите план подписки</h1> -->
-        </div>
+    <div class="subscriptions__container" v-if="subscriptions && subscriptions.length">
+       <!--  <div class="subscriptions__header">
+            <h1>Выберите план подписки</h1>
+        </div> -->
         <div class="subscriptions__list">
             <div class="subscriptions__list_item" v-for="subscription in subscriptions" :key="subscription.id">
                 <div class="subscriptions__item_header">

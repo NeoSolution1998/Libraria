@@ -68,6 +68,7 @@ export default {
 .welcome-header p {
     color: var(--white);
     font-family: 'Ubuntu';
+    margin-bottom: 8px;
 }
 
 .welcome-banner {
@@ -86,7 +87,7 @@ export default {
     top: -50px;
     position: absolute;
     box-shadow: 0 0 20px 10px var(--dark-blue);
-    /* Голубое свечение */
+    filter: brightness(1.1);
 
 }
 
@@ -97,15 +98,14 @@ export default {
     transform: translate(-50%, -50%);
     max-width: 650px;
     height: auto;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
 }
 
-.welcome-banner img:hover {
-    transform: translate(-50%, -50%) scale(1.05) ;
-    /* Увеличение и легкий наклон */
+/* .welcome-banner:hover {
+    transform:  scale(1.001);
     filter: brightness(1.1);
-    /* Легкое осветление изображения */
-}
+} */
 
 @media(max-width:1550px) {
     .home-about-container {

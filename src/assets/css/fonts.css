@@ -2,6 +2,7 @@
 @font-face {
     font-family: 'Russo';
     src: url('../fonts/russo/RussoOne-Regular.ttf') format('truetype');
+
 }
 @font-face {
     font-family: 'Rubik-Medium';
@@ -18,7 +19,22 @@
     src: url('../fonts/rubik/Rubik-Regular.ttf') format('truetype');
 }
 
-
+@font-face {
+    font-family: 'BebasNeue';
+    src: url('../fonts/BebasNeue/BebasNeue-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Bebas';
+    src: url('../fonts/BebasNeue/BebasNeueCyrillic.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Black.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Monts';
+    src: url('../fonts/Montserrat/mont_heavydemo.ttf') format('truetype');
+}
 /* ...................................................................... */
 
 @font-face {

@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="books_pagination">
+        <div v-if="books && books.length" class="books_pagination">
             <PaginationUI :totalPages="totalPages" :currentPage="currentPage" @page-changed="handlePageChange">
             </PaginationUI>
         </div>
@@ -102,6 +102,15 @@ export default {
 
 .books_pagination {}
 
+.books__empty {
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: 10px;
+    font-family: Rubik-Medium;
+    font-size: 20px;
+    text-align: center;
+}
+
 @media(max-width:1024px) {
     .books__container_blocks {
         max-width: 1024px;
@@ -125,8 +134,11 @@ export default {
         display: block;
         border: 2px solid var(--default);
     }
-    .books_search__block-separator{
 
+    .books_search__block-separator {}
+
+    .books__empty {
+        font-size: 16px;
     }
 }
 </style>

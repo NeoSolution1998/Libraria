@@ -53,7 +53,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 20px;
-  font-family: 'Rubik-Medium';
+  font-family: Montserrat;
 }
 
 .nav-link:hover {
