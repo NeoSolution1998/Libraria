@@ -47,7 +47,6 @@ import PostsContainer from "./Posts/PostsContainer.vue";
 import PostsListComponent from "./Posts/PostsListComponent.vue";
 
 /* PROFILE */
-import ProfileVue from "@/components/Profile/ProfileVue.vue";
 
 
 /* COMMENTS */
@@ -74,10 +73,15 @@ import BooksListComponent from "./Books/BooksListComponent.vue";
 import BooksFilterComponent from "./Books/BooksFilterComponent.vue";
 import PaginationUI from "./UI/Pagination/PaginationUI.vue";
 import FooterComponent from "./Footer/FooterComponent.vue";
-import ProfileComponent from "./Profile/ProfileComponent.vue";
 
 
+/* Book */
+import BookContainer from "./Book/BookContainer.vue";
+import BookMainSection from "./Book/BookSections/BookMainSection.vue";
+import BookSidebarSection from "./Book/BookSections/BookSidebarSection.vue";
+import BookChaptersSection from "./Book/BookSections/BookChaptersSection.vue";
 /* PROFILE */
+import ProfileContainer from "./Profile/ProfileContainer.vue";
 import ProfileHeader from "./Profile/UserProfile/ProfileHeader.vue";
 import ProfileSidebar from "./Profile/UserProfile/ProfileSidebar.vue";
 import ProfileMain from "./Profile/UserProfile/ProfileMain.vue";
@@ -102,23 +106,34 @@ export default [
     SortSelectUI,
     InputVue,
     DialogVue,
+
     HeaderVue,
     FooterVue,
+    /* Books */
     BooksItem,
     BooksList,
+
+    /* Pagination */
     PaginationVue,
+
     SearchVue,
     SortVue,
     FilterVue,
+
+    /* Posts */
     PostsList,
     PostsItem,
+
+    /* Auth */
     AuthVue,
     RegistrationVue,
     LoginVue,
-    ProfileVue,
-    BookVue,
+
+
+
     CommentsVue,
     Comments,
+
     IconVue,
     FontelloIcons,
     PopularPosts,
@@ -135,9 +150,16 @@ export default [
     PostsListComponent,
 
     /* Books */
+    BookVue,
     BooksContainer,
     BooksListComponent,
     BooksFilterComponent,
+
+    /* Book */
+    BookContainer,
+    BookMainSection,
+    BookSidebarSection,
+    BookChaptersSection,
 
     /* Filters */
     FiltersComponent,
@@ -155,19 +177,18 @@ export default [
     FooterComponent,
 
     /* Profile */
-    ProfileVue,
-    ProfileComponent,
+
+    ProfileContainer,
 
     ProfileHeader,
     ProfileSidebar,
-    ProfileMain,  
+    ProfileMain,
     FollowersSection,
     FriendsSection,
     UserSection,
     WallSection,
     MainSection,
     SocialSection,
-
     SettingsVue,
 
 

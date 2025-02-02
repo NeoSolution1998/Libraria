@@ -15,7 +15,7 @@
 <script>
 
 export default {
-    name: "ProfileComponent"
+    name: "ProfileContainer"
 }
 </script>
 <style scoped>

@@ -2,7 +2,7 @@
   <header-vue></header-vue>
   <Breadcrumbs></Breadcrumbs>
 
-  <ProfileComponent></ProfileComponent>
+  <ProfileContainer></ProfileContainer>
 <!--   <profile-vue :user="user"></profile-vue> -->
 
   <footer-vue></footer-vue>

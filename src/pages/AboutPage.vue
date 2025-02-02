@@ -41,8 +41,8 @@
         <p>Мы стремимся быть надежным партнером для наших клиентов и помогать им на пути к успеху.</p>
       </section>
     </div>
-    <footer-vue></footer-vue>
-  </div>
+    
+  </div><footer-vue></footer-vue>
 </template>
 
 <script>
@@ -55,9 +55,10 @@ export default {
 .about-page {
   display: flex;
   flex-direction: column;
-
   font-family: sans-serif;
   background-color: var(--light);
+  max-width: 1920px;
+  margin: auto;
 }
 
 .container {

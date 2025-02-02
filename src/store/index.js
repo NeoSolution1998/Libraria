@@ -8,6 +8,7 @@ import { paginationModule } from "./UI/PaginationModule";
 import { headerModule } from "./Header/headerModule";
 import { authModule } from './Auth/AuthModule';
 import { SubscriptionsModule } from "./Subscriptions/SubscriptionsModule";
+import { bookModule } from "./Books/BookModule";
 
 export default createStore({
     state: {
@@ -18,10 +19,12 @@ export default createStore({
         header: headerModule, // Управление состоянием хедера
         posts: postsModule,
         books: booksModule,
+        book: bookModule,
         comments: commentsModule,
         pagination: paginationModule,
         chapters: chaptersModule,
         images: imagesModule,
         subscriptions: SubscriptionsModule,
+
     }
 })
