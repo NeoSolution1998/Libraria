@@ -2,8 +2,8 @@
     <div class="books-list_container">
         <div class="books-item" v-for="book in books" :key="book.id">
             <div class="books-item__image_block">
-                <img v-if="book.cover_image" src="#" alt="">
-                <img v-else src="/images/books/books_default4.jpg" alt="">
+                <img v-if="book.cover_image" :src="book.cover_image" alt="">
+                <img v-else src="/images/books/book_default.jpeg" alt="">
             </div>
 
             <div class="books-item__description_block">

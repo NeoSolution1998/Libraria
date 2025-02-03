@@ -37,7 +37,7 @@ export default {
     padding: 30px;
     border-radius: 8px;
     background-color: var(--white);
-    font-family: "Russo";
+    font-family: Rubik-Medium;
 }
 
 .filters__container h1 {

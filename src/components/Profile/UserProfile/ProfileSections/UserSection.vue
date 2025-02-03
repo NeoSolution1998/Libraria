@@ -6,7 +6,7 @@
                     <span class="icon-pencil"></span>
                 </div>
 
-                <img src="/images/user_logo_default.jpg" alt="">
+                <img src="/images/user_default.jpg" alt="">
             </div>
         </div>
 

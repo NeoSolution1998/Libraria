@@ -6,7 +6,7 @@
           <img :src="user.images[0]?.image" alt="Аватарка пользователя" />
         </div>
         <div v-else class="user-avatar">
-          <img src="/images/user_logo_default.jpg" alt="Default avatar" />
+          <img src="/images/user_default.jpg" alt="Default avatar" />
         </div>
       </div>
     </button>
