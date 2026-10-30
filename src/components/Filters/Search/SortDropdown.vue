@@ -1,11 +1,10 @@
 <template>
-    <div class="sort_dropdown__container" @click="closeDropdown">
-        <!-- Список сортировки -->
-        <ul class="sort_dropdown__list" @click.stop>
+    <div class="sort-dropdown" @click="closeDropdown">
+        <ul class="sort-dropdown__list" @click.stop>
             <li v-for="(option, index) in options" :key="index"
-                :class="['sort_dropdown__list_item', { active: option === selectedSort }]"
-                @click="selectOption(option)">
-                {{ option }}
+                :class="['sort-dropdown__item', { active: option.value === selectedSort }]"
+                @click="selectOption(option.value)">
+                {{ option.label }}
             </li>
         </ul>
     </div>
@@ -14,30 +13,23 @@
 <script>
 export default {
     name: "SortDropdown",
-    data() {
-        return {
-            options: [
-                "По имени (A-Z)",
-                "По имени (Z-A)",
-                "По популярности (вверх)",
-                "По популярности (вниз)",
-                "По дате (сначала новые)",
-                "По дате (сначала старые)",
-            ], // Опции выбора
-            selectedSort: null, // Выбранная опция
-        };
-    },
-    methods: {
-        selectOption(option) {
-            this.selectedSort = option;
+    props: {
+        options: {
+            type: Array,
+            required: true
         },
+        selectedSort: {
+            type: String,
+            required: true
+        }
     },
+    emits: ['toggleSortDropdown', 'selectOption'],
     methods: {
-        handleOutsideClick(event) {
-            this.$emit('toggleSortDropdown');
+        selectOption(value) {
+            this.$emit('selectOption', value);
+            // Parent handles toggling via @selectOption
         },
-        selectOption(option) {
-            this.selectedSort = option;
+        closeDropdown() {
             this.$emit('toggleSortDropdown');
         },
     },
@@ -45,72 +37,55 @@ export default {
 </script>
 
 <style scoped>
-.sort_dropdown__container {
-    position: relative;
-    max-width: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    font-family: "Russo";
-    background-color: var(--light);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 5px;
-    z-index: 10; 
+.sort-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 50;
+    min-width: 220px;
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-1);
+    margin-top: var(--space-1);
 }
 
-
-.sort_dropdown__list {
-    width: 100%;
-    max-width: 200px;
-    background-color: var(--light);
+.sort-dropdown__list {
     list-style: none;
     padding: 0;
     margin: 0;
-    overflow: hidden;
-    border-radius: 8px;
 }
 
-.sort_dropdown__list_item {
-    padding: 8px 10px;
+.sort-dropdown__item {
+    padding: var(--space-3) var(--space-4);
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    font-size: 12px;
-    color: var(--dark-muted);
-    text-align: center;
-    margin: 0px 0px;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    color: var(--ink);
+    border-radius: var(--radius-md);
 }
 
-.sort_dropdown__list_item:last-child {
-    border-bottom: none;
+.sort-dropdown__item:hover {
+    background-color: var(--surface-hover);
+    color: var(--accent);
 }
 
-.sort_dropdown__list_item:hover {
-    background-color: var(--light);
+.sort-dropdown__item.active {
+    background-color: var(--accent);
+    color: var(--ink);
+    font-weight: 500;
 }
 
-.sort_dropdown__list_item.active {
-    background-color: var(--dark);
-    color: var(--white);
-}
+@media (max-width: 640px) {
+    .sort-dropdown {
+        min-width: 200px;
+    }
 
-@media (max-width: 440px) {
-    .sort_dropdown__container {
-    max-width: 150px;
-    border-radius: 4px;
-    margin-top: 5px;
-}
-
-/* Список сортировки */
-.sort_dropdown__list {
-    max-width: 150px;
-    border-radius: 8px;
-}
-
-.sort_dropdown__list_item {
-    padding: 6px 8px;
-    font-size: 10px;
-}
+    .sort-dropdown__item {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-sm);
+    }
 }
 </style>

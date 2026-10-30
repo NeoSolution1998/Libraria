@@ -1,6 +1,10 @@
 <template>
-  <button class="reset-button" @click="resetFilters">
-    <slot></slot>
+  <button
+    class="btn btn-ghost btn-sm"
+    @click="resetFilters"
+    :disabled="disabled"
+  >
+    <slot>Сбросить фильтры</slot>
   </button>
 </template>
 
@@ -12,33 +16,21 @@ export default {
       type: Function,
       required: true,
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     resetFilters() {
-      this.onReset();
+      if (!this.disabled) {
+        this.onReset();
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-.reset-button {
-  background: none;
-  border: none;
-  color: var(--blue);
-  text-decoration:none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0;
-  transition: color 0.2s ease-in-out;
-}
-
-.reset-button:hover {
-  color: var(--red);
-}
-@media(max-width:440px) {
-    .reset-button{
-      font-size: 14px;
-    }
-}
+/* Using global styles from main.css - .btn, .btn-ghost, .btn-sm */
 </style>

@@ -1,49 +1,59 @@
 <template>
-  <div class="auth-container">
+  <section class="auth-section">
     <div class="auth-card">
-      <div class="auth-header">
-        <h3>Добро пожаловать!</h3>
-        <p>Войдите, чтобы продолжить.</p>
-      </div>
+      <span class="auth-card__kicker">ДОСТУП К БИБЛИОТЕКЕ</span>
+      <h1 class="auth-card__title">Добро пожаловать</h1>
+      <p class="auth-card__subtitle">Войдите, чтобы продолжить чтение и вернуться к сохранённым книгам.</p>
 
-      <!-- Отображение ошибки -->
-      <div v-if="errorMessage" class="auth-error">
+      <div v-if="errorMessage" class="auth-message auth-message--error" role="alert">
         {{ errorMessage }}
       </div>
 
-      <form @submit.prevent="loginUser">
-        <div class="input-group">
-          <input v-model="userData.email" class="auth-input" type="email" placeholder="E-mail" required />
-          <div class="input-icon">
-            <i class="fas fa-envelope"></i>
-          </div>
-        </div>
+      <form class="auth-form" @submit.prevent="submitLogin">
+        <label class="auth-field">
+          <span>Email</span>
+          <input
+            v-model.trim="userData.email"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </label>
 
-        <div class="input-group">
-          <input v-model="userData.password" class="auth-input" type="password" placeholder="Пароль" required />
-          <div class="input-icon">
-            <i class="fas fa-lock"></i>
-          </div>
-        </div>
+        <label class="auth-field">
+          <span>Пароль</span>
+          <input
+            v-model="userData.password"
+            type="password"
+            placeholder="Ваш пароль"
+            autocomplete="current-password"
+            required
+          >
+        </label>
 
         <div class="auth-options">
-          <div>
-            <input type="checkbox" id="rememberMe" v-model="rememberMe" />
-            <label for="rememberMe">Запомнить меня</label>
-          </div>
-          <a href="#" class="forgot-password">Забыли пароль?</a>
+          <label class="auth-checkbox">
+            <input v-model="rememberMe" type="checkbox">
+            <span>Запомнить меня</span>
+          </label>
+          <a href="mailto:dev.polonkoev@gmail.com?subject=Восстановление%20пароля%20Libraria" class="auth-link">
+            Забыли пароль?
+          </a>
         </div>
 
-        <button type="submit" class="auth-button">Войти</button>
+        <button type="submit" class="auth-submit" :disabled="isSubmitting">
+          {{ isSubmitting ? "Входим…" : "Войти" }}
+          <span>↗</span>
+        </button>
       </form>
 
-      <div class="auth-footer">
-        <p>
-          Нет аккаунта? <a href="/registration">Зарегистрироваться</a>
-        </p>
-      </div>
+      <p class="auth-card__footer">
+        Нет аккаунта?
+        <router-link :to="{ name: 'Registration', query: $route.query }">Зарегистрироваться</router-link>
+      </p>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -51,28 +61,35 @@ import { mapActions } from "vuex";
 
 export default {
   name: "LoginVue",
-
   data() {
     return {
       userData: {
         email: "",
         password: "",
       },
-      errorMessage: "", // Для хранения сообщения об ошибке
+      errorMessage: "",
       rememberMe: false,
+      isSubmitting: false,
     };
   },
   methods: {
     ...mapActions("auth", ["login"]),
+    async submitLogin() {
+      if (this.isSubmitting) return;
 
-    async loginUser() {
-      this.errorMessage = ""; // Сбрасываем сообщение об ошибке перед попыткой входа
+      this.errorMessage = "";
+      this.isSubmitting = true;
+
       try {
         await this.login(this.userData);
-        console.log("Успешный вход в систему");
       } catch (error) {
-        console.error("Ошибка входа", error.response?.data);
-        this.errorMessage = error.response?.data?.message || "Произошла ошибка. Попробуйте еще раз.";
+        const errors = error?.errors || {};
+        const firstError = Object.values(errors)[0];
+        this.errorMessage = Array.isArray(firstError)
+          ? firstError[0]
+          : firstError || error?.message || "Неверные учётные данные.";
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },
@@ -80,126 +97,203 @@ export default {
 </script>
 
 <style scoped>
-.auth-container {
+.auth-section {
   display: flex;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
-  height: 500px;
-  background: linear-gradient(135deg, #9cb2c0, #a8a8a8);
-  font-family: "Rubik-Regular";
-  padding: 10px;
+  padding: var(--space-10) var(--space-4) var(--space-16);
 }
 
 .auth-card {
-  background: var(--dark);
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 600px;
+  max-width: 460px;
+  padding: var(--space-8);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
 }
 
-.auth-header h3 {
-  margin: 0;
-  font-size: 24px;
+.auth-card__kicker {
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.auth-card__title {
+  margin: var(--space-2) 0 var(--space-2);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
   font-weight: 600;
-  color: var(--light);
+  line-height: 1.15;
 }
 
-.auth-header p {
-  font-size: 14px;
-  color: var(--light-hover);
-  margin-bottom: 20px;
+.auth-card__subtitle {
+  margin-bottom: var(--space-5);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
 }
 
-.input-group {
-  position: relative;
-  margin-bottom: 20px;
+.auth-message {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
 }
 
-.auth-input {
+.auth-message--error {
+  color: var(--danger);
+  background: rgba(145, 32, 22, 0.08);
+  border: 1px solid rgba(145, 32, 22, 0.18);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.auth-field > span {
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-field input {
   width: 100%;
-  padding: 10px 40px 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #333;
+  height: 44px;
+  padding: 0 var(--space-3);
+  color: var(--ink);
+  background: var(--surface-hover);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  outline: none;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.input-icon {
-  position: absolute;
-  top: 50%;
-  right: 15px;
-  transform: translateY(-50%);
-  color: var(--dark);
+.auth-field input:focus {
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(231, 165, 74, 0.15);
 }
 
 .auth-options {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.auth-checkbox {
+  display: inline-flex;
   align-items: center;
-  font-size: 14px;
-  color: var(--light-hover);
-  margin-bottom: 20px;
-}
-
-.auth-options div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.auth-options div label {
-  margin: 0%;
-  padding-left: 5px;
-}
-
-.auth-options a {
-  color: var(--bisque);
-  text-decoration: none;
-}
-
-.auth-options a:hover {
-  text-decoration: underline;
-}
-
-.auth-button {
-  width: 100%;
-  padding: 10px;
-  background: linear-gradient(135deg, #2b5876, #4e4376);
-  background: var();
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.auth-button:hover {
-  background: linear-gradient(135deg, #4e4376, #2b5876);
+.auth-checkbox input {
+  accent-color: var(--accent);
 }
 
-.auth-footer {
-  text-align: center;
-  font-size: 14px;
-  color: #555;
-  margin-top: 5px;
-}
-
-.auth-footer a {
-  color: var(--bisque);
+.auth-link {
+  color: var(--accent-hover);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
   text-decoration: none;
 }
 
-.auth-footer a:hover {
+.auth-link:hover {
   text-decoration: underline;
 }
 
-.auth-error {
-  color: #d9534f;
-  font-size: 14px;
-  margin-bottom: 20px;
+.auth-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 46px;
+  margin-top: var(--space-1);
+  padding: 0 var(--space-4);
+  color: var(--text-on-accent);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.auth-submit:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.auth-submit:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.auth-submit span {
+  font-size: var(--text-lg);
+}
+
+.auth-card__footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
   text-align: center;
+}
+
+.auth-card__footer a {
+  color: var(--accent-hover);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-card__footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .auth-section {
+    padding: var(--space-6) var(--space-3) var(--space-10);
+  }
+
+  .auth-card {
+    padding: var(--space-5);
+  }
+
+  .auth-card__title {
+    font-size: var(--text-2xl);
+  }
 }
 </style>

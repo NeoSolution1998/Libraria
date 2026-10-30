@@ -1,31 +1,31 @@
 <template>
-    <div class="subscriptions__container" v-if="subscriptions && subscriptions.length">
-       <!--  <div class="subscriptions__header">
+    <section class="subscriptions" v-if="subscriptions && subscriptions.length">
+        <header class="subscriptions__header">
             <h1>Выберите план подписки</h1>
-        </div> -->
+        </header>
         <div class="subscriptions__list">
-            <div class="subscriptions__list_item" v-for="subscription in subscriptions" :key="subscription.id">
-                <div class="subscriptions__item_header">
+            <article class="subscription-card" v-for="subscription in subscriptions" :key="subscription.id">
+                <header class="subscription-card__header">
                     <h2>{{ subscription.name }}</h2>
-                    <p class="access-level">{{ subscription.access_level }}</p>
+                    <p class="subscription-card__access">{{ subscription.access_level }}</p>
+                </header>
+                <div class="subscription-card__features">
+                    <ul>
+                        <li>Доступ к тысячам книг</li>
+                        <li><strong>Без рекламы</strong></li>
+                        <li><strong>Стать автором</strong></li>
+                        <li>Ежемесячные обновления</li>
+                        <li>Скидки на книги и аудиокниги</li>
+                    </ul>
                 </div>
-                <div class="subscriptions__item_content">
-                    <p>Доступ к тысячам книг</p>
-                    <p><strong>Без рекламы</strong></p>
-                    <p><strong>Стать автором</strong></p>
-                    <p>Ежемесячные обновления</p>
-                    <p>Скидки на книги и аудиокниги</p>
-                </div>
-                <div class="subscriptions__item_footer">
-                    <p class="duration">Длительность: {{ subscription.duration_months }} мес</p>
-                    <p class="price">Цена: {{ subscription.price }}р</p>
-                    <div class="cta">
-                        <a href="#" class="subscribe-btn">Оформить подписку</a>
-                    </div>
-                </div>
-            </div>
+                <footer class="subscription-card__footer">
+                    <p class="subscription-card__duration">Длительность: {{ subscription.duration_months }} мес</p>
+                    <p class="subscription-card__price">Цена: {{ subscription.price }}р</p>
+                    <a href="#" class="btn btn-primary subscription-card__cta">Оформить подписку</a>
+                </footer>
+            </article>
         </div>
-    </div>
+    </section>
 </template>
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
@@ -56,318 +56,165 @@ export default {
     },
 };
 </script>
-
 <style scoped>
-.subscriptions__container {
-    max-width: 1600px;
-    margin: auto;
-    padding: 10px 40px;
+/* Using global styles from main.css - .btn, .btn-primary, etc. */
+
+.subscriptions {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-10) var(--container-padding);
 }
 
 .subscriptions__header {
-    text-align: center;
-    margin-bottom: 40px;
+  text-align: center;
+  margin-bottom: var(--space-10);
 }
 
 .subscriptions__header h1 {
-    font-size: 48px;
-    font-weight: 200;
-    color: var(--dark-muted);
-    font-family: "Russo";
-    text-shadow: 0px 4px 10px rgba(94, 114, 62, 0.4);
+  font-size: var(--text-4xl);
+  font-weight: 300;
+  color: var(--ink);
+  font-family: var(--font-display);
 }
 
 .subscriptions__list {
-    max-width: 1600px;
-    margin: auto;
-    margin-top: 40px;
-    padding: 50px 20px;
-    background-color: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    font-family: "Rubik-Medium";
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
 }
 
-.subscriptions__list_item {
-    padding: 20px;
-    border-radius: 15px;
-    background: linear-gradient(145deg, #ffffff, #ececff);
-    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.1), -8px -8px 15px rgba(255, 255, 255, 1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.subscription-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-.subscriptions__list_item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
+.subscription-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
 }
 
-.subscriptions__item_header {
-    background: linear-gradient(90deg, #15588f 0%, #143764 100%);
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    color: #fff;
-    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2);
+.subscription-card__header {
+  background: var(--ink);
+  color: var(--text-on-dark);
+  padding: var(--space-4);
+  margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) var(--space-5);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  text-align: center;
 }
 
-.subscriptions__item_header h2 {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
+.subscription-card__header h2 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  color: var(--text-on-dark);
 }
 
-.subscriptions__item_header p {
-    font-size: 14px;
-    font-weight: 500;
-    margin: 5px 0 0;
-    opacity: 0.8;
+.subscription-card__access {
+  font-size: var(--text-sm);
+  opacity: 0.8;
+  margin: 0;
 }
 
-.subscriptions__item_content {
-    margin: 20px 0;
-    color: #333;
-    font-size: 16px;
-    line-height: 1.6;
+.subscription-card__features {
+  flex: 1;
+  margin-bottom: var(--space-5);
 }
 
-.subscriptions__item_content p {
-    margin: 5px 0;
-    position: relative;
-    padding-left: 20px;
+.subscription-card__features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.subscriptions__item_content p::before {
-    content: "✔";
-    position: absolute;
-    left: 0;
-    color: #15588f;
-    font-weight: bold;
+.subscription-card__features li {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding: var(--space-2) 0;
+  padding-left: var(--space-6);
+  position: relative;
 }
 
-.subscriptions__item_footer {
-    padding: 15px;
-    background: linear-gradient(145deg, #ffffff, #f1f1ff);
-    border-radius: 10px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
+.subscription-card__features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--success);
+  font-weight: bold;
 }
 
-.duration {
-    font-size: 14px;
-    color: #666;
+.subscription-card__footer {
+  text-align: center;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
 }
 
-.price {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 10px 0;
-    color: var(--dark-muted);
+.subscription-card__duration {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
 }
 
-.cta {
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 30px;
-    background: linear-gradient(90deg, #0b8542 0%, #29962e 100%);
-    padding: 10px 20px;
-    transition: all 0.3s ease;
-    cursor: pointer;
+.subscription-card__price {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink);
+  margin: var(--space-2) 0 var(--space-4);
 }
 
-.cta:hover {
-    background: linear-gradient(90deg, #1a661a 0%, #187437 100%);
-    transform: scale(1.05);
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+.subscription-card__cta {
+  width: 100%;
 }
 
-.cta a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.subscribe-btn {
-    font-size: 16px;
-}
-
-/* Стили для крупных экранов (1024px и больше) */
 @media (max-width: 1024px) {
-    .subscriptions__container {
-        padding: 20px 15px;
-    }
-    .subscriptions__header{
-        margin-bottom: 0;
-    }
-    .subscriptions__header h1 {
-        font-size: 36px;
-        
-    }
+  .subscriptions {
+    padding: var(--space-6) var(--space-4);
+  }
 
-    /* Делаем список горизонтальным слайдером */
-    .subscriptions__list {
-        display: flex;
-        overflow-x: auto;
-        gap: 20px;
-        margin-top: 0px;
-        scroll-snap-type: x mandatory;
-        padding: 10px; /* Дополнительный отступ для удобства */
-    }
+  .subscriptions__header h1 {
+    font-size: var(--text-3xl);
+  }
 
-    /* Стили для каждого элемента внутри слайдера */
-    .subscriptions__list_item {
-        flex: 0 0 100%; /* Занимает 90% ширины видимой области */
-        max-width: 100%;
-        scroll-snap-align: center; /* Центрирование элемента */
-        padding: 15px;
-        border-radius: 10px;
-        background: linear-gradient(145deg, #ffffff, #ececff);
-        box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.1), -8px -8px 15px rgba(255, 255, 255, 1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+  .subscriptions__list {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
 
-    .subscriptions__list_item:hover {
-        transform: scale(1.02);
-    }
-
-    .subscriptions__item_header h2 {
-        font-size: 22px;
-    }
-
-    .subscriptions__item_content {
-        font-size: 14px;
-    }
-
-    .price {
-        font-size: 18px;
-    }
-
-    .cta {
-        padding: 8px 15px;
-    }
-
-    .cta a {
-        font-size: 14px;
-    }
-
-    /* Скрываем вертикальные полосы прокрутки */
-    .subscriptions__list::-webkit-scrollbar {
-        display: none;
-    }
-    .subscriptions__list {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-    }
+  .subscription-card {
+    padding: var(--space-5);
+  }
 }
 
-/* Стили для средних экранов (640px - 1024px) */
 @media (max-width: 640px) {
-    .subscriptions__container {
-        padding: 20px 10px;
-    }
+  .subscriptions {
+    padding: var(--space-4) var(--space-3);
+  }
 
-    .subscriptions__header h1 {
-        font-size: 30px;
-    }
+  .subscriptions__header h1 {
+    font-size: var(--text-2xl);
+  }
 
-    .subscriptions__list {
-        display: flex;
-        overflow-x: auto;
-        gap: 15px;
-        scroll-snap-type: x mandatory;
-        padding: 10px;
-    }
+  .subscription-card {
+    padding: var(--space-4);
+  }
 
-    .subscriptions__list_item {
-        flex: 0 0 100%; /* Занимает 90% ширины видимой области */
-        max-width: 100%;
-        padding: 15px;
-        border-radius: 10px;
-    }
+  .subscription-card__header {
+    margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-4);
+    padding: var(--space-3);
+  }
 
-    .subscriptions__item_header {
-        padding: 10px;
-    }
+  .subscription-card__features li {
+    font-size: var(--text-xs);
+    padding-left: var(--space-5);
+  }
 
-    .subscriptions__item_header h2 {
-        font-size: 20px;
-    }
-
-    .subscriptions__item_content {
-        font-size: 13px;
-    }
-
-    .price {
-        font-size: 16px;
-    }
-
-    .cta {
-        padding: 8px 12px;
-    }
-
-    .cta a {
-        font-size: 14px;
-    }
+  .subscription-card__price {
+    font-size: var(--text-lg);
+  }
 }
-
-/* Стили для небольших экранов (440px и меньше) */
-@media (max-width: 440px) {
-    .subscriptions__container {
-        padding: 20px 10px;
-    }
-
-    .subscriptions__header h1 {
-        font-size: 24px;
-    }
-
-    .subscriptions__list {
-        display: flex;
-        overflow-x: auto;
-        gap: 15px;
-        scroll-snap-type: x mandatory;
-        padding: 10px;
-    }
-
-    .subscriptions__list_item {
-        flex: 0 0 100%;
-        max-width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    .subscriptions__item_header {
-        padding: 8px;
-    }
-
-    .subscriptions__item_header h2 {
-        font-size: 18px;
-    }
-
-    .subscriptions__item_content {
-        font-size: 12px;
-    }
-
-    .subscriptions__item_content p {
-        padding-left: 15px;
-    }
-
-    .price {
-        font-size: 14px;
-    }
-
-    .cta {
-        padding: 6px 10px;
-        border-radius: 20px;
-    }
-
-    .cta a {
-        font-size: 12px;
-    }
-}
-
 </style>

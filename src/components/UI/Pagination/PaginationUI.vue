@@ -1,41 +1,68 @@
 <template>
-    <div class="pagination__container">
-        <div class="pagination__list">
-            <!-- Стрелка "В начало" показывается, если не на первой странице и если первая страница не отображается -->
-            <div class="pagination__item-icon" v-if="currentPage > 1 && !pagesToShow.includes(1)" @click="goToPage(1)"
-                aria-label="First">
-                <icon-vue class="icon-fast-backward-1"></icon-vue>
-            </div>
+    <nav class="pagination" aria-label="Pagination">
+        <!-- Стрелка "В начало" показывается, если не на первой странице и если первая страница не отображается -->
+        <button
+            class="pagination__item pagination__item--icon"
+            v-if="currentPage > 1 && !pagesToShow.includes(1)"
+            @click="goToPage(1)"
+            aria-label="First page"
+        >
+            <icon-vue class="icon-fast-backward-1"></icon-vue>
+        </button>
 
-            <!-- Стрелка "Назад" показывается, если есть страница назад -->
-            <div class="pagination__item-icon" v-if="currentPage > 1" @click="prevPage" aria-label="Previous">
-                <icon-vue class="icon-to-start-2"></icon-vue>
-            </div>
+        <!-- Стрелка "Назад" показывается, если есть страница назад -->
+        <button
+            class="pagination__item pagination__item--icon"
+            v-if="currentPage > 1"
+            @click="prevPage"
+            aria-label="Previous page"
+        >
+            <icon-vue class="icon-to-start-2"></icon-vue>
+        </button>
 
-            <!-- Отображаем страницы -->
-            <div class="pagination__item" v-for="page in pagesToShow" :key="page"
-                :class="{ active: page === currentPage }" @click="goToPage(page)">
-                <span>{{ page }}</span>
-            </div>
+        <!-- Отображаем страницы -->
+        <button
+            class="pagination__item"
+            v-for="page in pagesToShow"
+            :key="page"
+            :class="{ 'pagination__item--active': page === currentPage }"
+            @click="goToPage(page)"
+            :aria-label="'Page ' + page"
+            :aria-current="page === currentPage ? 'page' : undefined"
+        >
+            <span>{{ page }}</span>
+        </button>
 
-            <!-- Стрелка "Вперед" показывается, если есть страница вперед и если последняя страница не отображается -->
-            <div class="pagination__item-icon" v-if="currentPage < totalPages && !pagesToShow.includes(totalPages)"
-                @click="nextPage" aria-label="Next">
-                <icon-vue class="icon-to-end-1"></icon-vue>
-            </div>
+        <!-- Стрелка "Вперед" показывается, если есть страница вперед и если последняя страница не отображается -->
+        <button
+            class="pagination__item pagination__item--icon"
+            v-if="currentPage < totalPages && !pagesToShow.includes(totalPages)"
+            @click="nextPage"
+            aria-label="Next page"
+        >
+            <icon-vue class="icon-to-end-1"></icon-vue>
+        </button>
 
-            <!-- Стрелка "В конец" показывается, если не на последней странице и если последняя страница не отображается -->
-            <div class="pagination__item-icon" v-if="currentPage < totalPages && !pagesToShow.includes(totalPages)"
-                @click="goToPage(totalPages)" aria-label="Last">
-                <icon-vue class="icon-fast-forward-1"></icon-vue>
-            </div>
-        </div>
-    </div>
+        <!-- Стрелка "В конец" показывается, если не на последней странице и если последняя страница не отображается -->
+        <button
+            class="pagination__item pagination__item--icon"
+            v-if="currentPage < totalPages && !pagesToShow.includes(totalPages)"
+            @click="goToPage(totalPages)"
+            aria-label="Last page"
+        >
+            <icon-vue class="icon-fast-forward-1"></icon-vue>
+        </button>
+    </nav>
 </template>
 
 <script>
+import IconVue from '@/components/Icons/IconVue.vue';
+
 export default {
     name: "PaginationUI",
+    components: {
+        IconVue
+    },
     props: {
         currentPage: {
             type: Number,
@@ -97,157 +124,5 @@ export default {
 </script>
 
 <style scoped>
-.pagination__container {
-    padding: 10px;
-    padding-bottom: 40px;
-}
-
-.pagination__list {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-}
-
-.pagination__item {
-    display: flex;
-    align-items: center;
-    padding: 7px 15px;
-    background-color: var(--white);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    font-family: "Russo";
-    font-size: 16px;
-    color: var(--dark);
-    outline: none;
-}
-
-.pagination__item-icon {
-    padding: 7px 10px;
-    background-color: var(--white);
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-
-
-/* Стили для активной страницы */
-.pagination__item.active {
-    background-color: var(--dark);
-    color: var(--white);
-}
-
-/* Стили для текста внутри активной страницы */
-.pagination__item.active span {
-    color: var(--white);
-}
-
-/* Стили при наведении или фокусе на другие страницы */
-.pagination__item:hover,
-.pagination__item-icon:hover,
-.pagination__item:focus {
-    background-color: var(--dark);
-    color: var(--white);
-}
-
-.pagination__item:hover span,
-.pagination__item:focus span {
-    color: var(--white);
-}
-
-/* Убираем выделение при клике и фокусе на мобильных устройствах */
-.pagination__item:active,
-.pagination__item:focus {
-    outline: none;
-    /* Убираем контур */
-    box-shadow: none;
-    /* Убираем тень (если она появляется) */
-}
-
-.icon-fast-backward-1 {
-    padding-right: 8px;
-}
-
-.icon-fast-forward-1 {
-    padding-right: 8px;
-}
-
-@media(max-width: 768px) {
-    .pagination__container {
-        padding: 8px;
-        padding-bottom: 20px;
-        overflow: hidden;
-    }
-
-    .pagination__list {
-        display: flex;
-        justify-content: center;
-        gap: 4px;
-    }
-
-
-
-    .pagination__item {
-        padding: 5px 15px;
-        border-radius: 6px;
-        font-size: 14px;
-        touch-action: manipulation;
-    }
-
-    .pagination__item-icon {
-        padding: 6px 8px;
-        border-radius: 6px;
-    }
-
-    .icon-fast-backward-1 {
-        padding-right: 8px;
-    }
-
-    .icon-fast-forward-1 {
-        padding-right: 8px;
-    }
-}
-
-@media(max-width: 440px) {
-    .pagination__container {
-        padding: 8px;
-        padding-bottom: 20px;
-        overflow: hidden;
-    }
-
-    .pagination__list {
-        display: flex;
-        justify-content: center;
-        gap: 4px;
-    }
-
-    .pagination__item {
-        padding: 5px 13px;
-        border-radius: 6px;
-        font-size: 14px;
-    }
-
-    .pagination__item-icon {
-        padding: 5px 5px;
-        border-radius: 6px;
-    }
-
-    .icon-fast-backward-1 {
-        padding-right: 8px;
-
-    }
-
-    .icon-fast-forward-1 {
-        padding-right: 8px;
-    }
-
-    .icon-fast-backward-1,
-    .icon-to-end-1,
-    .icon-to-start-2,
-    .icon-fast-forward-1 {
-
-        font-size: 14px;
-    }
-
-}
+/* Using global styles from main.css - .pagination, .pagination__item, .pagination__item--active, .pagination__item--icon, .pagination__ellipsis */
 </style>

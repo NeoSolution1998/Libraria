@@ -2,87 +2,122 @@
     <div class="filters__tag">
         <div class="filters__tag_header">
             <label>Теги</label>
-            <ResetButton :onReset="resetTagsFilter">Сбросить</ResetButton>
+            <ResetButton v-if="selectedTags.length" :onReset="resetTagsFilter">Сбросить</ResetButton>
         </div>
-        <p v-if="isMaxTagsReached" class="max-tags-warning">
-            Вы можете выбрать не более 10 тегов.
-        </p>
-        <div class="tags">
-            <span v-for="tag in visibleTags" :key="tag" @click="toggleTag(tag)"
-                :class="{ selected: selectedTags.includes(tag) }">
-                #{{ tag }}
-            </span>
-        </div>
-        <button v-if="hasMoreTags" @click="loadMoreTags" class="show-more-button">Показать еще</button>
-        <div>
-            <p>Выбранные теги:</p>
-        </div>
-        <div class="selected-tags">
 
-            <span v-for="tag in selectedTags" :key="tag" class="selected-tag">
+        <p v-if="isMaxTagsReached" class="max-tags-warning">Можно выбрать не более 10 тегов.</p>
+        <div v-if="loadingTags" class="tags-loading">Загрузка тегов…</div>
+        <p v-else-if="loadError" class="tags-error">{{ loadError }}</p>
+
+        <div v-else class="tags">
+            <button
+                v-for="tag in visibleTags"
+                :key="tag"
+                type="button"
+                :class="{ selected: selectedTags.includes(tag) }"
+                @click="toggleTag(tag)"
+            >
                 #{{ tag }}
-            </span>
+            </button>
+        </div>
+
+        <button v-if="hasMoreTags" type="button" class="show-more-button" @click="loadMoreTags">
+            Показать ещё
+        </button>
+
+        <div v-if="selectedTags.length" class="selected-tags">
+            <span v-for="tag in selectedTags" :key="tag" class="selected-tag">#{{ tag }}</span>
         </div>
     </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import ResetButton from '@/components/UI/Buttons/ResetButton.vue';
+
 export default {
     name: "TagFilter",
-    data() {
-        return {
-            tags: [
-                "Фантастика", "Детектив", "История", "Романтика", "Приключения", "Фэнтези", "Триллер",
-                "Документалистика", "Научная литература", "Юмор", "Психология", "Биография",
-                "Путешествия", "Мистика", "Драма", "Комедия", "Поэзия", "Философия",
-                "Кулинария", "Мода", "Спорт", "Технологии", "Искусство", "Музыка",
-                "Кино", "Наука", "Образование", "Здоровье", "Природа", "Астрономия"
-            ],
-            // Список видимых тегов
-            visibleTags: [],
-            // Список выбранных тегов
-            selectedTags: [],
-            // Сколько тегов показываем за один раз
-            loadStep: 10,
-            // Текущая позиция загрузки
-            currentIndex: 0
-        };
+    components: {
+        ResetButton,
     },
     computed: {
-        // Проверяем, достигнут ли максимум выбранных тегов
+        ...mapGetters('books', ['selectedTags']),
         isMaxTagsReached() {
             return this.selectedTags.length >= 10;
         },
-        // Проверяем, есть ли еще теги для загрузки
         hasMoreTags() {
             return this.currentIndex < this.tags.length;
-        }
+        },
+    },
+    data() {
+        return {
+            tags: [],
+            visibleTags: [],
+            loadStep: 10,
+            currentIndex: 0,
+            loadingTags: true,
+            loadError: null,
+        };
     },
     methods: {
-        // Переключение выбора тегов
-        toggleTag(tag) {
-            if (this.selectedTags.includes(tag)) {
-                // Удаляем тег, если он уже выбран
-                this.selectedTags = this.selectedTags.filter((t) => t !== tag);
-            } else if (!this.isMaxTagsReached) {
-                // Добавляем тег, если он не выбран и максимум не достигнут
-                this.selectedTags.push(tag);
+        ...mapMutations('books', ['setSelectedTags', 'setCurrentPage']),
+        async fetchTags() {
+            try {
+                const authToken = Cookies.get("auth_token") ?? "";
+                const response = await axios.get(
+                    `${process.env.VUE_APP_API_URL}/api/v1/categories`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${authToken}`,
+                            Accept: 'application/json',
+                        },
+                    }
+                );
+
+                const data = response.data?.data || response.data;
+                this.tags = (Array.isArray(data) ? data : []).map((category) => category.name);
+                this.loadMoreTags();
+            } catch (error) {
+                console.error('Ошибка при загрузке тегов:', error);
+                this.loadError = 'Не удалось загрузить теги.';
+            } finally {
+                this.loadingTags = false;
             }
         },
-        // Загружаем дополнительные теги
+        toggleTag(tag) {
+            let next;
+
+            if (this.selectedTags.includes(tag)) {
+                next = this.selectedTags.filter((item) => item !== tag);
+            } else if (!this.isMaxTagsReached) {
+                next = [...this.selectedTags, tag];
+            } else {
+                return;
+            }
+
+            this.setSelectedTags(next);
+            this.setCurrentPage(1);
+            this.fetchBooks();
+        },
         loadMoreTags() {
             const nextIndex = this.currentIndex + this.loadStep;
             this.visibleTags = this.tags.slice(0, nextIndex);
             this.currentIndex = nextIndex;
         },
         resetTagsFilter() {
-            this.selectedTags = [];
-        }
+            this.setSelectedTags([]);
+            this.setCurrentPage(1);
+            this.fetchBooks();
+        },
+        fetchBooks() {
+            this.$store.dispatch('books/fetchBooks', 1);
+        },
     },
     mounted() {
-        // Изначально загружаем первые 10 тегов
-        this.loadMoreTags();
-    }
+        this.fetchTags();
+    },
 };
 </script>
 
@@ -90,139 +125,101 @@ export default {
 .filters__tag {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: var(--space-4);
 }
 
 .filters__tag_header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
 }
 
 .filters__tag_header label {
-    font-size: 18px;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 600;
+}
+
+.tags-loading,
+.tags-error {
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+}
+
+.tags-error {
+    color: var(--danger);
 }
 
 .tags {
     display: flex;
-    gap: 10px;
     flex-wrap: wrap;
+    gap: var(--space-2);
 }
 
-span {
-    padding: 5px 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.tags button {
+    padding: 5px 9px;
+    color: var(--text-secondary);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-full);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    user-select: none;
-    font-size: 14px;
+    transition: all var(--transition-fast);
 }
 
-span.selected {
-    background-color: var(--green-light);
-    color: white;
-    border-color: var(--green-light);
+.tags button:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.tags button.selected {
+    color: var(--text-on-accent);
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
 .show-more-button {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    background-color: var(--green-light);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
+    align-self: flex-start;
+    margin-top: var(--space-2);
+    padding: 0;
+    color: var(--text-muted);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s ease-in-out;
 }
 
 .show-more-button:hover {
-    background-color: #0056b3;
+    color: var(--accent);
+    border-color: var(--accent);
 }
 
 .selected-tags {
-
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-}
-
-.selected-tags p {
-    font-size: 16px;
-    margin-bottom: 0px;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--line);
 }
 
 .selected-tag {
-    background-color: #f8f9fa;
-    padding: 5px 5px;
-    border-radius: 4px;
+    color: var(--accent-hover);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
 }
 
 .max-tags-warning {
-    color: red;
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-@media(max-width:440px) {
-    .filters__tag {
-        margin-bottom: 6px;
-    }
-
-    .filters__tag_header label {
-        font-size: 14px;
-    }
-
-    .tags {
-        gap: 3px;
-        flex-wrap: wrap;
-    }
-
-    span {
-        padding: 3px 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 10px;
-    }
-
-    .show-more-button {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        padding: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .show-more-button:hover {
-        background-color: #0056b3;
-    }
-
-    .selected-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-
-    .selected-tags p {
-        font-size: 14px;
-        margin-bottom: 0px;
-    }
-
-    .selected-tag {
-        background-color: var(--green);
-        padding: 4px 4px;
-        border-radius: 4px;
-    }
-
-    .max-tags-warning {
-        color: red;
-        font-size: 12px;
-        margin-top: 10px;
-        margin: 0px
-    }
-
-
+    margin: 0 0 var(--space-2);
+    color: var(--danger);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
 }
 </style>

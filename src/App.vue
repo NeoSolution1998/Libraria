@@ -1,5 +1,6 @@
 <template>
-  <div class="container-fluid">
+  <div class="app">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <router-view></router-view>
   </div>
 </template>
@@ -11,10 +12,5 @@ export default {
 </script>
 
 <style scoped>
-.container-fluid {
-  padding: 0px;
- background-color: rgb(232, 229, 229);
- 
-  
-}
+/* Using global styles from main.css */
 </style>

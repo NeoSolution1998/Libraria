@@ -5,7 +5,6 @@ import ResetButton from "./UI/Buttons/ResetButton.vue";
 import SortSelectUI from "./UI/Selects/SortSelectUI.vue";
 
 import InputVue from "@/components/UI/InputVue.vue";
-import DialogVue from "@/components/UI/DialogVue.vue";
 import PaginationVue from "@/components/UI/PaginationVue.vue";
 import FilterVue from "@/components/UI/FilterVue.vue";
 import SearchVue from "@/components/UI/SearchVue.vue";
@@ -17,15 +16,10 @@ import FiltersComponent from "@/components/Filters/FiltersComponent.vue";
 import CategoryFilter from "@/components/Filters/CategoryFilter.vue";
 import RangeFilter from "@/components/Filters/RangeFilter.vue";
 import SearchBarFilter from "@/components/Filters/Search/SearchBarFilter.vue";
-import DateFilter from "@/components/Filters/DateFilter..vue";
+import DateFilter from "@/components/Filters/DateFilter.vue";
 import TagFilter from "@/components/Filters/TagFilter.vue";
 import SortDropdown from "./Filters/Search/SortDropdown.vue";
 import FiltersDropdown from "./Filters/Search/FiltersDropdown.vue";
-
-/* HOME PAGE COMPONENTS */
-import WelcomeSection from '@/components/Home/WelcomeSection.vue';
-import HowWorksSection from '@/components/Home/HowWorksSection.vue';
-import PopularBooks from "./Home/PopularBooks.vue";
 
 /* HEADER AND FOOTER */
 import HeaderVue from "@/components/Header/HeaderVue.vue";
@@ -40,11 +34,10 @@ import PopularBookSeries from "@/components/Books/old/PopularBookSeries.vue";
 /* POSTS */
 import PostsList from "@/components/Posts/old/PostsList.vue";
 import PostsItem from "@/components/Posts/old/PostsItem.vue";
-import PopularPosts from "@/components/Posts/old/PopularPosts.vue";
 
-import PostsHeader from "./Posts/PostsHeader.vue";
 import PostsContainer from "./Posts/PostsContainer.vue";
 import PostsListComponent from "./Posts/PostsListComponent.vue";
+import PostDetail from "./Posts/PostDetail.vue";
 
 /* PROFILE */
 
@@ -80,20 +73,6 @@ import BookContainer from "./Book/BookContainer.vue";
 import BookMainSection from "./Book/BookSections/BookMainSection.vue";
 import BookSidebarSection from "./Book/BookSections/BookSidebarSection.vue";
 import BookChaptersSection from "./Book/BookSections/BookChaptersSection.vue";
-/* PROFILE */
-import ProfileContainer from "./Profile/ProfileContainer.vue";
-import ProfileHeader from "./Profile/UserProfile/ProfileHeader.vue";
-import ProfileSidebar from "./Profile/UserProfile/ProfileSidebar.vue";
-import ProfileMain from "./Profile/UserProfile/ProfileMain.vue";
-import FollowersSection from "./Profile/UserProfile/ProfileSections/FollowersSection.vue";
-import FriendsSection from "./Profile/UserProfile/ProfileSections/FriendsSection.vue";
-import UserSection from "./Profile/UserProfile/ProfileSections/UserSection.vue";
-import WallSection from "./Profile/UserProfile/ProfileSections/WallSection.vue";
-
-import SettingsVue from "./Profile/UserSettings/SettingsVue.vue";
-import MainSection from "./Profile/UserProfile/ProfileSections/MainSection.vue";
-import SocialSection from "./Profile/UserProfile/ProfileSections/SocialSection.vue";
-/* Wall */
 
 
 
@@ -105,7 +84,6 @@ export default [
 
     SortSelectUI,
     InputVue,
-    DialogVue,
 
     HeaderVue,
     FooterVue,
@@ -136,18 +114,14 @@ export default [
 
     IconVue,
     FontelloIcons,
-    PopularPosts,
     RatingVue,
     PopularBookSeries,
-    WelcomeSection,
-    HowWorksSection,
-    PopularBooks,
     VuexComponent,
 
     /* Posts */
-    PostsHeader,
     PostsContainer,
     PostsListComponent,
+    PostDetail,
 
     /* Books */
     BookVue,
@@ -175,23 +149,5 @@ export default [
     PaginationUI,
     SubscriptionsComponent,
     FooterComponent,
-
-    /* Profile */
-
-    ProfileContainer,
-
-    ProfileHeader,
-    ProfileSidebar,
-    ProfileMain,
-    FollowersSection,
-    FriendsSection,
-    UserSection,
-    WallSection,
-    MainSection,
-    SocialSection,
-    SettingsVue,
-
-
-
 
 ];

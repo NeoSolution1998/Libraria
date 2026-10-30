@@ -7,35 +7,49 @@
 
         <div class="rating">
             <span v-for="star in 5" :key="star" @click="setRating(star)" @mouseover="hoverRating(star)"
-                @mouseleave="resetHover" :class="{ filled: star <= (hoveredRating || selectedRating) }">
-                <icon-vue class="icon-star"></icon-vue>
+                @mouseleave="resetHover" :class="{ filled: star <= (hoveredRating || minRating) }">
+                <IconVue name="star" />
             </span>
         </div>
-        <p>Выбранный рейтинг: {{ selectedRating }}</p>
+        <p class="filters__range_selected">Минимальный рейтинг: {{ minRating }}</p>
     </div>
 </template>
 
 <script>
+import IconVue from '@/components/Icons/IconVue.vue';
+import { mapGetters, mapMutations } from 'vuex';
+
 export default {
     name: "RangeFilter",
+    components: {
+        IconVue
+    },
+    computed: {
+        ...mapGetters('books', ['minRating']),
+    },
     data() {
         return {
-            selectedRating: 0, // Текущий выбранный рейтинг
-            hoveredRating: 0,  // Рейтинг при наведении
+            hoveredRating: 0,
         };
     },
     methods: {
+        ...mapMutations('books', ['setMinRating']),
         setRating(rating) {
-            this.selectedRating = rating; // Устанавливаем выбранный рейтинг
+            this.setMinRating(rating);
+            this.fetchBooks();
         },
         hoverRating(rating) {
-            this.hoveredRating = rating; // Обновляем значение при наведении
+            this.hoveredRating = rating;
         },
         resetHover() {
-            this.hoveredRating = 0; // Сбрасываем hover, если мышь ушла
+            this.hoveredRating = 0;
         },
         resetRangeFilter() {
-            this.selectedRating = 0;
+            this.setMinRating(0);
+            this.fetchBooks();
+        },
+        fetchBooks() {
+            this.$store.dispatch('books/fetchBooks', 1);
         }
     }
 };
@@ -45,78 +59,64 @@ export default {
 .filters__range {
     display: flex;
     flex-direction: column;
-
+    margin-bottom: var(--space-4);
 }
 
 .filters__range_header {
     display: flex;
-    justify-content: space-between
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
 }
 
 .filters__range_header label {
-    font-size: 18px;
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--ink);
+    font-family: var(--font-sans);
 }
 
-.filters__range p {
-    color: var(--blue);
-    margin-bottom: 5px;
+.filters__range_selected {
+    color: var(--info);
+    margin-bottom: var(--space-1);
+    font-size: var(--text-sm);
 }
 
 .rating {
     display: flex;
-    gap: 0px;
-    font-size: 30px;
-    color: #ccc;
+    gap: var(--space-1);
+    font-size: var(--text-xl);
+    color: var(--line);
     cursor: pointer;
 }
 
 .rating span {
-    transition: color 0.2s ease-in-out;
+    transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 .rating span.filled {
-    color: #ffc107;
-    /* Цвет для заполненной звезды (золотой) */
+    color: var(--warning);
 }
 
 .rating span:hover {
-    transform: scale(1.2);
-    /* Небольшое увеличение при наведении */
+    transform: scale(1.15);
 }
 
-@media(max-width:440px) {
-
-
-    .filters__range_header label {
-        font-size: 14px;
+@media (max-width: 640px) {
+    .filters__range {
+        margin-bottom: var(--space-3);
     }
 
-    .filters__range p {
-        color: var(--blue);
-        margin-bottom: 5px;
-        font-size: 14px;
+    .filters__range_header label {
+        font-size: var(--text-sm);
+    }
+
+    .filters__range_selected {
+        font-size: var(--text-xs);
     }
 
     .rating {
-        display: flex;
-        gap: 0px;
-        font-size: 18px;
-        color: #ccc;
-        cursor: pointer;
-    }
-
-    .rating span {
-        transition: color 0.2s ease-in-out;
-    }
-
-    .rating span.filled {
-        color: #ffc107;
-        /* Цвет для заполненной звезды (золотой) */
-    }
-
-    .rating span:hover {
-        transform: scale(1.2);
-        /* Небольшое увеличение при наведении */
+        font-size: var(--text-xl);
     }
 }
 </style>
