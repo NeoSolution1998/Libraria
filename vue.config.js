@@ -10,14 +10,15 @@ module.exports = defineConfig({
     headers: {
       'Access-Control-Allow-Origin': '*', // Разрешить кросс-доменные запросы (если нужно)
     },
-    host: 'localhost', // Хост для работы на локальной машине
-    port: 8080, // Порт разработки
+    host: '0.0.0.0', // Хост для работы на любой машине
+    port: 8081, // Порт разработки
     hot: true, // Включаем HMR (по умолчанию включено)
+    historyApiFallback: true, // Для SPA роутинга с history mode
     client: {
       webSocketURL: {
         protocol: 'ws', // Используем WebSocket без SSL
         hostname: 'localhost', // Указываем локальный хост
-        port: 8080, // Порт разработки
+        port: 8081, // Порт разработки
       },
     },
   },
