@@ -9,6 +9,7 @@ import { headerModule } from "./Header/headerModule";
 import { authModule } from './Auth/AuthModule';
 import { SubscriptionsModule } from "./Subscriptions/SubscriptionsModule";
 import { bookModule } from "./Books/BookModule";
+import { profileModule } from "./Profile/ProfileModule";
 
 export default createStore({
     state: {
@@ -20,6 +21,7 @@ export default createStore({
         posts: postsModule,
         books: booksModule,
         book: bookModule,
+        profile: profileModule,
         comments: commentsModule,
         pagination: paginationModule,
         chapters: chaptersModule,

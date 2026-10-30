@@ -2,23 +2,37 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import router from "@/router/router";
 
+const apiUrl = process.env.VUE_APP_API_URL;
+
+const authHeaders = (token) => ({
+    Authorization: `Bearer ${token}`,
+    Accept: "application/json",
+});
+
 export const authModule = {
     state: () => ({
-        user: null, // Информация о текущем пользователе
+        user: null,
         userName: "",
         userAvatar: "",
     }),
 
     getters: {
-        isAuthenticated: (state) => !!state.user, // Проверка авторизации
-        user: (state) => state.user, // Данные пользователя
+        isAuthenticated: (state) => !!state.user,
+        user: (state) => state.user,
     },
 
     mutations: {
         setUser(state, user) {
+            if (!user) {
+                state.user = null;
+                state.userName = "";
+                state.userAvatar = "";
+                return;
+            }
+
             state.user = user;
             state.userName = user.name || "";
-            state.userAvatar = user.avatar || "";
+            state.userAvatar = user.avatar || user.images?.[0]?.image || "";
         },
         clearUser(state) {
             state.user = null;
@@ -28,96 +42,163 @@ export const authModule = {
     },
 
     actions: {
-        async login({ commit, dispatch, rootState }, credentials) {
+        async login({ commit }, credentials) {
             try {
-                const apiUrl = `${rootState.domain || process.env.VUE_APP_API_URL}/api/v1/auth/login`;
-                const response = await axios.post(apiUrl, credentials, {
-                    headers: { "Content-Type": "application/json" },
+                const response = await axios.post(`${apiUrl}/api/v1/auth/login`, credentials, {
+                    headers: { "Content-Type": "application/json", Accept: "application/json" },
                 });
 
                 const token = response.data.token;
-                Cookies.set("auth_token", token);
 
+                if (!token) {
+                    throw { message: "Сервер не вернул токен авторизации." };
+                }
+
+                Cookies.set("auth_token", token, { expires: 7, sameSite: "Lax" });
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-                await dispatch("fetchUser");
+                const userResponse = await axios.get(`${apiUrl}/api/v1/auth/user`, {
+                    headers: authHeaders(token),
+                });
 
-                const prevPageUrl = localStorage.getItem("prevPageUrl");
-                router.push(prevPageUrl || "/");
+                commit("setUser", userResponse.data?.data || userResponse.data);
+
+                const redirect = router.currentRoute.value.query.redirect
+                    || localStorage.getItem("prevPageUrl")
+                    || "/";
+                localStorage.removeItem("prevPageUrl");
+
+                await router.push(
+                    ["/login", "/registration"].includes(redirect) ? "/" : redirect
+                );
+
+                return response.data;
             } catch (error) {
-                console.error("Ошибка авторизации", error.response?.data);
-                throw error.response?.data || { message: "Ошибка авторизации." };
+                console.error("Ошибка авторизации", error.response?.data || error);
+                throw error.response?.data || error;
             }
         },
 
         async register({ commit }, userData) {
             try {
-                const apiUrl = `${process.env.VUE_APP_API_URL}/api/v1/auth/register`;
-
-                const response = await axios.post(apiUrl, userData, {
-                    headers: { "Content-Type": "application/json" },
+                const response = await axios.post(`${apiUrl}/api/v1/auth/register`, userData, {
+                    headers: { "Content-Type": "application/json", Accept: "application/json" },
                 });
 
                 const token = response.data.token;
-                Cookies.set("auth_token", token);
 
+                if (!token) {
+                    throw { message: "Сервер не вернул токен авторизации." };
+                }
+
+                Cookies.set("auth_token", token, { expires: 7, sameSite: "Lax" });
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-                commit("setUser", response.data.user);
+                let user = response.data.user;
+
+                if (!user) {
+                    const userResponse = await axios.get(`${apiUrl}/api/v1/auth/user`, {
+                        headers: authHeaders(token),
+                    });
+                    user = userResponse.data?.data || userResponse.data;
+                }
+
+                commit("setUser", user);
 
                 return response.data;
             } catch (error) {
-                console.error("Ошибка регистрации", error.response?.data);
-                throw error.response?.data || { message: "Ошибка регистрации." };
+                console.error("Ошибка регистрации", error.response?.data || error);
+                throw error.response?.data || error;
             }
         },
 
-        async fetchUser({ commit, rootState }) {
+        async fetchUser({ commit }) {
             const authToken = Cookies.get("auth_token");
 
             if (!authToken) {
-                console.warn("Токен аутентификации отсутствует");
                 commit("clearUser");
-                return;
+                return null;
             }
 
             try {
-                const response = await axios.get(`${rootState.domain || process.env.VUE_APP_API_URL}/api/v1/auth/user`, {
-                    headers: {
-                        Authorization: `Bearer ${authToken}`,
-                    },
+                const response = await axios.get(`${apiUrl}/api/v1/auth/user`, {
+                    headers: authHeaders(authToken),
                 });
-                commit("setUser", response.data);
+                const user = response.data?.data || response.data;
+                commit("setUser", user);
+                return user;
             } catch (error) {
                 console.error("Ошибка получения данных пользователя", error);
+                if (error.response?.status === 401) {
+                    Cookies.remove("auth_token");
+                }
                 commit("clearUser");
+                return null;
             }
         },
 
-        async logout({ commit, state, rootState }) {
-            try {
+        async logout({ commit }) {
+            const authToken = Cookies.get("auth_token");
 
+            try {
+                if (authToken) {
+                    await axios.post(
+                        `${apiUrl}/api/v1/auth/logout`,
+                        {},
+                        { headers: authHeaders(authToken) }
+                    );
+                }
+            } catch (error) {
+                console.error("Ошибка при выходе из системы", error);
+            } finally {
+                Cookies.remove("auth_token");
+                delete axios.defaults.headers.common["Authorization"];
+                commit("clearUser");
+                await router.push("/login");
+            }
+        },
+
+        async updateUser({ commit, dispatch, rootState }, userData) {
+            try {
                 const authToken = Cookies.get("auth_token");
-                if (!authToken) {
-                    console.error("Токен аутентификации не найден");
-                    return;
+                const userId = rootState.auth.user?.id;
+
+                if (!authToken || !userId) {
+                    throw new Error("Пользователь не авторизован");
                 }
 
+                const formData = new FormData();
+
+                Object.keys(userData).forEach((key) => {
+                    const value = userData[key];
+
+                    if (value === undefined || value === null) return;
+                    if (value instanceof File) {
+                        formData.append(key, value);
+                        return;
+                    }
+
+                    formData.append(key, value);
+                });
+
+                formData.append("_method", "PUT");
+
                 const response = await axios.post(
-                    rootState.domain + "/api/v1/auth/logout",
-                    {},
+                    `${apiUrl}/api/v1/users/${userId}`,
+                    formData,
                     {
                         headers: {
-                            Authorization: `Bearer ${authToken}`,
+                            ...authHeaders(authToken),
                         },
                     }
                 );
 
-                Cookies.remove("auth_token");
-                router.push("/login");
+                await dispatch("fetchUser");
+
+                return response.data;
             } catch (error) {
-                console.error("Ошибка при выходе из системы", error);
-                // Дополнительная обработка ошибок, если необходимо
+                console.error("Ошибка при обновлении профиля", error);
+                throw error.response?.data || { message: "Ошибка при обновлении профиля" };
             }
         },
     },

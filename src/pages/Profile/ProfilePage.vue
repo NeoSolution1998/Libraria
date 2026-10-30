@@ -1,41 +1,32 @@
 <template>
-  <header-vue></header-vue>
-  <Breadcrumbs></Breadcrumbs>
-
-  <ProfileContainer></ProfileContainer>
-<!--   <profile-vue :user="user"></profile-vue> -->
-
-  <footer-vue></footer-vue>
+  <div class="profile-page">
+    <header-vue />
+    <ProfileContainer />
+    <footer-vue />
+  </div>
 </template>
 
 <script>
-import Cookies from "js-cookie";
-import axios from "axios";
+import ProfileContainer from '@/components/Profile/ProfileContainer.vue';
 
 export default {
-  data() {
-    return {
-      user: []
-    };
-  },
-  methods: {
-    async getUser() {
-      try {
-        const authToken = Cookies.get("auth_token") ?? "";
-        const response = await axios.get("http://127.0.0.1:8000/api/v1/auth/user", {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        console.log("USER", response.data);
-        this.user = response.data;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-  },
-  mounted() {
-    this.getUser();
+  name: 'ProfilePage',
+  components: {
+    ProfileContainer,
   },
 };
 </script>
+
+<style scoped>
+.profile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.profile-page :deep(.pp-page) {
+  flex: 1;
+  min-height: 0;
+}
+</style>

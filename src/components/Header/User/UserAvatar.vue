@@ -1,212 +1,359 @@
 <template>
-  <div class="header-dropdown">
-    <button class="user-menu-button" id="DropdownMenuButton" @click="toggleDropdown">
-      <div class="header-dropdown-avatar">
-        <div v-if="imageLoaded" class="user-avatar">
-          <img :src="user.images[0]?.image" alt="Аватарка пользователя" />
-        </div>
-        <div v-else class="user-avatar">
-          <img src="/images/user_default.jpg" alt="Default avatar" />
-        </div>
-      </div>
+  <div ref="root" class="ua">
+    <button
+      type="button"
+      class="ua__trigger"
+      :class="{ 'is-open': isOpen }"
+      aria-haspopup="menu"
+      :aria-expanded="isOpen"
+      aria-label="Меню пользователя"
+      @click="toggle"
+    >
+      <span class="ua__avatar">
+        <img
+          v-if="avatarUrl && !imageFailed"
+          :src="avatarUrl"
+          :alt="user?.name || 'Пользователь'"
+          @error="imageFailed = true"
+        />
+        <span v-else>{{ initials }}</span>
+      </span>
+      <span class="ua__online" aria-hidden="true"></span>
     </button>
-    <ul v-if="isDropdownOpen" class="header-dropdown-menu">
-      <li><router-link to="/profile" class="header-dropdown-item">Открыть профиль</router-link></li>
-      <li><router-link to="/settings" class="header-dropdown-item">Настройки</router-link></li>
-      <hr class="header-dropdown-divider" />
-      <li class="header-dropdown-item" @click="$emit('logout')">Выход</li>
-    </ul>
+
+    <transition name="ua-drop">
+      <div v-if="isOpen" class="ua-menu" role="menu">
+        <div class="ua-menu__head">
+          <span class="ua-menu__avatar">
+            <img
+              v-if="avatarUrl && !imageFailed"
+              :src="avatarUrl"
+              :alt="user?.name || 'Пользователь'"
+            />
+            <span v-else>{{ initials }}</span>
+          </span>
+          <div class="ua-menu__identity">
+            <strong>{{ user?.name || 'Читатель' }}</strong>
+            <span>{{ user?.email || '' }}</span>
+          </div>
+        </div>
+
+        <div class="ua-menu__divider" aria-hidden="true"></div>
+
+        <router-link :to="{ name: 'Profile' }" class="ua-menu__link" role="menuitem" @click="close">
+          <span class="icon-user-circle-o" aria-hidden="true"></span>
+          <span>Мой профиль</span>
+          <span class="icon-right-open ua-menu__chevron" aria-hidden="true"></span>
+        </router-link>
+
+        <router-link :to="{ name: 'PostCreate' }" class="ua-menu__link" role="menuitem" @click="close">
+          <span class="icon-pencil" aria-hidden="true"></span>
+          <span>Новая публикация</span>
+          <span class="icon-right-open ua-menu__chevron" aria-hidden="true"></span>
+        </router-link>
+
+        <div class="ua-menu__divider" aria-hidden="true"></div>
+
+        <button type="button" class="ua-menu__logout" role="menuitem" @click="handleLogout">
+          <span class="icon-cancel-1" aria-hidden="true"></span>
+          <span>Выйти</span>
+        </button>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 export default {
-  name: "UserAvatar",
+  name: 'UserAvatar',
   props: {
-    user: Object,
+    user: {
+      type: Object,
+      default: null,
+    },
   },
+  emits: ['logout'],
   data() {
     return {
-      isDropdownOpen: false,
-      imageLoaded: this.user?.images?.length > 0,
+      isOpen: false,
+      imageFailed: false,
     };
   },
+  computed: {
+    avatarUrl() {
+      return this.user?.avatar || this.user?.images?.[0]?.image || '';
+    },
+    initials() {
+      return String(this.user?.name || 'L')
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part.slice(0, 1).toUpperCase())
+        .join('');
+    },
+  },
+  watch: {
+    avatarUrl() {
+      this.imageFailed = false;
+    },
+    '$route.fullPath'() {
+      this.close();
+    },
+  },
+  mounted() {
+    document.addEventListener('mousedown', this.handleOutsideClick);
+    document.addEventListener('keydown', this.handleKeydown);
+  },
+  beforeUnmount() {
+    document.removeEventListener('mousedown', this.handleOutsideClick);
+    document.removeEventListener('keydown', this.handleKeydown);
+  },
   methods: {
-    toggleDropdown() {
-      this.isDropdownOpen = !this.isDropdownOpen;
+    toggle() {
+      this.isOpen = !this.isOpen;
+    },
+    close() {
+      this.isOpen = false;
+    },
+    handleOutsideClick(event) {
+      if (this.isOpen && !this.$refs.root?.contains(event.target)) {
+        this.close();
+      }
+    },
+    handleKeydown(event) {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    },
+    handleLogout() {
+      this.close();
+      this.$emit('logout');
     },
   },
 };
 </script>
 
 <style scoped>
-.header-dropdown {
+.ua {
   position: relative;
-  height: 60px;
-  width: 60px;
+  flex-shrink: 0;
 }
 
-.user-menu-button {
+.ua__trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.ua__trigger:hover,
+.ua__trigger.is-open {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(231, 165, 74, 0.45);
+}
+
+.ua__avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  height: 60px;
-}
-
-.header-dropdown-avatar {
-  width: 60px;
-  height: 60px;
+  width: 36px;
+  height: 36px;
   overflow: hidden;
-  border: 3px solid var(--bisque);
-  border-radius: 20%;
+  color: #17191b;
+  background: linear-gradient(135deg, #f1c884, var(--accent));
+  border: 2px solid rgba(231, 165, 74, 0.65);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
-.user-avatar img {
+.ua__avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: #ffffff;
 }
 
-.header-dropdown-menu {
+.ua__online {
   position: absolute;
-  right: -50%;
-  top: 140%;
-  width: 200px;
-  background-color: var(--dark);
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 10px 0;
-  list-style: none;
-  display: block;
-  padding: 4px;
-  margin: 0%;
+  right: 1px;
+  bottom: 2px;
+  width: 9px;
+  height: 9px;
+  background: #63b47f;
+  border: 2px solid #1b2023;
+  border-radius: 50%;
+}
+
+.ua-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 1200;
+  width: 252px;
+  padding: var(--space-2);
+  color: #f5efe3;
+  background:
+    radial-gradient(220px 140px at 100% 0%, rgba(231, 165, 74, 0.14), transparent 70%),
+    #1b2023;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(10, 12, 13, 0.4);
+}
+
+.ua-menu::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 16px;
+  width: 10px;
+  height: 10px;
+  background: #1b2023;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+}
+
+.ua-menu__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+}
+
+.ua-menu__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
+  color: #17191b;
+  background: linear-gradient(135deg, #f1c884, var(--accent));
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ua-menu__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ua-menu__identity {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 2px;
+  min-width: 0;
 }
 
-.header-dropdown-item {
-  height: 30px;
-  padding: 5px 5px;
-  border-radius: 8px;
-  font-family: 'Rubik-Medium';
-  text-decoration: none;
-  color: var(--bisque);
-  cursor: pointer;
-}
-
-.header-dropdown-menu li {
-  margin: 5px 0;
-}
-
-.header-dropdown-menu li:hover {
-  background-color: var(--bisque);
-  border-radius: 5px;
-}
-
-.header-dropdown-item:hover {
-  color: var(--dark-muted);
-}
-
-.header-dropdown-divider {
-  margin: 0;
-  border: 0;
-  height: 2px;
-  background-color: #ccc;
-}
-
-@media (max-width: 1024px) {
-  .header-dropdown-avatar {
-    width: 60px;
-    height: 60px;
-  }
-
-  .header-dropdown-menu {
-    right: -40%;
-    top: 125%;
-    width: 200px;
-    padding: 10px 0;
-    padding: 4px;
-    margin: 0%;
-  }
-}
-
-@media (max-width: 640px) {
-  .header-dropdown-avatar {
-    width: 45px;
-    height: 45px;
-  }
-
-  .header-dropdown {
-    height: 45px;
-    width: 45px;
-  }
-
-  .header-dropdown-menu {
-    right: -10%;
-    top: 125%;
-    width: 150px;
-    padding: 10px 0;
-    padding: 4px;
-    margin: 0%;
-  }
-  .header-dropdown-avatar {
-
+.ua-menu__identity strong {
   overflow: hidden;
-  border: 2px solid var(--bisque);
- 
+  color: #f7f1e6;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-  .header-dropdown-item {
-    height: 30px;
-    padding: 5px 5px;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-
-  .header-dropdown-menu li {
-    margin: 5px 0;
-  }
-
-  .user-menu-button {
-    height: 45px;
-  }
+.ua-menu__identity span {
+  overflow: hidden;
+  color: rgba(232, 225, 213, 0.48);
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-@media (max-width: 440px) {
-  .header-dropdown-avatar {
-    width: 40px;
-    height: 40px;
+.ua-menu__divider {
+  height: 1px;
+  margin: var(--space-1) var(--space-2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ua-menu__link,
+.ua-menu__logout {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 9px var(--space-3);
+  color: rgba(245, 239, 227, 0.78);
+  background: transparent;
+  border: 0;
+  border-radius: 9px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.ua-menu__link:hover,
+.ua-menu__logout:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.ua-menu__link span:first-child,
+.ua-menu__logout span:first-child {
+  width: 16px;
+  color: rgba(231, 165, 74, 0.8);
+  font-size: 11px;
+  text-align: center;
+}
+
+.ua-menu__chevron {
+  margin-left: auto;
+  color: rgba(245, 239, 227, 0.25) !important;
+  font-size: 8px !important;
+}
+
+.ua-menu__logout {
+  color: rgba(245, 239, 227, 0.55);
+}
+
+.ua-drop-enter-active,
+.ua-drop-leave-active {
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.ua-drop-enter-from,
+.ua-drop-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+@media (max-width: 900px) {
+  .ua__trigger {
+    width: 36px;
+    height: 36px;
   }
 
-  .header-dropdown {
-    height: 40px;
-    width: 40px;
+  .ua__avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 10px;
   }
 
-  .header-dropdown-menu {
-    right: -15%;
-    top: 120%;
-    width: 130px;
-    padding: 10px 0;
-    padding: 4px;
-    margin: 0%;
-  }
-
-  .header-dropdown-item {
-    height: 30px;
-    padding: 5px 5px;
-    border-radius: 8px;
-    font-size: 12px;
-  }
-
-  .user-menu-button {
-    height: 40px;
+  .ua-menu {
+    right: -4px;
+    width: 240px;
   }
 }
 </style>
