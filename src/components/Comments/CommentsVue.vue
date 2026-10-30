@@ -1,135 +1,355 @@
 <template>
-  <div class="container bg-white pl-4 pr-4 pb-4 pt-3 mb-3">
-    <h6><icon-vue name="chat"></icon-vue> Комментарии {{ comments.length }}</h6>
-    <hr class="pb-2" />
-
-    <div v-if="comments.length > 0">
-      {{ console.log(comments) }}
-      <comments v-for="comment in comments" :key="comment.id" :comment="comment" @reply="handleReply"></comments>
-    </div>
-    <div v-else>
-      <p>Нет комментариев.</p>
+  <div class="comments-container">
+    <div class="comments-header">
+      <h6 class="comments-title">
+        <icon-vue name="chat"></icon-vue>
+        Комментарии <span class="comments-count">{{ total }}</span>
+      </h6>
     </div>
 
-    <div class="new-comment mt-3">
-      <textarea v-model="newCommentContent" placeholder="Напишите комментарий..." rows="3" class="form-control"></textarea>
-      <!-- <button @click="submitComment" class="btn btn-outline-dark mb-2 test mt-2">Добавить комментарий</button> -->
-      <button class="btn btn-outline-dark mb-2 test mt-2">Добавить комментарий</button>
+    <div v-if="loading" class="comments-loading">Загрузка комментариев…</div>
+    <div v-else-if="error" class="comments-error">{{ error }}</div>
+
+    <div v-if="!loading && !error && flatComments.length > 0" class="comments-list">
+      <comments
+        v-for="comment in flatComments"
+        :key="comment.id"
+        :comment="comment"
+        :commentable-type="commentableType"
+        :commentable-id="commentableId"
+        :depth="comment.parent_id ? 1 : 0"
+        @deleted="handleCommentDeleted"
+        @login-required="handleLoginRequired"
+      />
+    </div>
+
+    <div v-else-if="!loading && !error && flatComments.length === 0" class="comments-empty">
+      <p>Комментариев пока нет. Будьте первым!</p>
+    </div>
+
+    <!-- Comment pagination -->
+    <div v-if="!loading && !error && lastPage > 1" class="comments-pagination">
+      <button
+        class="btn btn-ghost btn-sm"
+        :disabled="currentPage === 1"
+        @click="changePage(currentPage - 1)"
+        aria-label="Предыдущая страница"
+      >
+        ← Предыдущая
+      </button>
+      <span class="comments-pagination__info">
+        Страница {{ currentPage }} из {{ lastPage }}
+      </span>
+      <button
+        class="btn btn-ghost btn-sm"
+        :disabled="currentPage === lastPage"
+        @click="changePage(currentPage + 1)"
+        aria-label="Следующая страница"
+      >
+        Следующая →
+      </button>
+    </div>
+
+    <!-- Add comment form -->
+    <div v-if="user" class="comments-new">
+      <textarea
+        v-model="newCommentContent"
+        placeholder="Напишите комментарий…"
+        rows="3"
+        class="comment__new-textarea"
+        :disabled="submitting"
+      ></textarea>
+      <div class="comments-new-actions">
+        <button
+          class="btn btn-ghost btn-sm"
+          @click="newCommentContent = ''"
+          :disabled="submitting"
+        >
+          Отмена
+        </button>
+        <button
+          class="btn btn-primary btn-sm"
+          @click="submitComment"
+          :disabled="submitting || !newCommentContent.trim()"
+        >
+          {{ submitting ? 'Отправляем…' : 'Отправить' }}
+        </button>
+      </div>
+      <div v-if="submitError" class="comments-new-error">{{ submitError }}</div>
+    </div>
+
+    <div v-if="!user && !submitting" class="comments-login-prompt">
+      <p>Чтобы оставлять комментарии, <a @click="handleLoginRequired" style="color: var(--accent); cursor: pointer;">войдите в аккаунт</a>.</p>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
+import { computed } from 'vue';
+import IconVue from '@/components/Icons/IconVue.vue';
+import Comments from '@/components/Comments/Comments.vue';
 
 export default {
-  name: "CommentsVue",
+  name: 'CommentsVue',
   components: {
-    Comment
+    IconVue,
+    Comments,
   },
   props: {
     commentableType: {
       type: String,
-      required: true
+      required: true,
     },
     commentableId: {
       type: [String, Number],
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       newCommentContent: '',
-      parentCommentId: null
+      submitting: false,
+      submitError: '',
+      _openMenuId: null,
+    };
+  },
+  provide() {
+    return {
+      commentMenu: {
+        openId: computed(() => this._openMenuId),
+        setOpenId: (id) => {
+          this._openMenuId = id;
+        },
+      },
     };
   },
   computed: {
     ...mapGetters('comments', {
-      comments: 'comments'
-    })
+      comments: 'comments',
+      total: 'total',
+      currentPage: 'currentPage',
+      lastPage: 'lastPage',
+      perPage: 'perPage',
+      loading: 'loading',
+      error: 'error',
+    }),
+    ...mapGetters('auth', ['user']),
+    flatComments() {
+      const result = [];
+      const flatten = (list) => {
+        for (const comment of list) {
+          result.push(comment);
+          if (comment.replies && comment.replies.length) {
+            flatten(comment.replies);
+          }
+        }
+      };
+      flatten(this.comments);
+      return result;
+    },
+  },
+  watch: {
+    commentableId: {
+      immediate: true,
+      handler() {
+        this.fetchComments(1);
+      },
+    },
   },
   mounted() {
-    this.fetchComments();
+    this.fetchComments(1);
   },
   methods: {
     ...mapActions('comments', {
-      getComment: "getComment",
-      addComment: "addComment"
+      addComment: 'addComment',
+      getComment: 'getComment',
     }),
-    fetchComments() {
-      this.getComment({ commentableType: this.commentableType, commentableId: this.commentableId });
+    async fetchComments(page = 1) {
+      try {
+        await this.getComment({
+          commentableType: this.commentableType,
+          commentableId: this.commentableId,
+          page,
+          perPage: 6,
+        });
+      } catch (err) {
+        console.error('Ошибка загрузки комментариев:', err);
+      }
     },
-    submitComment() {
-      if (this.newCommentContent.trim() === '') return;
-      this.addComment({
-        commentableType: this.commentableType,
-        commentableId: this.commentableId,
-        content: this.newCommentContent,
-        parentId: this.parentCommentId
-      });
-      this.newCommentContent = '';
-      this.parentCommentId = null;
+    async changePage(page) {
+      if (page < 1 || page > this.lastPage) return;
+      await this.fetchComments(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    handleReply(parentId) {
-      this.parentCommentId = parentId;
-    }
-  }
+    async submitComment() {
+      if (!this.newCommentContent.trim() || this.submitting || !this.user) return;
+
+      this.submitting = true;
+      this.submitError = '';
+
+      try {
+        await this.addComment({
+          commentableType: this.commentableType,
+          commentableId: this.commentableId,
+          content: this.newCommentContent.trim(),
+          parentId: null,
+        });
+        this.newCommentContent = '';
+        await this.fetchComments(1);
+      } catch (error) {
+        this.submitError = error.response?.data?.message || 'Не удалось отправить комментарий';
+        console.error('Ошибка при отправке комментария:', error);
+      } finally {
+        this.submitting = false;
+      }
+    },
+    handleCommentDeleted(commentId) {
+      this.$emit('deleted', commentId);
+    },
+    handleLoginRequired() {
+      this.$emit('login-required');
+    },
+  },
 };
 </script>
+
 <style scoped>
-.img-comment {
-  max-width: 150px;
-  max-height: 100%;
-  margin: 0%;
-  padding: 0%;
+.comments-container {
+  width: 100%;
 }
 
-.img-user-icon {
-  max-width: 50px;
-  margin-left: 20%;
-  padding: 0%;
+.comments-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
 }
 
-.container {
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  /* Добавление тени */
+.comments-title {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-.post {
-  background-color: rgb(245, 247, 246);
-  border-radius: 3%;
-  margin-bottom: 10px;
-  padding: 10px;
+.comments-count {
+  font-weight: 500;
+  color: var(--accent);
 }
 
-.activity-list .float-left {
-  margin-right: 10px;
-  width: 40px;
-  height: 40px;
-  float: left;
-  display: block;
-  border-radius: 50%;
-  background-color: #eee;
-  font-size: 20px;
-  line-height: 100%;
-  line-height: 43px;
+.comments-loading,
+.comments-empty,
+.comments-error {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.comments-error {
+  color: var(--danger);
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.comments-new {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.comment__new-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--reader-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.comment__new-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.comment__new-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.comments-new-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.comments-new-error {
+  margin-top: var(--space-2);
+  color: var(--danger);
+  font-size: var(--text-sm);
+}
+
+.comments-login-prompt {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--surface-hover);
+  border-radius: var(--radius-md);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.comments-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.comments-pagination__info {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  min-width: 140px;
   text-align: center;
 }
 
-.activity-list .float-left a {
-  display: inline-block;
-  color: #999;
-}
+@media (max-width: 640px) {
+  .comments-pagination {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
 
-.comment-content {
-  overflow: hidden;
-}
+  .comments-pagination__info {
+    order: -1;
+    width: 100%;
+    min-width: 0;
+  }
 
-.comment-content span.text-small {
-  display: block;
-  color: #999;
-  margin-bottom: 10px;
-  font-size: 12px;
+  .comments-pagination .btn {
+    flex: 1;
+    min-width: 0;
+    padding-right: var(--space-2);
+    padding-left: var(--space-2);
+    font-size: 10px;
+  }
 }
 </style>
