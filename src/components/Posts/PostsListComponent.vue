@@ -190,12 +190,7 @@ export default {
     ...mapGetters('auth', ['user']),
     ...mapGetters('posts', ['hasActiveFilters', 'hasActiveSearch']),
     showFeatured() {
-      return (
-        this.currentPage === 1 &&
-        !this.hasActiveFilters &&
-        !this.hasActiveSearch &&
-        this.posts.length > 1
-      );
+      return false;
     },
     featuredPost() {
       return this.showFeatured ? this.posts[0] : null;
@@ -932,5 +927,31 @@ span.post-card__stat {
   .post-card__body {
     padding: var(--space-4);
   }
+}
+
+/* ── Redesign: editorial rows like the mockup ── */
+@media (min-width: 1025px) {
+  .posts-grid { display: flex; flex-direction: column; gap: 12px; }
+  .post-card, .post-card--wide {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    min-height: 190px;
+    overflow: hidden;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .post-card__cover, .post-card--wide .post-card__cover {
+    width: 100%;
+    height: 100%;
+    min-height: 190px;
+    border-radius: 0;
+  }
+  .post-card__body { padding: 20px 22px; }
+  .post-card__title { margin: 7px 0 5px; font-family: var(--font-display); font-size: 24px; line-height: 1.14; }
+  .post-card__excerpt { max-width: 620px; margin: 0; font-size: 12px; }
+  .post-card__tags { margin-top: 8px; }
+  .post-card__footer { margin-top: auto; padding-top: 14px; }
+  .featured-post { min-height: 260px; }
 }
 </style>

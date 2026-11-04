@@ -1047,4 +1047,12 @@ export default {
     padding: 0 var(--space-2);
   }
 }
+
+/* ── Redesign: filters on the left ── */
+@media (min-width: 1025px) {
+  .posts-container { grid-template-columns: 300px minmax(0, 1fr); gap: 30px; }
+  .posts-main { order: 2; }
+  .posts-sidebar { order: 1; }
+}
+@media (max-width: 1024px) { .posts-main { order: 1; } }
 </style>

@@ -666,6 +666,31 @@ export default {
 
       try {
         localStorage.setItem(`libraria:last-chapter:${bookId}`, String(chapterId));
+
+        const historyKey = 'libraria:reading-history';
+        let history = [];
+
+        try {
+          history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        } catch (e) {
+          history = [];
+        }
+
+        history = Array.isArray(history) ? history : [];
+        history = history.filter((item) => Number(item.bookId) !== Number(bookId));
+        history.unshift({
+          bookId: Number(bookId),
+          chapterId: Number(chapterId),
+          updatedAt: Date.now(),
+          // Дополнительные данные, чтобы главная могла показать «продолжить чтение»
+          title: this.bookTitle,
+          author: this.book?.author || '',
+          cover: this.book?.cover_image || '',
+          chapterTitle: this.chapter?.title || '',
+          chapterIndex: this.currentIndex + 1,
+          totalChapters: this.totalChapters,
+        });
+        localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 20)));
       } catch (e) {
         // Приватный режим браузера может запрещать localStorage.
       }

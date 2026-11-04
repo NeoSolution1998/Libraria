@@ -2,7 +2,7 @@
     <div class="book-sidebar-section" v-if="book?.id">
         <div class="book-cover-wrapper">
             <div class="book-cover-main">
-                <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" loading="eager">
+                <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" @error="book.cover_image = null" loading="eager">
                 <img v-else :src="fallbackCover" :alt="book.title" loading="eager">
                 <div v-if="book.age_restriction" class="book-age-badge">{{ book.age_restriction }}+</div>
             </div>

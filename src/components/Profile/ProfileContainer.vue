@@ -1,477 +1,243 @@
 <template>
-  <div class="pp-page">
-    <!-- Loading -->
-    <div v-if="(!authChecked || profileLoading) && !profileData && !error" class="container-wide pp-state-wrap">
-      <div class="pp-skeleton">
-        <div class="pp-skeleton__cover"></div>
-        <div class="pp-skeleton__card">
-          <span class="pp-skeleton__avatar"></span>
-          <div class="pp-skeleton__lines">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        <div class="pp-skeleton__grid">
-          <span v-for="item in 4" :key="item"></span>
-        </div>
+  <div class="pf-page">
+    <div v-if="profileLoading && !profileData" class="pf-state pf-state--loading" aria-live="polite">
+      <span class="pf-spinner" aria-hidden="true"></span>
+      <p>Открываем профиль…</p>
+    </div>
+
+    <div v-else-if="error" class="pf-state">
+      <span class="pf-kicker">ПРОФИЛЬ</span>
+      <h1>{{ errorTitle }}</h1>
+      <p>{{ errorText }}</p>
+      <div class="pf-state__actions">
+        <router-link v-if="error === 'auth'" :to="{ name: 'Login', query: { redirect: $route.fullPath } }" class="pf-btn pf-btn--primary">Войти в библиотеку</router-link>
+        <button v-else type="button" class="pf-btn pf-btn--primary" @click="loadProfile">Повторить</button>
+        <router-link :to="{ name: 'Home' }" class="pf-btn pf-btn--ghost">На главную</router-link>
       </div>
     </div>
 
-    <!-- Error / auth required -->
-    <div v-else-if="error" class="container-wide pp-state-wrap">
-      <div class="pp-state">
-        <span class="pp-state__icon" :class="error === 'auth' ? 'icon-lock' : 'icon-attention-alt'" aria-hidden="true"></span>
-        <span class="pp-state__kicker">ПРОФИЛЬ</span>
-        <h1>{{ errorTitle }}</h1>
-        <p>{{ errorText }}</p>
-        <div class="pp-state__actions">
-          <router-link
-            v-if="error === 'auth'"
-            :to="{ name: 'Login', query: { redirect: $route.fullPath } }"
-            class="pp-btn pp-btn--primary"
-          >
-            Войти в библиотеку
-          </router-link>
-          <button v-else type="button" class="pp-btn pp-btn--primary" @click="loadProfile">
-            Повторить
-          </button>
-          <router-link :to="{ name: 'Books' }" class="pp-btn pp-btn--ghost">
-            К книгам
-          </router-link>
-        </div>
-      </div>
-    </div>
-
-    <!-- Profile -->
     <template v-else-if="profileData">
-      <section class="pp-cover">
-        <img
-          v-if="hasBanner"
-          :src="profileData.banner_image"
-          :alt="profileData.name"
-          class="pp-cover__image"
-          @error="bannerFailed = true"
-        />
-        <div v-else class="pp-cover__art" :style="coverStyle">
-          <span class="pp-cover__initial" aria-hidden="true">{{ initials }}</span>
-          <span class="pp-cover__quote" aria-hidden="true">“</span>
-          <span class="pp-cover__art-word">Libraria</span>
-        </div>
-        <div class="pp-cover__shade" aria-hidden="true"></div>
-
-        <div class="container-wide pp-cover__inner">
-          <div class="pp-cover__top">
-            <span class="pp-cover__kicker">LIBRARIA · ПРОФИЛЬ ЧИТАТЕЛЯ</span>
-            <span v-if="isOwn" class="pp-cover__tag">это ваш профиль</span>
-          </div>
-
-          <div class="pp-cover__bottom">
-            <button v-if="isOwn" type="button" class="pp-cover__edit" @click="openEdit">
-              <span class="icon-camera" aria-hidden="true"></span>
-              Изменить обложку
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <div class="container-wide pp-shell">
-        <header class="pp-identity">
-          <div class="pp-avatar-wrap">
-            <div class="pp-avatar">
-              <img
-                v-if="profileData.avatar && !avatarFailed"
-                :src="profileData.avatar"
-                :alt="profileData.name"
-                @error="avatarFailed = true"
-              />
-              <span v-else>{{ initials }}</span>
-            </div>
-            <button v-if="isOwn" type="button" class="pp-avatar__edit" aria-label="Редактировать профиль" @click="openEdit">
-              <span class="icon-pencil" aria-hidden="true"></span>
-            </button>
-          </div>
-
-          <div class="pp-identity__main">
-            <div class="pp-identity__badges">
-              <span class="pp-role">{{ roleLabel }}</span>
-              <span class="pp-identity__since">
-                участник с {{ joinedYear }}
-              </span>
-            </div>
-
-            <h1 class="pp-name">{{ profileData.name }}</h1>
-
-            <p class="pp-handle">
-              @{{ handle }}
-              <template v-if="profileData.city">
-                <span aria-hidden="true">·</span>
-                <span class="icon-pin" aria-hidden="true"></span>
-                {{ profileData.city }}
-              </template>
-            </p>
-
-            <p class="pp-bio">
-              {{ profileData.about || 'Читатель Libraria. Здесь появятся книги, заметки и всё, что хочется обсудить.' }}
-            </p>
-
-            <div class="pp-actions">
-              <button v-if="isOwn" type="button" class="pp-btn pp-btn--primary" @click="openEdit">
-                <span class="icon-pencil" aria-hidden="true"></span>
-                Редактировать профиль
+      <div class="pf-shell">
+        <section class="pf-hero-card">
+          <div class="pf-hero-card__decor" aria-hidden="true"><span class="pf-hero-card__circle"></span></div>
+          <div class="pf-hero-card__inner">
+            <div class="pf-avatar-wrap">
+              <div class="pf-avatar">
+                <img v-if="profileData.avatar && !avatarFailed" :src="profileData.avatar" :alt="profileData.name" @error="avatarFailed = true" />
+                <span v-else>{{ initials }}</span>
+              </div>
+              <button v-if="isOwn" type="button" class="pf-avatar-edit" aria-label="Редактировать профиль" @click="openEdit">
+                <span class="icon-camera" aria-hidden="true"></span>
               </button>
+            </div>
 
-              <button
-                v-else
-                type="button"
-                class="pp-btn"
-                :class="isFollowing ? 'pp-btn--subtle' : 'pp-btn--primary'"
-                :disabled="followLoading"
-                @click="toggleFollow"
-              >
-                <span :class="isFollowing ? 'icon-ok' : 'icon-user-plus'" aria-hidden="true"></span>
+            <div class="pf-identity">
+              <h1>{{ profileData.name }}</h1>
+              <p>Читатель Libraria{{ joinedLabel ? ` с ${joinedLabel}` : '' }}</p>
+              <div class="pf-hero-stats">
+                <div class="pf-hero-stat"><b>{{ stats.books }}</b><span>Книг</span></div>
+                <div class="pf-hero-stat"><b>{{ stats.posts }}</b><span>Постов</span></div>
+                <div class="pf-hero-stat"><b>{{ stats.followers }}</b><span>Подписчиков</span></div>
+                <div class="pf-hero-stat"><b>{{ stats.following }}</b><span>Подписок</span></div>
+              </div>
+            </div>
+
+            <div class="pf-hero-actions">
+              <template v-if="isOwn">
+                <button type="button" class="pf-btn pf-btn--paper" @click="openEdit">Редактировать профиль</button>
+                <div ref="createMenu" class="pf-create">
+                  <button type="button" class="pf-btn pf-btn--outline-paper" :aria-expanded="createOpen" @click.stop="createOpen = !createOpen">
+                    <span class="icon-plus-squared" aria-hidden="true"></span> Создать
+                  </button>
+                  <transition name="pf-fade">
+                    <div v-if="createOpen" class="pf-create__menu">
+                      <router-link :to="{ name: 'PostCreate' }" @click="createOpen = false"><span class="icon-pencil" aria-hidden="true"></span><span><b>Пост</b><small>Мысли о книге</small></span></router-link>
+                      <router-link :to="{ name: 'BookCreate' }" @click="createOpen = false"><span class="icon-folder-open" aria-hidden="true"></span><span><b>Книга</b><small>Добавить в библиотеку</small></span></router-link>
+                    </div>
+                  </transition>
+                </div>
+              </template>
+              <button v-else type="button" class="pf-btn pf-btn--paper" :disabled="followLoading" @click="toggleFollow">
                 {{ isFollowing ? 'Вы подписаны' : 'Подписаться' }}
               </button>
-
-              <button type="button" class="pp-btn pp-btn--ghost" @click="shareProfile">
-                <span class="icon-share" aria-hidden="true"></span>
-                Поделиться
-              </button>
             </div>
           </div>
+        </section>
 
-          <div class="pp-stats">
-            <button type="button" class="pp-stat" @click="activeTab = 'posts'">
-              <b>{{ stats.posts }}</b>
-              <span>публикаций</span>
-            </button>
-            <button type="button" class="pp-stat" @click="activeTab = 'books'">
-              <b>{{ stats.books }}</b>
-              <span>книг</span>
-            </button>
-            <button type="button" class="pp-stat" @click="activeTab = 'liked'">
-              <b>{{ stats.likes }}</b>
-              <span>понравилось</span>
-            </button>
-            <div class="pp-stat">
-              <b>{{ stats.followers }}</b>
-              <span>подписчиков</span>
-            </div>
-          </div>
-        </header>
-
-        <div class="pp-layout">
-          <main class="pp-main">
-            <nav class="pp-tabs" role="tablist" aria-label="Разделы профиля">
-              <button
-                v-for="tab in tabs"
-                :key="tab.id"
-                type="button"
-                class="pp-tab"
-                :class="{ 'is-active': activeTab === tab.id }"
-                role="tab"
-                :aria-selected="activeTab === tab.id"
-                @click="activeTab = tab.id"
-              >
-                <span class="icon" :class="tab.icon" aria-hidden="true"></span>
-                {{ tab.label }}
-                <span v-if="tab.count" class="pp-tab__count">{{ tab.count }}</span>
-              </button>
-            </nav>
-
-            <section class="pp-panel">
-              <!-- Posts / liked -->
-              <template v-if="activeTab === 'posts' || activeTab === 'liked'">
-                <div v-if="feedPosts.length" class="pp-posts">
-                  <article v-for="post in feedPosts" :key="post.id" class="pp-post">
-                    <router-link
-                      :to="postLink(post)"
-                      class="pp-post__cover"
-                      :style="postGradient(post)"
-                      :aria-label="`Читать: ${post.title}`"
-                    >
-                      <img v-if="post.image" :src="post.image" :alt="post.title" loading="lazy" />
-                      <span v-else class="pp-post__initial" aria-hidden="true">{{ initialOf(post.title) }}</span>
-                      <span v-if="firstTag(post)" class="pp-post__tag">{{ firstTag(post) }}</span>
-                    </router-link>
-
-                    <div class="pp-post__body">
-                      <div class="pp-post__meta">
-                        <time :datetime="post.created_at">{{ formatDate(post.created_at) }}</time>
-                        <span aria-hidden="true">·</span>
-                        <span>{{ readingTime(post.content) }} мин</span>
-                        <template v-if="activeTab === 'liked' && post.user">
-                          <span aria-hidden="true">·</span>
-                          <span>{{ post.user.name }}</span>
-                        </template>
-                      </div>
-
-                      <h3>
-                        <router-link :to="postLink(post)">{{ post.title }}</router-link>
-                      </h3>
-
-                      <p>{{ excerpt(post.content, 150) }}</p>
-
-                      <footer class="pp-post__footer">
-                        <span><span class="icon-heart" aria-hidden="true"></span> {{ post.likes_count || 0 }}</span>
-                        <span><span class="icon-chat" aria-hidden="true"></span> {{ post.comments_count || 0 }}</span>
-                        <span><span class="icon-eye" aria-hidden="true"></span> {{ post.views_count || 0 }}</span>
-                      </footer>
-                    </div>
-                  </article>
-                </div>
-
-                <div v-else class="pp-empty">
-                  <span class="pp-empty__icon" :class="activeTab === 'liked' ? 'icon-heart' : 'icon-chat'" aria-hidden="true"></span>
-                  <h3>{{ activeTab === 'liked' ? 'Пока ничего не понравилось' : 'Публикаций пока нет' }}</h3>
-                  <p v-if="activeTab === 'liked'">
-                    Посты, которым {{ isOwn ? 'вы поставили лайк' : 'пользователь поставил лайк' }}, появятся здесь.
-                  </p>
-                  <p v-else-if="isOwn">Расскажите о книге, которая вас зацепила — начните с небольшой заметки.</p>
-                  <p v-else>Как только появятся новые материалы, они будут здесь.</p>
-                  <router-link v-if="isOwn && activeTab === 'posts'" :to="{ name: 'PostCreate' }" class="pp-btn pp-btn--primary">
-                    Написать пост
+        <div class="pf-columns">
+          <main class="pf-left">
+            <section class="pf-block">
+              <div class="pf-block__head">
+                <h2>Читаю сейчас</h2>
+                <router-link :to="{ name: 'Books' }" class="pf-block__link">Вся библиотека <span class="icon-right-open" aria-hidden="true"></span></router-link>
+              </div>
+              <div v-if="readingBooks.length" class="pf-reading-grid">
+                <article v-for="book in readingBooks" :key="book.id" class="pf-reading-card">
+                  <router-link :to="bookLink(book)" class="pf-reading-cover" :style="bookGradient(book)">
+                    <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" @error="book.cover_image = null" loading="lazy" />
+                    <span v-else>{{ initialOf(book.title) }}</span>
                   </router-link>
-                </div>
-              </template>
-
-              <!-- Books -->
-              <template v-else-if="activeTab === 'books'">
-                <div v-if="profileData.books?.length" class="pp-books">
-                  <article v-for="book in profileData.books" :key="book.id" class="pp-book">
-                    <router-link :to="bookLink(book)" class="pp-book__cover" :style="bookGradient(book)">
-                      <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" loading="lazy" />
-                      <span v-else class="pp-book__initial" aria-hidden="true">{{ initialOf(book.title) }}</span>
-                    </router-link>
-                    <div class="pp-book__body">
-                      <h3><router-link :to="bookLink(book)">{{ book.title }}</router-link></h3>
-                      <p>{{ book.author || 'Автор не указан' }}</p>
-                      <div v-if="book.categories?.length" class="pp-book__tags">
-                        <span v-for="category in book.categories.slice(0, 2)" :key="category.id">
-                          #{{ category.name }}
-                        </span>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div v-else class="pp-empty">
-                  <span class="pp-empty__icon icon-folder-open" aria-hidden="true"></span>
-                  <h3>Книг пока нет</h3>
-                  <p v-if="isOwn">Добавьте первую книгу в библиотеку — она появится в профиле.</p>
-                  <p v-else>Пользователь пока не добавил ни одной книги.</p>
-                  <router-link v-if="isOwn" :to="{ name: 'BookCreate' }" class="pp-btn pp-btn--primary">
-                    Добавить книгу
-                  </router-link>
-                </div>
-              </template>
-
-              <!-- About -->
-              <template v-else>
-                <div class="pp-about">
-                  <section class="pp-about__bio">
-                    <span class="pp-kicker">О СЕБЕ</span>
-                    <h2>{{ profileData.name }}</h2>
-                    <p>
-                      {{ profileData.about || 'Профиль только начинает заполняться. Читатель ещё не рассказал о себе.' }}
-                    </p>
-                  </section>
-
-                  <section class="pp-about__details">
-                    <span class="pp-kicker">ДЕТАЛИ</span>
-                    <ul>
-                      <li v-for="detail in details" :key="detail.label">
-                        <span>{{ detail.label }}</span>
-                        <b>{{ detail.value }}</b>
-                      </li>
-                    </ul>
-                  </section>
-
-                  <section v-if="socialLinks.length" class="pp-about__social">
-                    <span class="pp-kicker">ССЫЛКИ</span>
-                    <div class="pp-social">
-                      <a
-                        v-for="link in socialLinks"
-                        :key="link.label"
-                        :href="link.href"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="pp-social__link"
-                      >
-                        <span class="pp-social__mark">{{ link.mark }}</span>
-                        <span>
-                          <b>{{ link.label }}</b>
-                          <small>{{ link.value }}</small>
-                        </span>
-                        <span class="icon-right-open" aria-hidden="true"></span>
-                      </a>
-                    </div>
-                  </section>
-
-                  <section v-if="isOwn" class="pp-about__manage">
+                  <div class="pf-reading-body">
                     <div>
-                      <span class="pp-kicker">АККАУНТ</span>
-                      <p>Обновите имя, город, соцсети или фотографии профиля.</p>
+                      <h3><router-link :to="bookLink(book)">{{ book.title }}</router-link></h3>
+                      <p>{{ book.author || 'Автор не указан' }} · {{ chapterLabelFor(book) }}</p>
                     </div>
-                    <button type="button" class="pp-btn pp-btn--primary" @click="openEdit">
-                      <span class="icon-pencil" aria-hidden="true"></span>
-                      Настроить профиль
-                    </button>
-                  </section>
-                </div>
-              </template>
+                    <div class="pf-reading-progress">
+                      <span class="pf-progress"><i :style="{ width: progressFor(book) + '%' }"></i></span>
+                      <router-link :to="readLinkFor(book)" class="pf-reading-continue">Продолжить чтение <span class="icon-right-open" aria-hidden="true"></span></router-link>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div v-else class="pf-empty pf-empty--compact"><span class="icon-folder-open" aria-hidden="true"></span><h3>Пока нет книг</h3><p v-if="isOwn">Добавьте первую книгу — она появится здесь.</p></div>
             </section>
+
+            <section class="pf-block">
+              <div class="pf-block__head">
+                <h2>Мои посты</h2>
+                <router-link v-if="isOwn" :to="{ name: 'PostCreate' }" class="pf-block__link">Написать пост <span class="icon-plus-squared" aria-hidden="true"></span></router-link>
+              </div>
+              <div v-if="createdPosts.length" class="pf-post-list">
+                <article v-for="post in createdPosts.slice(0, 3)" :key="post.id" class="pf-post-row">
+                  <router-link :to="postLink(post)" class="pf-post-row__cover" :style="postGradient(post)">
+                    <img v-if="post.image" :src="post.image" :alt="post.title" loading="lazy" />
+                    <span v-else>{{ initialOf(post.title) }}</span>
+                  </router-link>
+                  <div class="pf-post-row__body">
+                    <div class="pf-post-row__meta">
+                      <span v-if="firstTag(post)" class="pf-tag">{{ firstTag(post) }}</span>
+                      <time :datetime="post.created_at">{{ formatDate(post.created_at) }}</time>
+                    </div>
+                    <h3><router-link :to="postLink(post)">{{ post.title }}</router-link></h3>
+                    <p>{{ excerpt(post.content, 180) }}</p>
+                    <div class="pf-post-row__footer">
+                      <span><span class="icon-heart" aria-hidden="true"></span>{{ post.likes_count || 0 }}</span>
+                      <span><span class="icon-chat" aria-hidden="true"></span>{{ post.comments_count || 0 }}</span>
+                      <span><span class="icon-eye" aria-hidden="true"></span>{{ post.views_count || 0 }}</span>
+                      <span v-if="isOwn" class="pf-post-row__actions">
+                        <router-link :to="{ name: 'PostEdit', params: { id: post.id } }" class="pf-icon-btn" aria-label="Редактировать пост"><span class="icon-pencil" aria-hidden="true"></span></router-link>
+                        <button type="button" class="pf-icon-btn pf-icon-btn--danger" aria-label="Удалить пост" @click="askDelete('posts', post)"><span class="icon-trash" aria-hidden="true"></span></button>
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div v-else class="pf-empty"><span class="icon-chat" aria-hidden="true"></span><h3>Публикаций пока нет</h3><p v-if="isOwn">Расскажите о книге, которая оставила след.</p><router-link v-if="isOwn" :to="{ name: 'PostCreate' }" class="pf-btn pf-btn--primary">Написать первый пост</router-link></div>
+            </section>
+
           </main>
 
-          <aside class="pp-aside">
-            <section class="pp-side">
-              <header class="pp-side__head">
-                <div>
-                  <span class="pp-kicker">СООБЩЕСТВО</span>
-                  <h3>Подписчики</h3>
-                </div>
-                <span class="pp-side__count">{{ stats.followers }}</span>
-              </header>
+          <aside class="pf-right">
+            <section class="pf-activity-card">
+              <h3>Активность</h3>
+              <div class="pf-activity-main">
+                <span class="pf-activity-icon icon-star" aria-hidden="true"></span>
+                <div><b>{{ stats.books + stats.posts }}</b><p>материалов в библиотеке</p></div>
+              </div>
+              <div class="pf-activity-weeks" aria-hidden="true">
+                <i v-for="n in 7" :key="n" :class="'is-' + ((n * 3 + stats.posts) % 5)"></i>
+              </div>
+              <p class="pf-activity-quote">«Чтение — лучший способ путешествовать, не выходя из дома»</p>
+            </section>
 
-              <div v-if="profileData.followers?.length" class="pp-people">
-                <router-link
-                  v-for="person in profileData.followers.slice(0, 5)"
-                  :key="person.id"
-                  :to="{ name: 'Profile', params: { id: person.id } }"
-                  class="pp-person"
-                >
-                  <span class="pp-person__avatar">
-                    <img v-if="person.avatar" :src="person.avatar" :alt="person.name" />
-                    <span v-else>{{ initialsOf(person.name) }}</span>
-                  </span>
-                  <span class="pp-person__info">
-                    <b>{{ person.name }}</b>
-                    <small>{{ person.city || 'читатель' }}</small>
-                  </span>
-                  <span class="icon-right-open pp-person__arrow" aria-hidden="true"></span>
+            <section class="pf-following-card">
+              <div class="pf-block__head"><h3>Подписки</h3><span>{{ stats.following }}</span></div>
+              <div v-if="profileData.following?.length" class="pf-people">
+                <router-link v-for="person in profileData.following.slice(0, 4)" :key="person.id" :to="{ name: 'Profile', params: { id: person.id } }" class="pf-person">
+                  <span class="pf-person__avatar"><img v-if="person.avatar" :src="person.avatar" :alt="person.name" loading="lazy" /><span v-else>{{ initialOf(person.name) }}</span></span>
+                  <span><b>{{ person.name }}</b><small>{{ person.city || 'читатель' }}</small></span>
+                  <span class="pf-person__link">Профиль</span>
                 </router-link>
               </div>
-              <p v-else class="pp-side__empty">
-                {{ isOwn ? 'У вас пока нет подписчиков.' : 'Пока нет подписчиков.' }}
-              </p>
+              <p v-else class="pf-muted">Пока никого нет.</p>
+              <router-link v-if="profileData.following?.length" :to="{ name: 'Profile', params: { id: profileData.id } }" class="pf-following-all">Показать все ({{ stats.following }})</router-link>
             </section>
 
-            <section class="pp-side">
-              <header class="pp-side__head">
-                <div>
-                  <span class="pp-kicker">ИНТЕРЕСЫ</span>
-                  <h3>Подписки</h3>
-                </div>
-                <span class="pp-side__count">{{ stats.following }}</span>
-              </header>
-
-              <div v-if="profileData.following?.length" class="pp-people">
-                <router-link
-                  v-for="person in profileData.following.slice(0, 5)"
-                  :key="person.id"
-                  :to="{ name: 'Profile', params: { id: person.id } }"
-                  class="pp-person"
-                >
-                  <span class="pp-person__avatar">
-                    <img v-if="person.avatar" :src="person.avatar" :alt="person.name" />
-                    <span v-else>{{ initialsOf(person.name) }}</span>
-                  </span>
-                  <span class="pp-person__info">
-                    <b>{{ person.name }}</b>
-                    <small>{{ person.city || 'читатель' }}</small>
-                  </span>
-                  <span class="icon-right-open pp-person__arrow" aria-hidden="true"></span>
-                </router-link>
-              </div>
-              <p v-else class="pp-side__empty">
-                {{ isOwn ? 'Вы пока ни на кого не подписаны.' : 'Пока нет подписок.' }}
-              </p>
-            </section>
-
-            <section class="pp-side pp-side--details">
-              <header class="pp-side__head">
-                <div>
-                  <span class="pp-kicker">КОРОТКО</span>
-                  <h3>О читателе</h3>
-                </div>
-              </header>
-
-              <ul class="pp-mini-details">
-                <li>
-                  <span>Роль</span>
-                  <b>{{ roleLabel }}</b>
-                </li>
-                <li v-if="profileData.city">
-                  <span>Город</span>
-                  <b>{{ profileData.city }}</b>
-                </li>
-                <li v-if="profileData.birth_date">
-                  <span>День рождения</span>
-                  <b>{{ formatDate(profileData.birth_date) }}</b>
-                </li>
-                <li>
-                  <span>С нами с</span>
-                  <b>{{ joinedDate }}</b>
-                </li>
-              </ul>
-
-              <button v-if="isOwn" type="button" class="pp-side__edit" @click="openEdit">
-                <span class="icon-pencil" aria-hidden="true"></span>
-                Редактировать
-              </button>
-            </section>
           </aside>
         </div>
+
+        <section class="pf-extra">
+          <div class="pf-extra__grid">
+            <section class="pf-block">
+              <div class="pf-block__head">
+                <h2>Понравилось</h2>
+                <span class="pf-block__count">{{ likedPosts.length + likedBooks.length }}</span>
+              </div>
+              <div v-if="likedPosts.length" class="pf-liked-posts">
+                <article v-for="post in likedPosts.slice(0, 2)" :key="post.id" class="pf-liked-post">
+                  <router-link :to="postLink(post)" class="pf-liked-post__title">{{ post.title }}</router-link>
+                  <span>{{ post.user?.name || 'Автор' }} · {{ formatDate(post.created_at) }}</span>
+                </article>
+              </div>
+              <div v-if="likedBooks.length" class="pf-book-grid pf-book-grid--liked">
+                <article v-for="book in likedBooks.slice(0, 4)" :key="book.id" class="pf-book-card">
+                  <router-link :to="bookLink(book)" class="pf-book-card__cover" :style="bookGradient(book)">
+                    <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" @error="book.cover_image = null" loading="lazy" />
+                    <span v-else>{{ initialOf(book.title) }}</span>
+                  </router-link>
+                  <h3><router-link :to="bookLink(book)">{{ book.title }}</router-link></h3>
+                </article>
+              </div>
+              <p v-if="!likedPosts.length && !likedBooks.length" class="pf-muted">Пока ничего не понравилось.</p>
+            </section>
+
+            <section v-if="profileData.about || socialLinks.length" class="pf-block pf-about">
+              <div class="pf-block__head"><h2>О читателе</h2><button v-if="isOwn" type="button" class="pf-block__link" @click="openEdit">Редактировать</button></div>
+              <p>{{ profileData.about || 'Читатель пока не рассказал о себе.' }}</p>
+              <div v-if="socialLinks.length" class="pf-socials">
+                <a v-for="link in socialLinks" :key="link.label" :href="link.href" target="_blank" rel="noopener"><span>{{ link.mark }}</span>{{ link.label }}</a>
+              </div>
+            </section>
+          </div>
+        </section>
       </div>
+
+      <EditProfileModal :visible="editOpen" :user="profileData" @update:visible="editOpen = $event" @saved="handleProfileSaved" />
+      <transition name="pf-fade">
+        <div v-if="deleteTarget" class="pf-confirm" role="dialog" aria-modal="true" aria-labelledby="pf-confirm-title" @click.self="deleteTarget = null">
+          <div class="pf-confirm__card">
+            <span class="pf-confirm__icon icon-trash" aria-hidden="true"></span>
+            <span class="pf-kicker">УДАЛЕНИЕ</span>
+            <h2 id="pf-confirm-title">Удалить {{ deleteTarget.type === 'posts' ? 'пост' : 'книгу' }}?</h2>
+            <p>«{{ deleteTarget.item.title }}» исчезнет из библиотеки. Это действие нельзя отменить.</p>
+            <div class="pf-confirm__actions"><button type="button" class="pf-btn pf-btn--ghost" :disabled="deleting" @click="deleteTarget = null">Отмена</button><button type="button" class="pf-btn pf-btn--danger" :disabled="deleting" @click="confirmDelete">{{ deleting ? 'Удаляем…' : 'Удалить' }}</button></div>
+          </div>
+        </div>
+      </transition>
+      <transition name="pf-fade"><div v-if="toastMessage" class="pf-toast" role="status">{{ toastMessage }}</div></transition>
     </template>
-
-    <EditProfileModal
-      v-if="profileData && isOwn"
-      :visible="editOpen"
-      :user="profileData"
-      @update:visible="editOpen = $event"
-      @saved="handleProfileSaved"
-    />
-
-    <transition name="pp-toast">
-      <div v-if="toastMessage" class="pp-toast" role="status">
-        <span class="icon-ok" aria-hidden="true"></span>
-        {{ toastMessage }}
-      </div>
-    </transition>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import { mapActions, mapGetters } from 'vuex';
 import EditProfileModal from '@/components/Profile/UserProfile/ProfileSections/EditProfileModal.vue';
 
-const COVER_GRADIENTS = [
-  'linear-gradient(135deg, #18201e 0%, #26332d 48%, #8f6d3d 115%)',
-  'linear-gradient(135deg, #1d2229 0%, #2a3038 45%, #9b6c3a 120%)',
-  'linear-gradient(135deg, #241f20 0%, #3a2d2d 48%, #b07b3f 120%)',
-  'linear-gradient(135deg, #1b2528 0%, #26363a 45%, #6f8a7d 120%)',
-  'linear-gradient(135deg, #26231d 0%, #33302a 45%, #c18a42 120%)',
-];
-
 const CARD_GRADIENTS = [
-  'linear-gradient(135deg, #20262b 0%, #3a3025 58%, #a97436 140%)',
-  'linear-gradient(135deg, #1e2a28 0%, #2e3a31 55%, #8b7a4a 140%)',
-  'linear-gradient(135deg, #2a2024 0%, #3b2b2b 55%, #b8793d 140%)',
-  'linear-gradient(135deg, #242a35 0%, #1e242c 55%, #6f7d64 140%)',
-  'linear-gradient(135deg, #302a20 0%, #1f2326 55%, #c18a42 140%)',
+  'linear-gradient(135deg, #36513f 0%, #283d30 100%)',
+  'linear-gradient(135deg, #274d4a 0%, #173533 100%)',
+  'linear-gradient(135deg, #6f5133 0%, #42301f 100%)',
+  'linear-gradient(135deg, #4c5a6d 0%, #293441 100%)',
+  'linear-gradient(135deg, #6c3d43 0%, #3d2226 100%)',
 ];
 
 export default {
   name: 'ProfileContainer',
-  components: {
-    EditProfileModal,
-  },
+  components: { EditProfileModal },
   data() {
     return {
-      activeTab: 'posts',
+      activeTab: 'created',
       editOpen: false,
+      createOpen: false,
       authChecked: false,
       avatarFailed: false,
       bannerFailed: false,
+      deleting: false,
+      deleteTarget: null,
+      readingBooksData: [],
+      readingLoading: false,
       toastMessage: '',
       toastTimer: null,
     };
@@ -484,10 +250,8 @@ export default {
       profileError: 'error',
       followLoading: 'followLoading',
     }),
-
     targetId() {
-      const routeId = this.$route.params.id;
-      return routeId || this.user?.id || null;
+      return this.$route.params.id || this.user?.id || null;
     },
     isOwn() {
       if (!this.profileData) return false;
@@ -505,54 +269,43 @@ export default {
       return 'Не удалось загрузить профиль';
     },
     errorText() {
-      if (this.error === 'auth') {
-        return 'Профили читателей доступны после входа. Войдите в аккаунт, и мы вернём вас на эту страницу.';
-      }
-      if (this.error === 'notfound') {
-        return 'Возможно, пользователь удалил аккаунт или ссылка устарела.';
-      }
+      if (this.error === 'auth') return 'Профили читателей доступны после входа. Войдите, и мы вернём вас на эту страницу.';
+      if (this.error === 'notfound') return 'Возможно, пользователь удалил аккаунт или ссылка устарела.';
       return 'Проверьте подключение к библиотеке и попробуйте ещё раз.';
     },
-
     initials() {
       return this.initialsOf(this.profileData?.name);
     },
-    handle() {
-      return String(this.profileData?.name || 'reader')
-        .toLocaleLowerCase('ru-RU')
-        .replace(/\s+/g, '_');
-    },
     roleLabel() {
       const roles = this.profileData?.roles || [];
-      if (roles.includes('admin')) return 'Администратор';
-      if (roles.includes('author')) return 'Автор';
-      if (roles.includes('reader')) return 'Читатель';
-      return 'Читатель';
+      if (roles.includes('admin')) return 'администратор';
+      if (roles.includes('author')) return 'автор';
+      return 'читатель';
     },
     joinedYear() {
-      if (!this.profileData?.created_at) return '';
-      return new Date(this.profileData.created_at).getFullYear();
+      return this.profileData?.created_at ? new Date(this.profileData.created_at).getFullYear() : '';
     },
-    joinedDate() {
+    joinedLabel() {
       if (!this.profileData?.created_at) return '';
-      return this.formatDate(this.profileData.created_at, {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
+      return new Date(this.profileData.created_at).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+    },
+    readingBooks() {
+      return this.readingBooksData;
+    },
+    createdBookIds() {
+      return new Set((this.createdBooks || []).map((book) => Number(book.id)));
     },
     hasBanner() {
       return Boolean(this.profileData?.banner_image) && !this.bannerFailed;
     },
     coverStyle() {
-      const index = Math.abs(Number(this.profileData?.id) || 0) % COVER_GRADIENTS.length;
-      return { background: COVER_GRADIENTS[index] };
+      if (this.hasBanner) return {};
+      return { background: 'linear-gradient(135deg, #36513f 0%, #2d4637 58%, #253a2e 100%)' };
     },
     stats() {
       return {
-        posts: Number(this.profileData?.posts_count) || 0,
-        books: Number(this.profileData?.books_count) || 0,
-        likes: Number(this.profileData?.liked_posts?.length) || 0,
+        posts: Number(this.profileData?.posts_count ?? this.profileData?.posts?.length) || 0,
+        books: Number(this.profileData?.books_count ?? this.profileData?.books?.length) || 0,
         followers: Number(this.profileData?.followers_count) || 0,
         following: Number(this.profileData?.following_count) || 0,
       };
@@ -560,1789 +313,410 @@ export default {
     isFollowing() {
       return Boolean(this.profileData?.is_following);
     },
+    createdPosts() {
+      return this.profileData?.posts || [];
+    },
+    createdBooks() {
+      return this.profileData?.books || [];
+    },
+    likedPosts() {
+      return this.profileData?.liked_posts || [];
+    },
+    likedBooks() {
+      return this.profileData?.liked_books || [];
+    },
     tabs() {
       return [
-        { id: 'posts', label: 'Публикации', icon: 'icon-chat', count: this.profileData?.posts?.length || 0 },
-        { id: 'books', label: 'Книги', icon: 'icon-folder-open', count: this.profileData?.books?.length || 0 },
-        { id: 'liked', label: 'Понравилось', icon: 'icon-heart', count: this.profileData?.liked_posts?.length || 0 },
-        { id: 'about', label: 'Обо мне', icon: 'icon-user-circle-o', count: 0 },
+        { id: 'created', label: 'Созданное', count: this.createdPosts.length + this.createdBooks.length },
+        { id: 'liked', label: 'Понравилось', count: this.likedPosts.length + this.likedBooks.length },
+        { id: 'about', label: 'О себе', count: 0 },
       ];
     },
-    feedPosts() {
-      if (this.activeTab === 'posts') return this.profileData?.posts || [];
-      if (this.activeTab === 'liked') return this.profileData?.liked_posts || [];
-      return [];
-    },
     details() {
+      const data = this.profileData || {};
       const rows = [];
-      if (this.profileData?.birth_date) {
-        rows.push({ label: 'Дата рождения', value: this.formatDate(this.profileData.birth_date) });
-      }
-      if (this.profileData?.city) {
-        rows.push({ label: 'Город', value: this.profileData.city });
-      }
-      if (this.profileData?.telegram) {
-        rows.push({ label: 'Telegram', value: `@${this.cleanHandle(this.profileData.telegram)}` });
-      }
-      if (this.profileData?.phone && this.isOwn) {
-        rows.push({ label: 'Телефон', value: this.profileData.phone });
-      }
-      if (this.profileData?.created_at) {
-        rows.push({ label: 'Регистрация', value: this.joinedDate });
-      }
+      if (data.birth_date) rows.push({ label: 'Дата рождения', value: this.formatDate(data.birth_date) });
+      if (data.city) rows.push({ label: 'Город', value: data.city });
+      if (data.telegram) rows.push({ label: 'Telegram', value: `@${this.cleanHandle(data.telegram)}` });
+      if (data.phone && this.isOwn) rows.push({ label: 'Телефон', value: data.phone });
+      if (data.created_at) rows.push({ label: 'В библиотеке', value: this.formatDate(data.created_at, { year: 'numeric', month: 'long' }) });
       return rows;
     },
     socialLinks() {
-      const links = [];
       const data = this.profileData || {};
-
-      if (data.telegram) {
-        links.push({
-          label: 'Telegram',
-          mark: 'TG',
-          value: `@${this.cleanHandle(data.telegram)}`,
-          href: `https://t.me/${this.cleanHandle(data.telegram)}`,
-        });
-      }
-      if (data.github) {
-        links.push({
-          label: 'GitHub',
-          mark: 'GH',
-          value: `@${this.cleanHandle(data.github)}`,
-          href: `https://github.com/${this.cleanHandle(data.github)}`,
-        });
-      }
-      if (data.vk) {
-        links.push({
-          label: 'VK',
-          mark: 'VK',
-          value: this.cleanHandle(data.vk),
-          href: `https://vk.com/${this.cleanHandle(data.vk)}`,
-        });
-      }
-      if (data.habr) {
-        links.push({
-          label: 'Habr',
-          mark: 'H',
-          value: `@${this.cleanHandle(data.habr)}`,
-          href: `https://habr.com/ru/users/${this.cleanHandle(data.habr)}/`,
-        });
-      }
-
+      const links = [];
+      if (data.telegram) links.push({ label: 'Telegram', mark: 'TG', value: `@${this.cleanHandle(data.telegram)}`, href: `https://t.me/${this.cleanHandle(data.telegram)}` });
+      if (data.github) links.push({ label: 'GitHub', mark: 'GH', value: `@${this.cleanHandle(data.github)}`, href: `https://github.com/${this.cleanHandle(data.github)}` });
+      if (data.vk) links.push({ label: 'VK', mark: 'VK', value: `@${this.cleanHandle(data.vk)}`, href: `https://vk.com/${this.cleanHandle(data.vk)}` });
+      if (data.habr) links.push({ label: 'Habr', mark: 'H', value: `@${this.cleanHandle(data.habr)}`, href: `https://habr.com/ru/users/${this.cleanHandle(data.habr)}/` });
       return links;
     },
   },
   watch: {
-    '$route.params.id'() {
-      this.loadProfile();
-    },
-    'profileData.avatar'() {
-      this.avatarFailed = false;
-    },
-    'profileData.banner_image'() {
-      this.bannerFailed = false;
-    },
+    '$route.params.id'() { this.loadProfile(); },
+    'profileData.avatar'() { this.avatarFailed = false; },
+    'profileData.banner_image'() { this.bannerFailed = false; },
   },
   async mounted() {
+    document.addEventListener('click', this.handleOutsideCreate);
     await this.loadProfile();
   },
   beforeUnmount() {
+    document.removeEventListener('click', this.handleOutsideCreate);
     if (this.toastTimer) window.clearTimeout(this.toastTimer);
   },
   methods: {
     ...mapActions('auth', ['fetchUser']),
     ...mapActions('profile', ['fetchProfile', 'followUser', 'unfollowUser']),
-
     async loadProfile() {
       this.authChecked = false;
-
-      if (!this.user) {
-        await this.fetchUser();
-      }
-
+      if (!this.user) await this.fetchUser();
       this.authChecked = true;
-
       if (!this.user) return;
-
       await this.fetchProfile(this.targetId);
-      this.activeTab = 'posts';
+      await this.loadReadingHistory();
+      if (!['created', 'liked', 'about'].includes(this.activeTab)) this.activeTab = 'created';
     },
-
-    openEdit() {
-      if (this.isOwn) this.editOpen = true;
+    handleOutsideCreate(event) {
+      if (this.createOpen && !this.$refs.createMenu?.contains(event.target)) this.createOpen = false;
     },
+    openEdit() { if (this.isOwn) this.editOpen = true; },
     async handleProfileSaved() {
       this.editOpen = false;
       await this.fetchProfile(this.targetId);
       this.showToast('Профиль обновлён');
     },
     async toggleFollow() {
-      if (!this.user) {
-        this.$router.push({ name: 'Login', query: { redirect: this.$route.fullPath } });
-        return;
-      }
-
       if (this.followLoading || !this.profileData) return;
-
       try {
-        if (this.isFollowing) {
-          await this.unfollowUser(this.profileData.id);
-          this.showToast('Вы отписались');
-        } else {
-          await this.followUser(this.profileData.id);
-          this.showToast('Вы подписались на читателя');
-        }
-
+        if (this.isFollowing) await this.unfollowUser(this.profileData.id);
+        else await this.followUser(this.profileData.id);
         await this.fetchProfile(this.profileData.id);
+        this.showToast(this.isFollowing ? 'Вы подписались' : 'Вы отписались');
       } catch (error) {
-        console.error('Не удалось изменить подписку:', error);
         this.showToast('Не удалось изменить подписку');
       }
     },
-    async shareProfile() {
-      const url = window.location.href;
-
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: `${this.profileData?.name || 'Читатель'} — Libraria`,
-            text: 'Профиль читателя в Libraria',
-            url,
-          });
-          return;
-        } catch (error) {
-          if (error.name === 'AbortError') return;
-        }
-      }
-
+    askDelete(type, item) {
+      this.deleteTarget = { type, item };
+    },
+    async confirmDelete() {
+      if (!this.deleteTarget || this.deleting) return;
+      this.deleting = true;
+      const { type, item } = this.deleteTarget;
       try {
-        await navigator.clipboard.writeText(url);
-        this.showToast('Ссылка на профиль скопирована');
+        await axios.delete(`${process.env.VUE_APP_API_URL}/api/v1/${type}/${item.id}`, { headers: this.authHeaders() });
+        this.deleteTarget = null;
+        await this.fetchProfile(this.targetId);
+        this.showToast(type === 'posts' ? 'Пост удалён' : 'Книга удалена');
       } catch (error) {
-        this.showToast('Не удалось скопировать ссылку');
+        this.showToast(error.response?.data?.message || 'Не удалось удалить запись');
+      } finally {
+        this.deleting = false;
       }
+    },
+    authHeaders() {
+      return { Authorization: `Bearer ${Cookies.get('auth_token') || ''}`, Accept: 'application/json' };
+    },
+    shareProfile() {
+      const url = window.location.href;
+      if (navigator.share) {
+        navigator.share({ title: `${this.profileData?.name || 'Читатель'} — Libraria`, url }).catch(() => {});
+        return;
+      }
+      navigator.clipboard?.writeText(url).then(() => this.showToast('Ссылка на профиль скопирована')).catch(() => this.showToast('Не удалось скопировать ссылку'));
     },
     showToast(message) {
       this.toastMessage = message;
       if (this.toastTimer) window.clearTimeout(this.toastTimer);
-      this.toastTimer = window.setTimeout(() => {
-        this.toastMessage = '';
-      }, 2600);
+      this.toastTimer = window.setTimeout(() => { this.toastMessage = ''; }, 2600);
     },
-    cleanHandle(value) {
-      return String(value || '').replace(/^@/, '').trim();
-    },
+    cleanHandle(value) { return String(value || '').replace(/^@/, '').trim(); },
     initialsOf(name) {
-      return String(name || 'L')
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((part) => part.slice(0, 1).toUpperCase())
-        .join('');
+      return String(name || 'L').trim().split(/\s+/).slice(0, 2).map((part) => part.slice(0, 1).toUpperCase()).join('');
     },
-    initialOf(title) {
-      return String(title || 'L').trim().slice(0, 1).toUpperCase();
+    initialOf(title) { return String(title || 'L').trim().slice(0, 1).toUpperCase(); },
+    postLink(post) { return { name: 'Post', params: { id: post.id } }; },
+    bookLink(book) { return { name: 'Book', params: { id: book.id } }; },
+    async loadReadingHistory() {
+      this.readingLoading = true;
+
+      try {
+        const keys = Object.keys(window.localStorage)
+          .filter((key) => key.startsWith('libraria:last-chapter:'));
+
+        const ids = keys
+          .map((key) => Number(key.replace('libraria:last-chapter:', '')))
+          .filter((id) => id && !this.createdBookIds.has(id))
+          .reverse()
+          .slice(0, 4);
+
+        const books = await Promise.all(ids.map(async (id) => {
+          try {
+            const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/v1/books/${id}`, {
+              headers: { Accept: 'application/json', Authorization: `Bearer ${Cookies.get('auth_token') || ''}` },
+            });
+            const book = response.data?.data || response.data;
+            const chapterId = window.localStorage.getItem(`libraria:last-chapter:${id}`);
+            return { ...book, _chapterId: Number(chapterId) || null };
+          } catch (e) {
+            return null;
+          }
+        }));
+
+        this.readingBooksData = books.filter(Boolean);
+      } finally {
+        this.readingLoading = false;
+      }
     },
-    postLink(post) {
-      return { name: 'Post', params: { id: post.id } };
+    chapterLabelFor(book) {
+      const chapters = Array.isArray(book.chapters) ? book.chapters : [];
+      const index = chapters.findIndex((chapter) => Number(chapter.id) === Number(book._chapterId));
+      if (index < 0) return 'В библиотеке';
+      return `Глава ${index + 1} / ${chapters.length}`;
     },
-    bookLink(book) {
-      return { name: 'Book', params: { id: book.id } };
+    readLinkFor(book) {
+      try {
+        const chapterId = window.localStorage.getItem(`libraria:last-chapter:${book.id}`);
+        if (chapterId) return { name: 'Chapter', params: { bookId: book.id, chapterId } };
+      } catch (e) { /* localStorage may be disabled */ }
+      return this.bookLink(book);
     },
-    postGradient(post) {
-      const index = Math.abs(Number(post.id) || 0) % CARD_GRADIENTS.length;
-      return { background: CARD_GRADIENTS[index] };
+    progressFor(book) {
+      const chapters = Array.isArray(book.chapters) ? book.chapters : [];
+      const index = chapters.findIndex((chapter) => Number(chapter.id) === Number(book._chapterId));
+      if (index < 0 || !chapters.length) return 0;
+      return Math.max(5, Math.round(((index + 1) / chapters.length) * 100));
     },
-    bookGradient(book) {
-      const index = Math.abs(Number(book.id) || 0) % CARD_GRADIENTS.length;
-      return { background: CARD_GRADIENTS[index] };
-    },
+    postGradient(post) { return { background: CARD_GRADIENTS[Math.abs(Number(post.id) || 0) % CARD_GRADIENTS.length] }; },
+    bookGradient(book) { return { background: CARD_GRADIENTS[Math.abs(Number(book.id) || 0) % CARD_GRADIENTS.length] }; },
     postTags(post) {
       if (Array.isArray(post.tags) && post.tags.length) return post.tags;
       if (Array.isArray(post.categories)) return post.categories;
       return [];
     },
-    firstTag(post) {
-      return this.postTags(post)[0]?.name || '';
-    },
+    firstTag(post) { return this.postTags(post)[0]?.name || ''; },
     stripHtml(html) {
       if (!html) return '';
-      if (typeof DOMParser === 'undefined') {
-        return String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-      }
-      const doc = new DOMParser().parseFromString(String(html), 'text/html');
-      return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
+      if (typeof DOMParser === 'undefined') return String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      return (new DOMParser().parseFromString(String(html), 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim();
     },
     excerpt(html, maxLength) {
       const text = this.stripHtml(html);
-      if (text.length <= maxLength) return text;
-      return `${text.slice(0, maxLength).trim()}…`;
+      return text.length <= maxLength ? text : `${text.slice(0, maxLength).trim()}…`;
     },
     readingTime(html) {
       const words = this.stripHtml(html).split(/\s+/).filter(Boolean).length;
       return Math.max(1, Math.round(words / 180));
     },
-    formatDate(value, options = { day: 'numeric', month: 'short', year: 'numeric' }) {
+    formatDate(value, options = { day: 'numeric', month: 'short' }) {
       if (!value) return '';
-      const date = new Date(`${value}`.length === 10 ? `${value}T00:00:00` : value);
-      if (Number.isNaN(date.getTime())) return '';
-      return date.toLocaleDateString('ru-RU', options);
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('ru-RU', options);
+    },
+    plural(value, forms) {
+      const n = Math.abs(Number(value) || 0);
+      const n10 = n % 10;
+      const n100 = n % 100;
+      if (n10 === 1 && n100 !== 11) return forms[0];
+      if ([2, 3, 4].includes(n10) && ![12, 13, 14].includes(n100)) return forms[1];
+      return forms[2];
     },
   },
 };
 </script>
 
 <style scoped>
-.pp-page {
-  min-height: 100vh;
-  padding-bottom: var(--space-16);
-  background:
-    radial-gradient(900px 340px at 90% 0%, rgba(231, 165, 74, 0.06), transparent 60%),
-    var(--paper);
-}
-
-/* States */
-.pp-state-wrap {
-  padding-top: var(--space-10);
-  padding-bottom: var(--space-16);
-}
-
-.pp-state {
-  max-width: 560px;
-  margin: var(--space-8) auto;
-  padding: var(--space-10) var(--space-8);
-  text-align: center;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-md);
-}
-
-.pp-state__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  height: 58px;
-  margin-bottom: var(--space-4);
-  color: #fff;
-  background: var(--ink);
-  border-radius: 50%;
-  font-size: var(--text-xl);
-}
-
-.pp-state__kicker {
-  display: block;
-  margin-bottom: var(--space-1);
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-}
-
-.pp-state h1 {
-  margin: 0 0 var(--space-2);
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-}
-
-.pp-state p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-}
-
-.pp-state__actions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-5);
-}
-
-/* Skeleton */
-.pp-skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding-top: var(--space-4);
-}
-
-.pp-skeleton__cover {
-  height: 230px;
-  background: linear-gradient(90deg, #ebe6dc 25%, #f7f3ea 50%, #ebe6dc 75%);
-  background-size: 200% 100%;
-  border-radius: var(--radius-2xl);
-  animation: pp-shimmer 1.25s linear infinite;
-}
-
-.pp-skeleton__card {
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-  margin-top: -48px;
-  padding: var(--space-5);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-2xl);
-}
-
-.pp-skeleton__avatar {
-  width: 100px;
-  height: 100px;
-  margin-top: -48px;
-  background: #ebe6dc;
-  border: 5px solid var(--paper);
-  border-radius: 50%;
-}
-
-.pp-skeleton__lines {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-}
-
-.pp-skeleton__lines span,
-.pp-skeleton__grid span {
-  display: block;
-  height: 12px;
-  background: linear-gradient(90deg, #ebe6dc 25%, #f7f3ea 50%, #ebe6dc 75%);
-  background-size: 200% 100%;
-  border-radius: var(--radius-sm);
-  animation: pp-shimmer 1.25s linear infinite;
-}
-
-.pp-skeleton__lines span:nth-child(1) { width: 24%; height: 9px; }
-.pp-skeleton__lines span:nth-child(2) { width: 46%; height: 24px; }
-.pp-skeleton__lines span:nth-child(3) { width: 70%; }
-
-.pp-skeleton__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
-}
-
-.pp-skeleton__grid span {
-  height: 120px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-}
-
-@keyframes pp-shimmer {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
-}
-
-/* Cover */
-.pp-cover {
-  position: relative;
-  height: 260px;
-  overflow: hidden;
-  background: var(--ink);
-}
-
-.pp-cover__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pp-cover__art {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.pp-cover__art::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(420px 260px at 80% 10%, rgba(255, 255, 255, 0.13), transparent 70%),
-    radial-gradient(300px 220px at 10% 90%, rgba(231, 165, 74, 0.22), transparent 70%);
-}
-
-.pp-cover__initial {
-  position: absolute;
-  top: 50%;
-  right: 8%;
-  color: rgba(255, 255, 255, 0.07);
-  font-family: var(--font-display);
-  font-size: clamp(160px, 20vw, 280px);
-  font-weight: 700;
-  line-height: 1;
-  transform: translateY(-52%);
-  letter-spacing: -0.08em;
-}
-
-.pp-cover__quote {
-  position: absolute;
-  bottom: -28px;
-  left: 6%;
-  color: rgba(231, 165, 74, 0.34);
-  font-family: var(--font-serif);
-  font-size: 200px;
-  line-height: 0.7;
-}
-
-.pp-cover__art-word {
-  position: absolute;
-  top: var(--space-6);
-  right: var(--space-8);
-  color: rgba(246, 239, 226, 0.28);
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-}
-
-.pp-cover__shade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(10, 12, 13, 0.18) 0%, rgba(10, 12, 13, 0.02) 42%, rgba(10, 12, 13, 0.62) 100%);
-}
-
-.pp-cover__inner {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  padding-top: var(--space-5);
-  padding-bottom: 74px;
-}
-
-.pp-cover__top,
-.pp-cover__bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.pp-cover__bottom {
-  justify-content: flex-end;
-}
-
-.pp-cover__kicker {
-  color: rgba(245, 239, 227, 0.7);
-  font-family: var(--font-sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-}
-
-.pp-cover__tag {
-  padding: 5px 10px;
-  color: #17191b;
-  background: var(--accent);
-  border-radius: 999px;
-  font-family: var(--font-sans);
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.pp-cover__edit {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 34px;
-  padding: 0 var(--space-3);
-  color: #f5efe3;
-  background: rgba(15, 17, 18, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  backdrop-filter: blur(8px);
-  font-family: var(--font-sans);
-  font-size: 9.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
-}
-
-.pp-cover__edit:hover {
-  border-color: var(--accent);
-  background: rgba(15, 17, 18, 0.62);
-}
-
-.pp-cover__edit span {
-  color: var(--accent);
-  font-size: 10px;
-}
-
-/* Identity */
-.pp-shell {
-  position: relative;
-  z-index: 3;
-  margin-top: -54px;
-}
-
-.pp-identity {
-  display: grid;
-  grid-template-columns: 132px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-5);
-  padding: 0 var(--space-6) var(--space-5);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-2xl);
-  box-shadow: 0 20px 50px rgba(25, 27, 28, 0.1);
-}
-
-.pp-avatar-wrap {
-  position: relative;
-  align-self: start;
-  margin-top: -56px;
-}
-
-.pp-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 132px;
-  height: 132px;
-  overflow: hidden;
-  color: #17191b;
-  background: linear-gradient(135deg, #f2ca8a, var(--accent));
-  border: 5px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 14px 34px rgba(25, 27, 28, 0.2);
-  font-family: var(--font-display);
-  font-size: 38px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-}
-
-.pp-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pp-avatar__edit {
-  position: absolute;
-  right: 2px;
-  bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  color: #17191b;
-  background: var(--accent);
-  border: 3px solid #fff;
-  border-radius: 50%;
-  box-shadow: var(--shadow-md);
-  font-size: 11px;
-  cursor: pointer;
-  transition: transform var(--transition-fast), background-color var(--transition-fast);
-}
-
-.pp-avatar__edit:hover {
-  background: var(--accent-hover);
-  transform: scale(1.06);
-}
-
-.pp-identity__main {
-  min-width: 0;
-  padding-top: var(--space-4);
-}
-
-.pp-identity__badges {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
-}
-
-.pp-role {
-  padding: 3px 9px;
-  color: #9d6d33;
-  background: rgba(231, 165, 74, 0.12);
-  border: 1px solid rgba(231, 165, 74, 0.28);
-  border-radius: 999px;
-  font-family: var(--font-sans);
-  font-size: 8.5px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.pp-identity__since {
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 9.5px;
-}
-
-.pp-name {
-  margin: 0 0 2px;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: clamp(32px, 3.4vw, 46px);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 1.05;
-  text-overflow: ellipsis;
-}
-
-.pp-handle {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 0 0 var(--space-3);
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 10px;
-}
-
-.pp-handle span[aria-hidden] {
-  color: var(--line-strong);
-}
-
-.pp-handle .icon-pin {
-  color: #b08a55;
-  font-size: 10px;
-}
-
-.pp-bio {
-  display: -webkit-box;
-  max-width: 560px;
-  margin: 0 0 var(--space-4);
-  overflow: hidden;
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  line-height: 1.65;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
-.pp-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.pp-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 var(--space-4);
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-}
-
-.pp-btn span {
-  font-size: 10px;
-}
-
-.pp-btn--primary {
-  color: var(--text-on-accent);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.pp-btn--primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-.pp-btn--ghost {
-  color: var(--text-secondary);
-  background: transparent;
-  border-color: var(--line);
-}
-
-.pp-btn--ghost:hover {
-  color: var(--ink);
-  border-color: var(--ink);
-  background: var(--paper);
-}
-
-.pp-btn--subtle {
-  color: #9d6d33;
-  background: rgba(231, 165, 74, 0.1);
-  border-color: rgba(231, 165, 74, 0.34);
-}
-
-.pp-btn--subtle:hover {
-  background: rgba(231, 165, 74, 0.16);
-}
-
-.pp-btn:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-.pp-stats {
-  display: flex;
-  align-items: stretch;
-  align-self: stretch;
-  border-left: 1px solid var(--line);
-  padding-left: var(--space-4);
-}
-
-.pp-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  min-width: 82px;
-  padding: var(--space-2);
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-}
-
-.pp-stat:hover {
-  background: var(--paper);
-}
-
-div.pp-stat {
-  cursor: default;
-}
-
-.pp-stat b {
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-.pp-stat span {
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 8.5px;
-  letter-spacing: 0.04em;
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* Content layout */
-.pp-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 306px;
-  align-items: start;
-  gap: var(--space-5);
-  margin-top: var(--space-5);
-}
-
-.pp-main {
-  min-width: 0;
-}
-
-.pp-tabs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
-  overflow-x: auto;
-}
-
-.pp-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 var(--space-4);
-  color: var(--text-muted);
-  background: transparent;
-  border: 0;
-  border-radius: 9px;
-  font-family: var(--font-sans);
-  font-size: 10.5px;
-  font-weight: 500;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color var(--transition-fast), background-color var(--transition-fast);
-}
-
-.pp-tab:hover {
-  color: var(--ink);
-  background: var(--paper);
-}
-
-.pp-tab.is-active {
-  color: #17191b;
-  background: var(--accent);
-  font-weight: 600;
-}
-
-.pp-tab .icon {
-  font-size: 10px;
-}
-
-.pp-tab__count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 17px;
-  height: 17px;
-  padding: 0 4px;
-  color: var(--text-muted);
-  background: var(--paper);
-  border-radius: 999px;
-  font-size: 8.5px;
-  font-weight: 700;
-}
-
-.pp-tab.is-active .pp-tab__count {
-  color: #17191b;
-  background: rgba(255, 255, 255, 0.55);
-}
-
-.pp-panel {
-  margin-top: var(--space-3);
-  padding: var(--space-5);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-sm);
-  min-height: 280px;
-}
-
-/* Posts */
-.pp-posts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
-}
-
-.pp-post {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
-}
-
-.pp-post:hover {
-  border-color: rgba(231, 165, 74, 0.5);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.pp-post:only-child {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: 260px minmax(0, 1fr);
-}
-
-.pp-post:only-child .pp-post__cover {
-  height: 100%;
-  min-height: 190px;
-}
-
-.pp-post__cover {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 138px;
-  overflow: hidden;
-  color: #f6efe2;
-  text-decoration: none;
-}
-
-.pp-post__cover::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(10, 12, 13, 0.4));
-}
-
-.pp-post__cover img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pp-post__initial {
-  position: relative;
-  z-index: 1;
-  color: rgba(255, 255, 255, 0.1);
-  font-family: var(--font-display);
-  font-size: 120px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.pp-post__tag {
-  position: absolute;
-  top: var(--space-2);
-  left: var(--space-2);
-  z-index: 2;
-  max-width: calc(100% - 16px);
-  padding: 3px 7px;
-  overflow: hidden;
-  color: #f6efe2;
-  background: rgba(15, 17, 18, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  font-family: var(--font-sans);
-  font-size: 8px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pp-post__body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: var(--space-3) var(--space-4) var(--space-3);
-}
-
-.pp-post__meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 4px;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 8.5px;
-}
-
-.pp-post__body h3 {
-  display: -webkit-box;
-  margin: 0 0 5px;
-  overflow: hidden;
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 600;
-  line-height: 1.3;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.pp-post__body h3 a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.pp-post__body h3 a:hover {
-  color: var(--accent-hover);
-}
-
-.pp-post__body > p {
-  display: -webkit-box;
-  margin: 0 0 var(--space-2);
-  overflow: hidden;
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: 9.5px;
-  line-height: 1.55;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.pp-post__footer {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-top: auto;
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--line);
-}
-
-.pp-post__footer span {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 8.5px;
-}
-
-/* Books */
-.pp-books {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-  gap: var(--space-4);
-}
-
-.pp-book {
-  min-width: 0;
-}
-
-.pp-book__cover {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 3 / 4.2;
-  overflow: hidden;
-  color: rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 24px rgba(25, 27, 28, 0.14);
-  text-decoration: none;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.pp-book:hover .pp-book__cover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(25, 27, 28, 0.2);
-}
-
-.pp-book__cover img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pp-book__initial {
-  font-family: var(--font-display);
-  font-size: 68px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.pp-book__body {
-  padding-top: var(--space-2);
-}
-
-.pp-book__body h3 {
-  display: -webkit-box;
-  margin: 0 0 2px;
-  overflow: hidden;
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  line-height: 1.3;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.pp-book__body h3 a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.pp-book__body h3 a:hover {
-  color: var(--accent-hover);
-}
-
-.pp-book__body > p {
-  margin: 0 0 5px;
-  overflow: hidden;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 9px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pp-book__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-}
-
-.pp-book__tags span {
-  padding: 2px 5px;
-  color: #9d6d33;
-  background: rgba(231, 165, 74, 0.1);
-  border-radius: 999px;
-  font-family: var(--font-sans);
-  font-size: 7.5px;
-}
-
-/* About */
-.pp-about {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: var(--space-6);
-  align-items: start;
-}
-
-.pp-about__bio h2 {
-  margin: var(--space-2) 0 var(--space-2);
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-}
-
-.pp-about__bio p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  line-height: 1.75;
-}
-
-.pp-about__details ul {
-  margin: var(--space-3) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.pp-about__details li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: 8px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.pp-about__details li:last-child {
-  border-bottom: 0;
-}
-
-.pp-about__details li span {
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 10px;
-}
-
-.pp-about__details li b {
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 10.5px;
-  font-weight: 500;
-  text-align: right;
-}
-
-.pp-about__social {
-  grid-column: 1 / -1;
-  margin-top: var(--space-2);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--line);
-}
-
-.pp-social {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: var(--space-2);
-  margin-top: var(--space-3);
-}
-
-.pp-social__link {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 9px var(--space-3);
-  color: var(--text-secondary);
-  background: var(--paper);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
-}
-
-.pp-social__link:hover {
-  background: #fff;
-  border-color: var(--accent);
-}
-
-.pp-social__mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  flex-shrink: 0;
-  color: #9d6d33;
-  background: rgba(231, 165, 74, 0.14);
-  border-radius: 50%;
-  font-family: var(--font-display);
-  font-size: 8px;
-  font-weight: 700;
-}
-
-.pp-social__link > span:nth-child(2) {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
-.pp-social__link b {
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 500;
-}
-
-.pp-social__link small {
-  overflow: hidden;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 8.5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pp-social__link > span:last-child {
-  margin-left: auto;
-  color: var(--text-muted);
-  font-size: 8px;
-}
-
-.pp-about__manage {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  padding: var(--space-4);
-  background: var(--paper);
-  border-radius: var(--radius-lg);
-}
-
-.pp-about__manage p {
-  margin: 3px 0 0;
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: 10px;
-}
-
-.pp-kicker {
-  display: block;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 8.5px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-/* Empty */
-.pp-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  min-height: 250px;
-  padding: var(--space-8) var(--space-5);
-  text-align: center;
-}
-
-.pp-empty__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  margin-bottom: var(--space-1);
-  color: var(--text-muted);
-  background: var(--paper);
-  border-radius: 50%;
-  font-size: var(--text-lg);
-}
-
-.pp-empty h3 {
-  margin: 0;
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 600;
-}
-
-.pp-empty p {
-  max-width: 380px;
-  margin: 0 0 var(--space-2);
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  line-height: 1.55;
-}
-
-/* Aside */
-.pp-aside {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  min-width: 0;
-}
-
-.pp-side {
-  padding: var(--space-4);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
-}
-
-.pp-side__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.pp-side__head h3 {
-  margin: 2px 0 0;
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 600;
-}
-
-.pp-side__count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 6px;
-  color: #9d6d33;
-  background: rgba(231, 165, 74, 0.1);
-  border-radius: 999px;
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.pp-people {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.pp-person {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 6px;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  transition: background-color var(--transition-fast);
-}
-
-.pp-person:hover {
-  background: var(--paper);
-}
-
-.pp-person__avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  overflow: hidden;
-  color: #9d6d33;
-  background: rgba(231, 165, 74, 0.14);
-  border-radius: 50%;
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.pp-person__avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pp-person__info {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-  flex: 1;
-}
-
-.pp-person__info b {
-  overflow: hidden;
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 10.5px;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pp-person__info small {
-  overflow: hidden;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 8.5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pp-person__arrow {
-  color: var(--line-strong);
-  font-size: 8px;
-}
-
-.pp-side__empty {
-  margin: 0;
-  padding: var(--space-3) 0;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 9.5px;
-  line-height: 1.5;
-}
-
-.pp-side--details {
-  background:
-    radial-gradient(220px 120px at 100% 0%, rgba(231, 165, 74, 0.08), transparent 70%),
-    #fff;
-}
-
-.pp-mini-details {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.pp-mini-details li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2);
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 9.5px;
-}
-
-.pp-mini-details li b {
-  color: var(--ink);
-  font-weight: 500;
-  text-align: right;
-}
-
-.pp-side__edit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  width: 100%;
-  height: 32px;
-  margin-top: var(--space-3);
-  color: var(--text-secondary);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  font-family: var(--font-sans);
-  font-size: 9px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.pp-side__edit:hover {
-  color: var(--ink);
-  border-color: var(--accent);
-}
-
-/* Toast */
-.pp-toast {
-  position: fixed;
-  bottom: max(var(--space-6), env(safe-area-inset-bottom));
-  left: 50%;
-  z-index: 2200;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
-  color: var(--text-on-dark);
-  background: var(--ink);
-  border-radius: 999px;
-  box-shadow: var(--shadow-xl);
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  transform: translateX(-50%);
-}
-
-.pp-toast span {
-  color: var(--accent);
-  font-size: 10px;
-}
-
-.pp-toast-enter-active,
-.pp-toast-leave-active {
-  transition: opacity var(--transition-base), transform var(--transition-base);
-}
-
-.pp-toast-enter-from,
-.pp-toast-leave-to {
-  opacity: 0;
-  transform: translate(-50%, 10px);
-}
-
-/* Responsive */
-@media (max-width: 1100px) {
-  .pp-identity {
-    grid-template-columns: 116px minmax(0, 1fr);
-  }
-
-  .pp-avatar {
-    width: 116px;
-    height: 116px;
-    font-size: 33px;
-  }
-
-  .pp-stats {
-    grid-column: 1 / -1;
-    justify-content: space-between;
-    padding: var(--space-3) 0 0;
-    border-left: 0;
-    border-top: 1px solid var(--line);
-  }
-}
-
-@media (max-width: 1024px) {
-  .pp-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .pp-aside {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .pp-side--details {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .pp-cover {
-    height: 200px;
-  }
-
-  .pp-cover__initial {
-    font-size: 170px;
-  }
-
-  .pp-cover__quote {
-    font-size: 150px;
-  }
-
-  .pp-cover__bottom {
-    display: none;
-  }
-
-  .pp-shell {
-    margin-top: -42px;
-  }
-
-  .pp-identity {
-    grid-template-columns: 84px minmax(0, 1fr);
-    gap: var(--space-4);
-    padding: 0 var(--space-4) var(--space-4);
-    border-radius: var(--radius-xl);
-  }
-
-  .pp-avatar-wrap {
-    margin-top: -38px;
-  }
-
-  .pp-avatar {
-    width: 84px;
-    height: 84px;
-    border-width: 4px;
-    font-size: 24px;
-  }
-
-  .pp-avatar__edit {
-    right: -2px;
-    bottom: 2px;
-    width: 28px;
-    height: 28px;
-    border-width: 2px;
-    font-size: 9px;
-  }
-
-  .pp-identity__main {
-    padding-top: var(--space-3);
-  }
-
-  .pp-name {
-    font-size: 30px;
-  }
-
-  .pp-bio {
-    -webkit-line-clamp: 3;
-    font-size: 12px;
-  }
-
-  .pp-actions {
-    grid-column: 1 / -1;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .pp-actions .pp-btn {
-    width: 100%;
-  }
-
-  .pp-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    padding: var(--space-2) 0 0;
-  }
-
-  .pp-stat {
-    min-width: 0;
-    padding: 6px 2px;
-  }
-
-  .pp-stat b {
-    font-size: var(--text-xl);
-  }
-
-  .pp-stat span {
-    font-size: 7.5px;
-    white-space: normal;
-  }
-
-  .pp-panel {
-    padding: var(--space-3);
-  }
-
-  .pp-posts {
-    grid-template-columns: 1fr;
-  }
-
-  .pp-post:only-child {
-    display: flex;
-    grid-column: auto;
-  }
-
-  .pp-post:only-child .pp-post__cover {
-    height: 138px;
-    min-height: 0;
-  }
-
-  .pp-about {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  .pp-about__social,
-  .pp-about__manage {
-    grid-column: auto;
-  }
-
-  .pp-about__manage {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .pp-aside {
-    grid-template-columns: 1fr;
-  }
-
-  .pp-side--details {
-    grid-column: auto;
-  }
-
-  .pp-tabs {
-    gap: 2px;
-  }
-
-  .pp-tab {
-    padding: 0 10px;
-    font-size: 9.5px;
-  }
-}
-
-@media (max-width: 440px) {
-  .pp-cover {
-    height: 170px;
-  }
-
-  .pp-cover__kicker {
-    max-width: 180px;
-    font-size: 8px;
-    line-height: 1.4;
-  }
-
-  .pp-cover__edit {
-    padding: 0 9px;
-    font-size: 8px;
-  }
-
-  .pp-identity {
-    grid-template-columns: 72px minmax(0, 1fr);
-  }
-
-  .pp-avatar {
-    width: 72px;
-    height: 72px;
-    font-size: 20px;
-  }
-
-  .pp-name {
-    font-size: 26px;
-  }
-
-  .pp-handle {
-    font-size: 9px;
-  }
-
-  .pp-btn {
-    height: 36px;
-    padding: 0 10px;
-    font-size: 9px;
-  }
-
-  .pp-tab {
-    height: 34px;
-    padding: 0 8px;
-    font-size: 9px;
-  }
-
-  .pp-tab .icon {
-    display: none;
-  }
-
-  .pp-tab__count {
-    display: none;
-  }
+.pf-page { min-height: 100vh; padding: 40px 0 80px; background: var(--paper); }
+.pf-shell { width: 100%; max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-padding); }
+.pf-kicker { color: var(--text-muted); font-family: var(--font-sans); font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.pf-state { display: flex; min-height: 60vh; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
+.pf-state h1 { margin: 0; font-family: var(--font-display); font-size: 40px; }
+.pf-state p { max-width: 500px; margin: 0; color: var(--text-secondary); }
+.pf-state__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.pf-state--loading { color: var(--text-secondary); }
+.pf-spinner { width: 26px; height: 26px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: pspin .7s linear infinite; }
+@keyframes pspin { to { transform: rotate(360deg); } }
+
+/* Hero exactly like the profile mockup */
+.pf-hero-card { position: relative; z-index: 10; overflow: visible; margin-bottom: 48px; padding: 48px; color: #f6f1e7; background: var(--accent); border-radius: 32px; box-shadow: var(--shadow-sm); }
+.pf-hero-card__decor { position: absolute; inset: 0; overflow: hidden; border-radius: 32px; pointer-events: none; }
+.pf-hero-card__circle { position: absolute; top: -48px; right: -48px; width: 290px; height: 290px; background: rgba(246,241,231,.055); border-radius: 50%; }
+.pf-hero-card__inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 32px; }
+.pf-avatar-wrap { position: relative; flex-shrink: 0; }
+.pf-avatar { display: flex; width: 160px; height: 160px; align-items: center; justify-content: center; overflow: hidden; color: var(--accent); background: #efe7d9; border: 4px solid rgba(246,241,231,.25); border-radius: 50%; font-family: var(--font-display); font-size: 42px; }
+.pf-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.pf-avatar-edit { position: absolute; right: 3px; bottom: 5px; display: flex; width: 40px; height: 40px; align-items: center; justify-content: center; color: var(--ink); background: var(--gold, #d7b36a); border: 2px solid var(--accent); border-radius: 50%; cursor: pointer; }
+.pf-identity { flex: 1; min-width: 0; }
+.pf-identity h1 { margin: 0; color: #fff; font-family: var(--font-display); font-size: 48px; font-weight: 700; letter-spacing: -.035em; line-height: 1; }
+.pf-identity > p { margin: 10px 0 0; color: rgba(246,241,231,.7); font-size: 16px; line-height: 1.4; }
+.pf-identity__city { display: inline-flex; align-items: center; gap: 5px; }
+.pf-identity__city .icon-pin { font-size: 12px; }
+.pf-hero-stats { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 24px; }
+.pf-hero-stat { display: flex; flex-direction: column; gap: 1px; }
+.pf-hero-stat b { color: #fff; font-family: var(--font-display); font-size: 24px; line-height: 1; }
+.pf-hero-stat span { color: rgba(246,241,231,.58); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.pf-hero-actions { display: flex; flex-direction: column; align-items: stretch; gap: 12px; flex-shrink: 0; min-width: 220px; }
+.pf-btn { display: inline-flex; height: 44px; align-items: center; justify-content: center; gap: 7px; padding: 0 24px; border: 1px solid transparent; border-radius: 999px; font-family: var(--font-sans); font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; transition: .2s ease; }
+.pf-btn:disabled { opacity: .6; cursor: wait; }
+.pf-btn--primary { color: #fff; background: var(--accent); border-color: var(--accent); }
+.pf-btn--ghost { color: var(--text-secondary); background: transparent; border-color: var(--line); }
+.pf-btn--light, .pf-btn--paper { color: var(--ink); background: var(--paper); border-color: var(--paper); }
+.pf-btn--light:hover, .pf-btn--paper:hover { background: #fff; }
+.pf-btn--outline-light, .pf-btn--outline-paper { color: #fff; background: transparent; border-color: rgba(246,241,231,.35); }
+.pf-btn--outline-light:hover, .pf-btn--outline-paper:hover { background: rgba(246,241,231,.1); }
+.pf-btn--danger { color: #fff; background: var(--danger); border-color: var(--danger); }
+.pf-share { align-self: center; display: flex; width: 34px; height: 34px; align-items: center; justify-content: center; color: rgba(246,241,231,.75); background: transparent; border: 1px solid rgba(246,241,231,.25); border-radius: 50%; cursor: pointer; }
+.pf-share:hover { color: #fff; background: rgba(246,241,231,.1); }
+.pf-create { position: relative; z-index: 30; }
+.pf-create__menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 100; width: 218px; padding: 6px; background: var(--cream); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-lg); }
+.pf-create__menu a { display: flex; align-items: center; gap: 10px; padding: 10px; color: var(--ink); border-radius: 8px; text-decoration: none; }
+.pf-create__menu a:hover { background: var(--accent-light); }
+.pf-create__menu a > span:first-child { color: var(--accent); }
+.pf-create__menu a > span:last-child { display: flex; flex-direction: column; }
+.pf-create__menu b { font-size: 12px; }
+.pf-create__menu small { color: var(--text-muted); font-size: 10px; }
+
+/* Two-column content */
+.pf-columns { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 40px; align-items: start; }
+.pf-left, .pf-right { display: flex; min-width: 0; flex-direction: column; gap: 48px; }
+.pf-block { min-width: 0; }
+.pf-block__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.pf-block__head h2 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: 24px; line-height: 1.3; font-weight: 600; letter-spacing: -.025em; }
+.pf-block__head h3 { margin: 0; color: var(--ink); font-family: var(--font-sans); font-size: 11px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+.pf-block__link { display: inline-flex; align-items: center; gap: 4px; padding: 0; color: var(--accent); background: none; border: 0; font-family: var(--font-sans); font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; }
+.pf-block__link:hover { text-decoration: underline; }
+.pf-block__count { color: var(--text-muted); font-size: 11px; }
+
+.pf-reading-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.pf-reading-card { display: flex; min-width: 0; gap: 16px; padding: 16px; background: var(--cream); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-sm); }
+.pf-reading-cover { display: flex; width: 80px; height: 128px; flex-shrink: 0; align-items: center; justify-content: center; overflow: hidden; color: rgba(255,255,255,.7); border-radius: 5px 8px 8px 5px; font-family: var(--font-display); font-size: 30px; text-decoration: none; box-shadow: 0 10px 20px rgba(30,33,36,.16); }
+.pf-reading-cover img { width: 100%; height: 100%; object-fit: cover; }
+.pf-reading-body { display: flex; min-width: 0; flex: 1; flex-direction: column; justify-content: space-between; padding: 2px 0; }
+.pf-reading-body h3 { display: -webkit-box; overflow: hidden; margin: 0; color: var(--ink); font-family: var(--font-display); font-size: 18px; line-height: 1.16; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.pf-reading-body h3 a { color: inherit; text-decoration: none; }
+.pf-reading-body p { margin: 5px 0 0; color: var(--text-muted); font-size: 12px; }
+.pf-reading-progress { display: flex; flex-direction: column; gap: 6px; }
+.pf-progress { display: block; height: 6px; overflow: hidden; background: var(--line); border-radius: 99px; }
+.pf-progress i { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.pf-reading-continue { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .05em; text-decoration: none; text-transform: uppercase; }
+.pf-reading-continue:hover { color: var(--accent-hover); }
+
+.pf-post-list { display: flex; flex-direction: column; gap: 9px; }
+.pf-post-row { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 16px; padding: 16px; background: var(--cream); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-sm); }
+.pf-post-row__cover { display: flex; min-height: 118px; align-items: center; justify-content: center; overflow: hidden; color: rgba(255,255,255,.6); border-radius: 8px; font-family: var(--font-display); font-size: 40px; }
+.pf-post-row__cover img { width: 100%; height: 100%; object-fit: cover; }
+.pf-post-row__body { min-width: 0; padding: 4px 2px; }
+.pf-post-row__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12px; }
+.pf-tag { padding: 3px 8px; color: var(--accent); background: var(--accent-light); border-radius: 999px; font-size: 12px; font-weight: 600; }
+.pf-post-row h3 { margin: 8px 0 6px; font-family: var(--font-display); font-size: 20px; line-height: 1.15; }
+.pf-post-row h3 a { color: var(--ink); text-decoration: none; }
+.pf-post-row h3 a:hover { color: var(--accent); }
+.pf-post-row p { display: -webkit-box; overflow: hidden; margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.pf-post-row__footer { display: flex; align-items: center; gap: 13px; margin-top: 16px; color: var(--text-muted); font-size: 12px; }
+.pf-post-row__footer > span { display: inline-flex; align-items: center; gap: 4px; }
+.pf-post-row__actions { margin-left: auto; gap: 4px !important; }
+.pf-icon-btn { display: inline-flex; width: 27px; height: 27px; align-items: center; justify-content: center; padding: 0; color: var(--text-secondary); background: transparent; border: 1px solid var(--line); border-radius: 6px; font-size: 10px; cursor: pointer; }
+.pf-icon-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+.pf-icon-btn--danger:hover { color: var(--danger); border-color: var(--danger); background: #fbeeec; }
+
+.pf-liked-posts { display: flex; flex-direction: column; gap: 7px; margin-bottom: 13px; }
+.pf-liked-post { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.pf-liked-post__title { color: var(--ink); font-family: var(--font-display); font-size: 16px; text-decoration: none; }
+.pf-liked-post__title:hover { color: var(--accent); }
+.pf-liked-post > span { color: var(--text-muted); font-size: 9px; white-space: nowrap; }
+.pf-book-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.pf-book-card { min-width: 0; }
+.pf-book-card__cover { display: flex; height: 160px; align-items: center; justify-content: center; overflow: hidden; color: rgba(255,255,255,.65); border-radius: 8px; font-family: var(--font-display); font-size: 42px; text-decoration: none; }
+.pf-book-card__cover img { width: 100%; height: 100%; object-fit: cover; }
+.pf-book-card h3 { overflow: hidden; margin: 8px 0 0; font-family: var(--font-display); font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.pf-book-card h3 a { color: var(--ink); text-decoration: none; }
+.pf-about > p { max-width: 650px; margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
+.pf-socials { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.pf-socials a { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; color: var(--accent); background: var(--accent-light); border-radius: 999px; font-size: 9px; font-weight: 600; text-decoration: none; }
+.pf-muted { margin: 0; color: var(--text-muted); font-size: 11px; }
+
+.pf-activity-card { padding: 32px; background: var(--cream); border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow-sm); }
+.pf-activity-card h3 { margin: 0 0 24px; color: var(--text-muted); font-family: var(--font-sans); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.pf-activity-main { display: flex; align-items: center; gap: 18px; }
+.pf-activity-icon { display: flex; width: 64px; height: 64px; align-items: center; justify-content: center; color: var(--gold, #a8843f); background: rgba(168,132,63,.12); border-radius: 50%; font-size: 23px; }
+.pf-activity-main b { color: var(--ink); font-family: var(--font-display); font-size: 30px; line-height: 1; }
+.pf-activity-main p { margin: 4px 0 0; color: var(--text-muted); font-size: 14px; }
+.pf-activity-weeks { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 24px; }
+.pf-activity-weeks i { height: 32px; background: rgba(54,81,63,.1); border-radius: 4px; }
+.pf-activity-weeks i.is-1 { background: rgba(54,81,63,.22); }
+.pf-activity-weeks i.is-2 { background: rgba(54,81,63,.42); }
+.pf-activity-weeks i.is-3 { background: rgba(54,81,63,.65); }
+.pf-activity-weeks i.is-4 { background: var(--accent); }
+.pf-activity-quote { margin: 16px 0 0; color: var(--text-muted); font-family: var(--font-serif); font-size: 11px; font-style: italic; line-height: 1.55; text-align: center; }
+.pf-following-card { padding: 0; }
+.pf-following-card .pf-block__head { margin-bottom: 16px; }
+.pf-following-card .pf-block__head > span { color: var(--text-muted); font-size: 12px; }
+.pf-people { display: flex; flex-direction: column; gap: 0; }
+.pf-person { display: flex; align-items: center; gap: 12px; padding: 10px 0; color: var(--ink); border-bottom: 1px solid var(--line); text-decoration: none; }
+.pf-person:last-child { border-bottom: 0; }
+.pf-person:hover .pf-person__link { color: var(--accent-hover); }
+.pf-person__avatar { display: flex; width: 36px; height: 36px; flex-shrink: 0; align-items: center; justify-content: center; overflow: hidden; color: #fff; background: var(--accent); border-radius: 50%; font-family: var(--font-display); font-size: 13px; }
+.pf-person__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.pf-person > span:nth-child(2) { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 2px; }
+.pf-person b { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.pf-person small { color: var(--text-muted); font-size: 12px; }
+.pf-person__link { color: var(--accent); font-size: 12px; font-weight: 600; }
+.pf-following-all { display: block; width: 100%; margin-top: 12px; padding: 12px 0 0; color: var(--text-muted); background: transparent; border: 0; border-top: 1px solid var(--line); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-align: center; text-decoration: none; text-transform: uppercase; cursor: pointer; }
+.pf-following-all:hover { color: var(--ink); }
+
+.pf-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 28px 20px; color: var(--text-muted); background: var(--cream); border: 1px dashed var(--line-strong); border-radius: 14px; text-align: center; }
+.pf-empty > span:first-child { color: var(--accent); font-size: 22px; }
+.pf-empty h3 { margin: 0; color: var(--ink); font-size: 18px; }
+.pf-empty p { margin: 0; font-size: 10px; }
+.pf-empty .pf-btn { margin-top: 6px; }
+
+.pf-confirm { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(30,33,36,.42); backdrop-filter: blur(4px); }
+.pf-confirm__card { width: min(390px, 100%); padding: 25px; background: var(--cream); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-xl); text-align: center; }
+.pf-confirm__icon { display: flex; width: 40px; height: 40px; margin: 0 auto 12px; align-items: center; justify-content: center; color: var(--danger); background: #fbeeec; border-radius: 50%; }
+.pf-confirm h2 { margin: 5px 0 8px; font-family: var(--font-display); font-size: 25px; }
+.pf-confirm p { margin: 0 0 18px; color: var(--text-secondary); font-size: 12px; line-height: 1.6; }
+.pf-confirm__actions { display: flex; justify-content: center; gap: 8px; }
+.pf-toast { position: fixed; right: 20px; bottom: 20px; z-index: 3100; padding: 11px 16px; color: #fff; background: var(--accent); border-radius: 8px; box-shadow: var(--shadow-lg); font-size: 12px; }
+.pf-fade-enter-active, .pf-fade-leave-active { transition: opacity .18s ease, transform .18s ease; }
+.pf-fade-enter-from, .pf-fade-leave-to { opacity: 0; transform: translateY(5px); }
+
+.pf-extra { margin-top: 48px; }
+.pf-extra__grid { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(270px, 1fr); gap: 40px; }
+.pf-extra .pf-book-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1080px) {
+  .pf-shell { width: 100%; max-width: 900px; padding: 0 20px; }
+  .pf-hero-card { padding: 32px; }
+  .pf-hero-card__inner { gap: 24px; }
+  .pf-avatar { width: 112px; height: 112px; font-size: 32px; }
+  .pf-hero-actions { min-width: 180px; }
+  .pf-columns { grid-template-columns: 1fr; gap: 38px; }
+  .pf-right { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+}
+@media (max-width: 720px) {
+  .pf-page { padding: 18px 0 44px; }
+  .pf-shell { width: 100%; padding: 0 18px; }
+  .pf-hero-card { padding: 24px 20px; border-radius: 24px; margin-bottom: 30px; }
+  .pf-hero-card__inner { flex-wrap: wrap; gap: 16px; }
+  .pf-avatar { width: 84px; height: 84px; font-size: 25px; }
+  .pf-identity { flex: 1 1 calc(100% - 110px); }
+  .pf-identity h1 { font-size: 34px; }
+  .pf-identity > p { font-size: 11px; }
+  .pf-hero-stats { gap: 18px; margin-top: 16px; }
+  .pf-hero-stat b { font-size: 20px; }
+  .pf-hero-stat span { font-size: 8px; }
+  .pf-hero-actions { width: 100%; min-width: 0; flex-direction: row; flex-wrap: wrap; }
+  .pf-hero-actions .pf-btn { flex: 1; }
+  .pf-share { flex: 0 0 34px; }
+  .pf-right, .pf-extra__grid { grid-template-columns: 1fr; }
+  .pf-block__head h2 { font-size: 24px; }
+  .pf-reading-grid { grid-template-columns: 1fr; }
+  .pf-post-row { grid-template-columns: 82px minmax(0, 1fr); gap: 10px; padding: 9px; }
+  .pf-post-row__cover { min-height: 100px; font-size: 30px; }
+  .pf-post-row h3 { font-size: 16px; }
+  .pf-post-row p { -webkit-line-clamp: 2; }
+  .pf-book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pf-book-card__cover { height: 180px; }
+  .pf-liked-post { flex-direction: column; gap: 4px; }
 }
 </style>

@@ -19,6 +19,8 @@
         <span v-else>{{ initials }}</span>
       </span>
       <span class="ua__online" aria-hidden="true"></span>
+      <span class="ua__name">{{ user?.name || 'Читатель' }}</span>
+      <span class="ua__chevron" aria-hidden="true">⌄</span>
     </button>
 
     <transition name="ua-drop">
@@ -43,12 +45,6 @@
         <router-link :to="{ name: 'Profile' }" class="ua-menu__link" role="menuitem" @click="close">
           <span class="icon-user-circle-o" aria-hidden="true"></span>
           <span>Мой профиль</span>
-          <span class="icon-right-open ua-menu__chevron" aria-hidden="true"></span>
-        </router-link>
-
-        <router-link :to="{ name: 'PostCreate' }" class="ua-menu__link" role="menuitem" @click="close">
-          <span class="icon-pencil" aria-hidden="true"></span>
-          <span>Новая публикация</span>
           <span class="icon-right-open ua-menu__chevron" aria-hidden="true"></span>
         </router-link>
 
@@ -355,5 +351,37 @@ export default {
     right: -4px;
     width: 240px;
   }
+}
+
+/* ── Redesign: name + light dropdown ── */
+.ua__trigger {
+  width: auto; height: 40px; gap: 8px; padding: 3px 10px 3px 4px;
+  background: var(--cream); border: 1px solid var(--line); border-radius: 999px;
+}
+.ua__trigger:hover, .ua__trigger.is-open { background: #fff; border-color: var(--accent); }
+.ua__avatar { width: 30px; height: 30px; color: #fff; background: var(--accent); border: 0; font-size: 10px; }
+.ua__name {
+  max-width: 120px; overflow: hidden; color: var(--ink); font-family: var(--font-sans);
+  font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap;
+}
+.ua__chevron { color: var(--text-muted); font-size: 12px; line-height: 1; }
+.ua__online { right: 8px; bottom: 7px; border-color: var(--cream); }
+.ua-menu { color: var(--ink); background: var(--cream); border-color: var(--line); box-shadow: 0 20px 50px rgba(30, 33, 36, 0.14); }
+.ua-menu::before { background: var(--cream); border-color: var(--line); }
+.ua-menu__avatar { color: #fff; background: var(--accent); }
+.ua-menu__identity strong { color: var(--ink); }
+.ua-menu__identity span { color: var(--text-muted); }
+.ua-menu__divider { background: var(--line); }
+.ua-menu__link, .ua-menu__logout { color: var(--text-secondary); }
+.ua-menu__link:hover, .ua-menu__logout:hover { color: var(--accent); background: var(--accent-light); }
+.ua-menu__link span:first-child, .ua-menu__logout span:first-child { color: var(--accent); }
+.ua-menu__chevron { color: var(--text-muted) !important; }
+.ua-menu__logout { color: var(--text-secondary); }
+@media (max-width: 900px) {
+  .ua__trigger { width: auto; height: 36px; padding: 2px 8px 2px 2px; }
+  .ua__avatar { width: 28px; height: 28px; }
+  .ua__name { display: none; }
+  .ua__chevron { display: none; }
+  .ua__online { right: 2px; bottom: 2px; }
 }
 </style>

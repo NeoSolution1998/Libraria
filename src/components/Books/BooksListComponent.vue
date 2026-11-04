@@ -41,7 +41,7 @@
         :style="bookGradient(featuredBook)"
         :aria-label="`Открыть книгу: ${featuredBook.title}`"
       >
-        <img v-if="featuredBook.cover_image" :src="featuredBook.cover_image" :alt="featuredBook.title" loading="eager" />
+        <img v-if="featuredBook.cover_image" :src="featuredBook.cover_image" :alt="featuredBook.title" @error="featuredBook.cover_image = null" loading="eager" />
         <template v-else>
           <span class="bf-book__cover-initial" aria-hidden="true">{{ initialOf(featuredBook.title) }}</span>
           <span class="bf-book__cover-quote" aria-hidden="true">“</span>
@@ -63,7 +63,7 @@
           :style="bookGradient(book)"
           :aria-label="`Открыть книгу: ${book.title}`"
         >
-          <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" loading="lazy" />
+          <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" @error="book.cover_image = null" loading="lazy" />
           <template v-else>
             <span class="book-card__initial" aria-hidden="true">{{ initialOf(book.title) }}</span>
             <span class="book-card__quote" aria-hidden="true">“</span>
@@ -123,7 +123,7 @@ export default {
       );
     },
     showFeatured() {
-      return this.currentPage === 1 && !this.hasFilters && this.books.length > 1;
+      return false;
     },
     featuredBook() {
       if (!this.showFeatured) return null;
@@ -629,4 +629,11 @@ export default {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Mockup: compact catalogue cards ── */
+.book-card__excerpt, .book-card__tags { display: none; }
+.book-card__body { padding-top: 9px; }
+.book-card__body h3 { margin: 0 0 4px; font-family: var(--font-display); font-size: 19px; line-height: 1.15; }
+.book-card__author { margin-bottom: 8px; }
+.book-card__meta { margin-top: 0; }
 </style>

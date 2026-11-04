@@ -9,6 +9,9 @@ import './assets/fontello/css/fontello.css';
 import store from './store';
 import './assets/css/main.css';
 import './assets/css/fonts.css';
+import './assets/css/redesign-fonts.css';
+import './assets/css/redesign.css';
+import './assets/css/cards.css';
 
 const app = createApp(App);
 

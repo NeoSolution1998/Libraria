@@ -42,7 +42,7 @@
       <header class="bd-hero">
         <div class="container-wide bd-hero__grid">
           <div class="bd-cover" :style="coverGradient">
-            <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" loading="eager" />
+            <img v-if="book.cover_image" :src="book.cover_image" :alt="book.title" @error="book.cover_image = null" loading="eager" />
             <template v-else>
               <span class="bd-cover__initial" aria-hidden="true">{{ initialOf(book.title) }}</span>
               <span class="bd-cover__quote" aria-hidden="true">“</span>
@@ -199,7 +199,7 @@
                 class="bd-related__item"
               >
                 <span class="bd-related__cover" :style="gradientFor(item)">
-                  <img v-if="item.cover_image" :src="item.cover_image" :alt="item.title" loading="lazy" />
+                  <img v-if="item.cover_image" :src="item.cover_image" :alt="item.title" @error="item.cover_image = null" loading="lazy" />
                   <span v-else>{{ initialOf(item.title) }}</span>
                 </span>
                 <span class="bd-related__info">
@@ -1241,5 +1241,30 @@ export default {
   .bd-cover {
     width: min(190px, 70%);
   }
+}
+
+/* ── Redesign: clean book editorial ── */
+.bd-hero { padding: 28px 0 14px; }
+.bd-hero__grid { grid-template-columns: 300px minmax(0, 1fr); gap: 52px; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.bd-cover { border-radius: 6px; box-shadow: 0 20px 40px rgba(30,33,36,.18); }
+.bd-title { font-family: var(--font-display); font-size: clamp(38px, 4.6vw, 58px); line-height: 1.02; }
+.bd-author { color: var(--text-secondary); }
+.bd-hero__kicker i { background: var(--accent); }
+.bd-hero__status { display: none; }
+.bd-actions .bd-btn--ghost { border-color: var(--line); }
+.bd-layout { grid-template-columns: minmax(0, 1fr) 280px; gap: 44px; padding-top: 18px; }
+.bd-section, .bd-side { padding: 20px 0; background: transparent; border: 0; border-top: 1px solid var(--line); border-radius: 0; box-shadow: none; }
+.bd-section:first-child { border-top: 0; padding-top: 0; }
+.bd-section__head h2 { font-family: var(--font-display); font-size: 27px; }
+.bd-section__kicker { color: var(--text-muted); }
+.bd-side { padding-top: 0; }
+.bd-side__head h3 { font-family: var(--font-display); font-size: 23px; }
+.bd-comments, .bd-author-card { background: transparent; }
+.bd-author-card { border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+@media (max-width: 900px) {
+  .bd-hero__grid { grid-template-columns: 1fr; gap: 24px; }
+  .bd-cover { width: 270px; max-width: 100%; }
+  .bd-layout { grid-template-columns: 1fr; }
+  .bd-aside { display: none; }
 }
 </style>

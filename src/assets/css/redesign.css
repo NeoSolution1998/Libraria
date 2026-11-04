@@ -1,0 +1,157 @@
+/* ============================================================
+   Libraria redesign — warm editorial theme
+   ============================================================ */
+:root {
+  --ink: #1e2124;
+  --ink-muted: #303633;
+  --paper: #f6f1e7;
+  --cream: #fbf8f2;
+  --accent: #36513f;
+  --accent-hover: #283d30;
+  --accent-light: #e3eadf;
+  --accent-soft: #eef2e9;
+  --line: #e4dccb;
+  --line-strong: #d4c8b2;
+  --gold: #ac873d;
+  --gold-hover: #bb9445;
+  --success: #36513f;
+  --success-light: #46664f;
+  --danger: #9a3b32;
+  --danger-hover: #842f28;
+  --text-primary: var(--ink);
+  --text-secondary: #5e625f;
+  --text-muted: #8a847b;
+  --text-on-dark: #f6f1e7;
+  --text-on-accent: #fbf8f2;
+  --surface: var(--cream);
+  --surface-hover: #f2ede2;
+  --surface-border: var(--line);
+  --font-sans: 'Inter', 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 22px;
+  --shadow-sm: 0 1px 3px rgba(30, 33, 36, 0.04);
+  --shadow-md: 0 8px 24px rgba(30, 33, 36, 0.06);
+  --shadow-lg: 0 18px 45px rgba(30, 33, 36, 0.10);
+  --shadow-xl: 0 28px 70px rgba(30, 33, 36, 0.14);
+  --shadow-accent: 0 10px 28px rgba(54, 81, 63, 0.18);
+  --container-max: 1280px;
+  --header-height: 64px;
+}
+
+html,
+body {
+  background: var(--paper);
+}
+
+body {
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.028em;
+}
+
+::selection {
+  color: var(--paper);
+  background: var(--accent);
+}
+
+/* Shared primary button treatment */
+.btn-primary,
+.hm-btn--primary,
+.bd-btn--primary,
+.bc-btn--primary,
+.create-btn--primary,
+.publish-btn,
+.pp-btn--primary,
+.auth-submit,
+.posts-state__action {
+  color: var(--text-on-accent) !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.btn-primary:hover,
+.hm-btn--primary:hover,
+.bd-btn--primary:hover,
+.bc-btn--primary:hover,
+.create-btn--primary:hover,
+.publish-btn:hover,
+.pp-btn--primary:hover,
+.auth-submit:hover {
+  background: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+}
+
+/* Native form controls inherit the editorial palette */
+input:focus,
+select:focus,
+textarea:focus {
+  outline-color: var(--accent);
+}
+
+/* Small utility for new profile actions */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* ============================================================
+   Interaction & typography polish
+   ============================================================ */
+
+/* Аккуратный фокус с клавиатуры — виден, но не ломает вид */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Цифры в статистике и счётчиках не «прыгают» */
+.stats dd,
+.pf-stats dd,
+.book-stats dd,
+.uh-stats dd,
+.cat-results__summary h2,
+.post-stats,
+.pf-post__stats {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Плавный подъём карточек по всему сайту */
+.book-card__cover,
+.shelf-card__cover,
+.cat-card__cover,
+.post-mini,
+.post-card,
+.uh-post,
+.pf-post,
+.pf-read,
+.book-post,
+.author-card {
+  will-change: transform;
+}
+
+/* Аккуратный скроллбар в горизонтальных лентах */
+.ec-list,
+.posts-side,
+.pf-actions {
+  scrollbar-width: thin;
+}

@@ -1808,4 +1808,22 @@ export default {
     font-size: 10px;
   }
 }
+
+/* ── Redesign: centered article like the mockup ── */
+.post-page { background: var(--paper); }
+.post-layout { display: block; max-width: 780px; margin: 0 auto; }
+.post-side { display: none; }
+.post-article { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.post-article__head { text-align: center; }
+.post-article__tags { justify-content: center; }
+.post-article__title { font-family: var(--font-display); font-size: clamp(36px, 5vw, 58px); line-height: 1.06; }
+.post-article__lead { margin-right: auto; margin-left: auto; }
+.post-article__meta { justify-content: center; }
+.post-article__cover { margin-top: 26px; border-radius: 8px; }
+.post-article__body { max-width: 700px; margin: 0 auto; }
+.post-article__footer { max-width: 700px; margin: 0 auto; border-top: 1px solid var(--line); }
+.post-related { max-width: 1000px; margin: 0 auto; }
+.post-comments { max-width: 700px; margin: 0 auto; }
+.post-page__top { border-bottom: 0; }
+@media (max-width: 760px) { .post-layout { max-width: 100%; } }
 </style>

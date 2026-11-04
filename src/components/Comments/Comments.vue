@@ -181,7 +181,11 @@ export default {
       if (diffSeconds < 60) return 'только что';
       if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} мин назад`;
       if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} ч назад`;
-      return `${Math.floor(diffSeconds / 86400)} дн назад`;
+
+      const days = Math.floor(diffSeconds / 86400);
+      if (days < 30) return `${days} дн назад`;
+
+      return commentTime.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     },
     formatContent(content) {
       if (!content) return '';

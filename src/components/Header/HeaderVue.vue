@@ -6,7 +6,7 @@
           <img src="/images/logo.svg" alt="" class="site-brand__logo" />
         </span>
         <span class="site-brand__text">
-          <strong>Libraria<span>.</span></strong>
+          <strong>Libraria</strong>
           <small>цифровая библиотека</small>
         </span>
       </router-link>
@@ -30,7 +30,7 @@
         <template v-if="user">
           <router-link :to="{ name: 'PostCreate' }" class="site-write">
             <span class="icon-pencil" aria-hidden="true"></span>
-            <span>Написать</span>
+            Написать
           </router-link>
           <user-avatar :user="user" @logout="handleLogout" />
         </template>
@@ -98,14 +98,6 @@
           </nav>
 
           <div class="site-mobile__actions">
-            <router-link
-              v-if="user"
-              :to="{ name: 'PostCreate' }"
-              class="site-mobile__primary"
-            >
-              <span class="icon-pencil" aria-hidden="true"></span>
-              Написать пост
-            </router-link>
             <button v-if="user" type="button" class="site-mobile__logout" @click="handleLogout">
               Выйти из аккаунта
             </button>
@@ -396,6 +388,31 @@ export default {
 
 .site-write span:first-child {
   font-size: 12px;
+}
+
+.site-write {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-on-accent);
+  background: var(--accent);
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.site-write:hover {
+  color: var(--text-on-accent);
+  background: var(--accent-hover);
+}
+
+.site-write .icon-pencil {
+  font-size: 11px;
 }
 
 .site-login {
@@ -736,5 +753,62 @@ export default {
   .site-brand__text {
     display: none;
   }
+}
+
+/* ── Redesign: light editorial header ── */
+.site-header {
+  color: var(--ink);
+  background: rgba(246, 241, 231, 0.94);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.site-header::before { display: none; }
+.site-header.is-scrolled { box-shadow: 0 10px 30px rgba(30, 33, 36, 0.06); }
+.site-header__inner { max-width: var(--container-max); height: 64px; gap: 40px; }
+.site-brand__mark {
+  width: 36px; height: 36px; border-radius: 6px;
+  background: var(--accent); border-color: var(--accent);
+}
+.site-brand__logo { width: 21px; filter: brightness(0) invert(1); }
+.site-brand:hover .site-brand__mark { background: var(--accent-hover); border-color: var(--accent-hover); transform: none; }
+.site-brand__text strong { color: var(--ink); font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+
+.site-brand__text small { display: none; }
+.site-nav { gap: 2px; }
+.site-nav__link { height: 36px; padding: 0 14px; color: var(--text-secondary); font-size: 14px; border-radius: 999px; }
+.site-nav__link:hover { color: var(--ink); background: rgba(54, 81, 63, 0.06); }
+.site-nav__link.router-link-active { color: var(--accent); background: var(--accent-light); }
+.site-nav__dot { display: none; }
+.site-login { color: var(--text-secondary); font-size: 13px; }
+.site-login:hover { color: var(--accent); }
+.site-register {
+  height: 38px; padding: 0 18px; color: #fbf8f2; background: var(--accent);
+  border-color: var(--accent); border-radius: 999px; font-size: 13px;
+}
+.site-register:hover { color: #fff; background: var(--accent-hover); border-color: var(--accent-hover); }
+.site-burger { border-color: var(--line); background: transparent; }
+.site-burger span { background: var(--ink); }
+.site-burger:hover { background: var(--cream); border-color: var(--accent); }
+.site-mobile { color: var(--ink); background: var(--paper); border-top: 1px solid var(--line); }
+.site-mobile__profile { background: var(--cream); border-color: var(--line); }
+.site-mobile__avatar { color: #fff; background: var(--accent); border-color: var(--accent); }
+.site-mobile__profile-info strong { color: var(--ink); }
+.site-mobile__profile-info span { color: var(--text-muted); }
+.site-mobile__profile-link { color: var(--accent); border-color: var(--accent); }
+.site-mobile__link { color: var(--ink); border-bottom-color: var(--line); }
+.site-mobile__link:hover, .site-mobile__link.router-link-active { color: var(--accent); }
+.site-mobile__number { color: var(--accent); }
+.site-mobile__link span:last-child { color: var(--text-muted); }
+.site-mobile__primary { color: #fff; background: var(--accent); border-color: var(--accent); }
+.site-mobile__secondary { color: var(--ink); border-color: var(--line); }
+.site-mobile__logout { color: var(--text-secondary); }
+.site-mobile__logout:hover { color: var(--danger); }
+.site-mobile__note { color: var(--text-muted); }
+@media (max-width: 900px) {
+  .site-header__inner { height: 60px; padding: 0 18px; }
+  .site-brand__mark { width: 34px; height: 34px; }
+  .site-brand__text strong { font-size: 19px; }
+  .site-mobile { top: 60px; }
 }
 </style>

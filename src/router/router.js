@@ -10,6 +10,10 @@ import PostCreatePage from '@/pages/Posts/PostCreatePage.vue';
 import LoginPage from '@/pages/Auth/LoginPage.vue';
 import RegistrationPage from '@/pages/Auth/RegistrationPage.vue';
 import ProfilePage from '@/pages/Profile/ProfilePage.vue';
+import ProfileBooksPage from '@/pages/Profile/ProfileBooksPage.vue';
+import ProfilePostsPage from '@/pages/Profile/ProfilePostsPage.vue';
+import ProfileChaptersPage from '@/pages/Profile/ProfileChaptersPage.vue';
+import ProfileWishlistPage from '@/pages/Profile/ProfileWishlistPage.vue';
 
 const RedirectToHome = {
   name: 'RedirectToHome',
@@ -41,6 +45,30 @@ const routes = [
     meta: { breadcrumb: [{ text: 'Регистрация', path: '' }] },
   },
   {
+    path: '/profile/books',
+    name: 'ProfileBooks',
+    component: ProfileBooksPage,
+    meta: { breadcrumb: [{ text: 'Профиль', path: '/profile' }, { text: 'Мои книги', path: '' }] },
+  },
+  {
+    path: '/profile/books/:id/chapters',
+    name: 'ProfileChapters',
+    component: ProfileChaptersPage,
+    meta: { breadcrumb: [{ text: 'Профиль', path: '/profile' }, { text: 'Мои книги', path: '/profile/books' }, { text: 'Главы', path: '' }] },
+  },
+  {
+    path: '/profile/posts',
+    name: 'ProfilePosts',
+    component: ProfilePostsPage,
+    meta: { breadcrumb: [{ text: 'Профиль', path: '/profile' }, { text: 'Мои посты', path: '' }] },
+  },
+  {
+    path: '/profile/wishlist',
+    name: 'ProfileWishlist',
+    component: ProfileWishlistPage,
+    meta: { breadcrumb: [{ text: 'Профиль', path: '/profile' }, { text: 'Хочу прочитать', path: '' }] },
+  },
+  {
     path: '/profile/:id?',
     name: 'Profile',
     component: ProfilePage,
@@ -52,6 +80,17 @@ const routes = [
     component: BooksPage,
     meta: {
       breadcrumb: [{ text: 'Книги', path: '/books' }],
+    },
+  },
+  {
+    path: '/books/:id/edit',
+    name: 'BookEdit',
+    component: BookCreatePage,
+    meta: {
+      breadcrumb: [
+        { text: 'Книги', path: '/books' },
+        { text: 'Редактирование', path: '' },
+      ],
     },
   },
   {
@@ -93,6 +132,17 @@ const routes = [
     component: PostsPage,
     meta: {
       breadcrumb: [{ text: 'Посты', path: '/posts' }],
+    },
+  },
+  {
+    path: '/posts/:id/edit',
+    name: 'PostEdit',
+    component: PostCreatePage,
+    meta: {
+      breadcrumb: [
+        { text: 'Посты', path: '/posts' },
+        { text: 'Редактирование', path: '' },
+      ],
     },
   },
   {

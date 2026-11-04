@@ -129,8 +129,8 @@
         <button v-if="hasQueryOrFilters" type="button" class="books-state__action" @click="resetEverything">
           Сбросить поиск и фильтры
         </button>
-        <router-link v-else-if="user" :to="{ name: 'BookCreate' }" class="books-state__action">
-          Добавить книгу
+        <router-link v-else-if="user" :to="{ name: 'Profile' }" class="books-state__action">
+          Добавить книгу в профиле
         </router-link>
       </div>
     </div>
@@ -911,5 +911,16 @@ export default {
   .books-pagination__nav span:not([class]) {
     display: none;
   }
+}
+
+/* ── Redesign: filters on the left ── */
+@media (min-width: 1025px) {
+  .books-container { grid-template-columns: 300px minmax(0, 1fr); gap: 30px; }
+  .books-main { order: 2; }
+  .books-sidebar { order: 1; }
+  .books-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1024px) {
+  .books-main { order: 1; }
 }
 </style>
